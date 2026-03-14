@@ -1,61 +1,74 @@
-<!DOCTYPE html><html><head>
-<link rel="stylesheet" href="style2.css"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Reading Comprehension | Home</title><!-- Paste Shared CSS here --></head><body>
-<nav class="container"><div class="nav-links"><a href="index.html" class="nav-link active">Home</a><a href="pre-reading.html" class="nav-link">Pre-Reading</a><a href="while-reading.html" class="nav-link">While Reading</a><a href="post-reading.html" class="nav-link">Post Reading</a></div><a href="#" class="cta-btn">Get Started</a></nav>
-<div class="content-grid container">
-  <div class="hero">
-    <h1>Reading<br>Comprehension</h1>
-    <p>Master reading skills through structured pre-, while-, and post-reading strategies</p>
-  </div>
-  <div class="section"><div class="section-circle">📖</div><h2>Welcome</h2><p>Complete reading comprehension framework for educators and learners.</p></div>
-  <div class="bottom-nav">
-    <button class="nav-arrow" onclick="prevPage()">← דף קודם</button>
-    <span style="color:#FF6600">Page 1/5</span>
-    <a href="pre-reading.html" class="nav-arrow next-arrow">הדף הבא →</a>
-  </div>
-</div>
-</body></html>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <title>Reading Comprehension | Home</title>
-
-  <!-- Link to your CSS file -->
-  <link rel="stylesheet" href="style2.css">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Paste Shared CSS here if you want inline styles instead of a file -->
+  <style>
+    /* Your existing style2.css content + neon dividers */
+    * {box-sizing: border-box; margin: 0; padding: 0;}
+    body {font-family: 'Segoe UI', system-ui, sans-serif; background: #000000; color: #FF6600; line-height: 1.7; overflow-x: hidden;}
+    .container {max-width: 1200px; margin: 0 auto; padding: 0 20px;}
+    /* ... your existing nav/content styles ... */
+    
+    /* NEON ORANGE DIVIDERS */
+    .neon-divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #FF6600, #FF8C42, #FF6600, transparent);
+      box-shadow: 
+        0 0 10px #FF6600,
+        0 0 20px #FF6600,
+        0 0 30px #FF8C42,
+        inset 0 0 10px rgba(255, 102, 0, 0.5);
+      margin: 40px auto;
+      width: 80%;
+      border-radius: 2px;
+      animation: neon-glow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes neon-glow {
+      from { box-shadow: 0 0 10px #FF6600, 0 0 20px #FF6600, 0 0 30px #FF8C42; }
+      to { box-shadow: 0 0 20px #FF6600, 0 0 30px #FF6600, 0 0 40px #FF8C42, 0 0 50px #FF8C42; }
+    }
+  </style>
 </head>
 <body>
   <nav class="container">
     <div class="nav-links">
-      <a href="index.html" class="nav-link active">Home</a>
-      <a href="pre-reading.html" class="nav-link">Pre-Reading</a>
-      <a href="while-reading.html" class="nav-link">While Reading</a>
-      <a href="post-reading.html" class="nav-link">Post Reading</a>
+      <a href="https://ofirx.github.io/Reading-comprehension/" class="nav-link active">Home</a>
+      <a href="https://ofirx.github.io/Reading-comprehension/pre-reading.html" class="nav-link">Pre-Reading</a>
+      <a href="https://ofirx.github.io/Reading-comprehension/while-reading.html" class="nav-link">While Reading</a>
+      <a href="https://ofirx.github.io/Reading-comprehension/post-reading.html" class="nav-link">Post Reading</a>
     </div>
-    <a href="#" class="cta-btn">Get Started</a>
+    <a href="https://ofirx.github.io/Reading-comprehension/resources.html" class="cta-btn">Resources</a>
   </nav>
 
   <div class="content-grid container">
+    <!-- PART 1: Hero -->
     <div class="hero">
       <h1>Reading<br>Comprehension</h1>
       <p>Master reading skills through structured pre-, while-, and post-reading strategies</p>
     </div>
-
+    
+    <!-- NEON DIVIDER 1 -->
+    <div class="neon-divider"></div>
+    
+    <!-- PART 2: Content Section -->
     <div class="section">
       <div class="section-circle">📖</div>
       <h2>Welcome</h2>
       <p>Complete reading comprehension framework for educators and learners.</p>
     </div>
-
+    
+    <!-- NEON DIVIDER 2 -->
+    <div class="neon-divider"></div>
+    
+    <!-- PART 3: Bottom Navigation -->
     <div class="bottom-nav">
-      <button class="nav-arrow" onclick="prevPage()">← דף קודם</button>
+      <button class="nav-arrow" onclick="window.location.href='https://ofirx.github.io/Reading-comprehension/'">← דף קודם</button>
       <span style="color:#FF6600">Page 1/5</span>
-      <a href="pre-reading.html" class="nav-arrow next-arrow">הדף הבא →</a>
+      <a href="https://ofirx.github.io/Reading-comprehension/pre-reading.html" class="nav-arrow next-arrow">הדף הבא →</a>
     </div>
   </div>
 </body>
 </html>
-
-</style>
