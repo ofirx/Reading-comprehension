@@ -57,24 +57,5 @@
   </div>
 </body>
 </html>
-<style>
-* {box-sizing: border-box; margin: 0; padding: 0;}
-body {font-family: 'Segoe UI', system-ui, sans-serif; background: #000000; color: #FF6600; line-height: 1.7; overflow-x: hidden;}
-.container {max-width: 1200px; margin: 0 auto; padding: 0 20px;}
-nav {padding: 20px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333;}
-.nav-links {display: flex; gap: 30px;}
-.nav-link {color: #FF6600; text-decoration: none; font-weight: 500; font-size: 1.1rem; transition: color 0.3s;}
-.nav-link:hover, .nav-link.active {color: #ffffff;}
-.cta-btn {background: #FF6600; color: #000; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: bold;}
-.content-grid {min-height: 70vh; display: grid; grid-template-rows: auto 1fr auto; gap: 40px; padding: 60px 0;}
-.hero {text-align: center; padding: 80px 0;}
-.hero h1 {font-size: clamp(3rem, 8vw, 6rem); color: #ffffff; margin-bottom: 20px; font-weight: 300;}
-.hero p {font-size: 1.4rem; color: #FF6600; max-width: 600px; margin: 0 auto;}
-.section {background: rgba(255,102,0,0.1); border: 1px solid rgba(255,102,0,0.3); border-radius: 20px; padding: 40px; text-align: center;}
-.section-circle {width: 120px; height: 120px; background: linear-gradient(135deg, #FF6600, #FF8C00); border-radius: 50%; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #000;}
-.bottom-nav {display: flex; justify-content: space-between; align-items: center; padding: 30px 0; border-top: 1px solid #333;}
-.prev-next {display: flex; gap: 20px;}
-.nav-arrow {background: #FF6600; color: #000; border: none; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1rem; direction: rtl;}
-.next-arrow {direction: ltr;}
-@media (max-width: 768px) {.nav-links {gap: 15px; font-size: 1rem;}}
+
 </style>
