@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ELS - Language Learning Made Immersive</title>
+    <title>Services - ELS</title>
     <link rel="stylesheet" href="styles/main.css" />
   </head>
-  <body data-page="home">
+  <body data-page="practicing">
     <header class="topbar">
       <div class="container topbar-inner">
         <a class="brand" href="index.html" aria-label="ELS home">
@@ -52,27 +52,27 @@
 
     <main>
       <!-- Section 1: Hero -->
-      <section class="hero" aria-label="Home 1">
+      <section class="hero" aria-label="Practicing 3">
         <div class="container hero-inner">
           <div>
             <div
               class="small"
               style="color: rgba(15,23,42,0.75); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em"
             >
-              Home 1
+              Practicing 3
             </div>
-            <h1>Welcome / Intro</h1>
+            <h1>Practice & Repeat</h1>
             <p>
-              This is the Home page section. Replace the text, images, and media with your lesson content.
+              This page is for practice activities. Replace with exercises, speaking prompts, or worksheets.
             </p>
             <div class="hero-actions">
-              <a class="btn btn-primary" href="about.html">Next: Presentation 2</a>
-              <a class="btn" href="services.html">Go to Practicing 3</a>
+              <a class="btn btn-primary" href="contact.html">Next: Testing 4</a>
+              <a class="btn" href="about.html">Back to Presentation 2</a>
             </div>
           </div>
 
-          <div class="hero-card" aria-label="Home header image placeholder">
-            <div class="hero-image">Add your banner / cover image</div>
+          <div class="hero-card" aria-label="Practicing header image placeholder">
+            <div class="hero-image">Add your practice cover image</div>
             <div class="small" style="margin-top: 12px; color: rgba(15,23,42,0.7)">
               Tip: replace the hero background with `assets/hero.jpg`
             </div>
@@ -81,67 +81,67 @@
       </section>
 
       <!-- Section 2: Media + Text -->
-      <section class="page-block" aria-label="Home content section">
+      <section class="page-block" aria-label="Practicing content section">
         <div class="container page-split">
           <div class="media-box">
-            <!-- Replace the mp4 filename with your real video in `assets/` -->
-            <video
-              class="page-video"
-              controls
-              preload="metadata"
-              poster="assets/video-poster.jpg"
-            >
-              <source src="assets/page1-video.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            <div class="small" style="padding: 16px 16px 0; color: rgba(15,23,42,0.7); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
+              Wordwall Activity
+            </div>
+            <!-- Paste your Wordwall embed URL (iframe src) below -->
+            <iframe
+              class="wordwall-embed"
+              title="Wordwall activity"
+              src="PASTE_WORDWALL_EMBED_URL_1_HERE"
+              allowfullscreen
+            ></iframe>
           </div>
           <div class="card">
             <div class="small" style="color: rgba(15,23,42,0.7); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
               Section 2
             </div>
-            <h2 style="margin: 10px 0 10px; letter-spacing: -0.02em">HELLO / שלום</h2>
+            <h2 style="margin: 10px 0 10px; letter-spacing: -0.02em">Speak / Practice</h2>
             <p style="margin: 0; color: var(--muted)">
-              Replace this with your lesson dialogue or vocabulary example (English + Hebrew).
+              Add a prompt like: “Say hello to a friend” with 2-3 example responses.
             </p>
+            <div style="margin-top: 18px">
+              <div class="small" style="color: rgba(15,23,42,0.7); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
+                Optional Wordwall Activity 2
+              </div>
+              <!-- If you don't need a second activity, remove this iframe -->
+              <iframe
+                class="wordwall-embed"
+                title="Wordwall activity 2"
+                src="PASTE_WORDWALL_EMBED_URL_2_HERE"
+                allowfullscreen
+                style="margin-top: 12px"
+              ></iframe>
+            </div>
             <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px">
-              <a class="btn btn-primary" href="about.html">Forward</a>
-              <a class="btn" href="index.html">Refresh</a>
+              <a class="btn btn-primary" href="contact.html">Forward</a>
+              <a class="btn" href="about.html">Back</a>
             </div>
           </div>
         </div>
       </section>
 
       <!-- Section 3: Divider + Big Text -->
-      <section class="page-block" aria-label="Home divider section">
+      <section class="page-block" aria-label="Practicing divider section">
         <div class="container">
           <div class="divider-line" aria-hidden="true"></div>
           <p class="big-callout">
-            IN THE BEGINNING YOU WILL WATCH VIDEOS, THEN YOU WILL PRACTICE,
-            AND AT THE END YOU WILL BE HAVING GREAT RESULTS.
+            PRACTICE OUT LOUD. RECORD YOUR VOICE.
+            CHECK PRONUNCIATION AND TRY AGAIN.
           </p>
-          <div
-            style="
-              direction: rtl;
-              text-align: right;
-              margin-top: 14px;
-              font-weight: 800;
-              font-size: clamp(18px, 2.2vw, 26px);
-              line-height: 1.25;
-              letter-spacing: -0.01em;
-            "
-          >
-            בהתחלה תצפו בסרטונים, אחר כך תתרגלו, ובסוף יהיו לכם תוצאות מצוינות.
-          </div>
         </div>
       </section>
 
       <!-- Section 4: Prev / Next cursor -->
-      <section class="page-block" aria-label="Home navigation section">
+      <section class="page-block" aria-label="Practicing navigation section">
         <div class="container">
           <div class="pager" role="navigation" aria-label="Step navigation">
-            <span class="btn is-disabled" aria-disabled="true">Back</span>
-            <div class="small">Page 1 / 4</div>
-            <a class="btn btn-primary" href="about.html">Forward</a>
+            <a class="btn" href="about.html">Back</a>
+            <div class="small">Page 3 / 4</div>
+            <a class="btn btn-primary" href="contact.html">Forward</a>
           </div>
         </div>
       </section>
@@ -176,3 +176,4 @@
     <script defer src="scripts/main.js"></script>
   </body>
 </html>
+
