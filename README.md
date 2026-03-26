@@ -1,4 +1,4 @@
-# ELS-Style Website Template
+# EFL-Style Website Template
 
 This is a simple multi-page static template (plain HTML + CSS).
 
