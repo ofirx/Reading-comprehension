@@ -83,8 +83,47 @@
       <!-- Section 2: Media + Text -->
       <section class="page-block" aria-label="Presentation content section">
         <div class="container page-split">
-          <div class="media-box">
-            <div class="media-placeholder">Video / Slides</div>
+          <div class="media-box" style="min-height: 420px">
+            <div
+              class="small"
+              style="padding: 16px 16px 0; color: rgba(15,23,42,0.7); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em"
+            >
+              Gallery
+            </div>
+            <div style="padding: 14px 16px 16px; overflow-x: auto">
+              <article class="gallery_wrapper" aria-label="Presentation gallery">
+                <img
+                  src="https://images.unsplash.com/photo-1522943854798-7ea1c5464eba?q=80&w=1200&auto=format&fit=crop"
+                  alt="Balloon with controlled fire"
+                  loading="lazy"
+                />
+                <img
+                  src="https://images.unsplash.com/photo-1498435999018-6803de1f1c1f?q=80&w=1200&auto=format&fit=crop"
+                  alt="Minimalist catchphrase"
+                  loading="lazy"
+                />
+                <img
+                  src="https://images.unsplash.com/photo-1541695226403-a09aa08e5135?q=80&w=1200&auto=format&fit=crop"
+                  alt="Hiking directional signs"
+                  loading="lazy"
+                />
+                <img
+                  src="https://images.unsplash.com/photo-1609951651467-713256d1a3be?q=80&w=1200&auto=format&fit=crop"
+                  alt="Drinks"
+                  loading="lazy"
+                />
+                <img
+                  src="https://images.unsplash.com/photo-1525351326368-efbb5cb6814d?q=80&w=1200&auto=format&fit=crop"
+                  alt="Breakfast"
+                  loading="lazy"
+                />
+                <img
+                  src="https://images.unsplash.com/34/BA1yLjNnQCI1yisIZGEi_2013-07-16_1922_IMG_9873.jpg?q=80&w=1200&auto=format&fit=crop"
+                  alt="Alpine mountains under a clear sky"
+                  loading="lazy"
+                />
+              </article>
+            </div>
           </div>
           <div class="card">
             <div class="small" style="color: rgba(15,23,42,0.7); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
@@ -95,8 +134,8 @@
               Add the phrases the learner should understand before practicing.
             </p>
             <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px">
-              <a class="btn btn-primary" href="services.html">Forward</a>
-              <a class="btn" href="index.html">Back</a>
+              <a class="btn btn-forward" href="services.html">Forward</a>
+              <a class="btn btn-back" href="index.html">Back</a>
             </div>
           </div>
         </div>
@@ -111,7 +150,7 @@
             <div class="divider-item">
               <h3>Divider 1 title (Presentation)</h3>
               <div class="rtl">טקסט בעברית (לא חובה) עבור מחיצה 1 בעמוד המצגת.</div>
-              <div class="divider-mini" aria-hidden="true"></div>
+              <div class="divider-mini is-orange" aria-hidden="true"></div>
               <p>Edit this text for divider 1 on the Presentation page.</p>
             </div>
 
@@ -120,7 +159,7 @@
             <div class="divider-item">
               <h3>Divider 2 title (Presentation)</h3>
               <div class="rtl">טקסט בעברית (לא חובה) עבור מחיצה 2 בעמוד המצגת.</div>
-              <div class="divider-mini" aria-hidden="true"></div>
+              <div class="divider-mini is-orange" aria-hidden="true"></div>
               <p>Edit this text for divider 2 on the Presentation page.</p>
             </div>
 
@@ -129,7 +168,7 @@
             <div class="divider-item">
               <h3>Divider 3 title (Presentation)</h3>
               <div class="rtl">טקסט בעברית (לא חובה) עבור מחיצה 3 בעמוד המצגת.</div>
-              <div class="divider-mini" aria-hidden="true"></div>
+              <div class="divider-mini is-orange" aria-hidden="true"></div>
               <p>Edit this text for divider 3 on the Presentation page.</p>
             </div>
           </div>
@@ -140,9 +179,9 @@
       <section class="page-block" aria-label="Presentation navigation section">
         <div class="container">
           <div class="pager" role="navigation" aria-label="Step navigation">
-            <a class="btn" href="index.html">Back</a>
+            <a class="btn btn-back" href="index.html">Back</a>
             <div class="small">Page 2 / 4</div>
-            <a class="btn btn-primary" href="services.html">Forward</a>
+            <a class="btn btn-forward" href="services.html">Forward</a>
           </div>
         </div>
       </section>
