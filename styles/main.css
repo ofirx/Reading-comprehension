@@ -125,6 +125,83 @@ a {
   align-items: center;
 }
 
+.wordwall-embed-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: stretch;
+  padding: 0 16px 16px;
+}
+.media-box .wordwall-embed-row {
+  padding: 0 16px 16px;
+}
+.card .wordwall-embed-row {
+  padding: 0 0 0;
+}
+.wordwall-embed-row .wordwall-embed {
+  flex: 1 1 260px;
+  min-width: 0;
+  width: auto;
+  height: min(52vh, 420px);
+  border: 0;
+  display: block;
+}
+/* Practicing 3: orange upload control beside each Wordwall iframe */
+.wordwall-activity-upload {
+  flex: 0 0 auto;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 118px;
+  min-height: 118px;
+  padding: 14px 16px;
+  border-radius: 999px;
+  border: 2px solid rgba(0, 0, 0, 0.45);
+  background: linear-gradient(135deg, #f7941d, #f26727);
+  color: #0a0a0a;
+  font-weight: 850;
+  font-size: 15px;
+  line-height: 1.12;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(242, 103, 39, 0.28);
+  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+  align-self: center;
+}
+.wordwall-activity-upload:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(242, 103, 39, 0.35);
+  filter: brightness(1.03);
+}
+.wordwall-activity-upload:active {
+  transform: translateY(0);
+}
+.wordwall-activity-upload-line {
+  display: block;
+}
+@media (max-width: 640px) {
+  .wordwall-embed-row {
+    flex-direction: column;
+  }
+  .wordwall-activity-upload {
+    align-self: stretch;
+    min-height: 0;
+    flex-direction: row;
+    justify-content: center;
+    border-radius: 14px;
+    padding: 12px 16px;
+  }
+  .wordwall-activity-upload-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+}
+
 .wordwall-embed {
   width: 100%;
   height: min(52vh, 420px);

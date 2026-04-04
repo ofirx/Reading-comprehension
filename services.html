@@ -87,12 +87,21 @@
               Wordwall Activity
             </div>
             <!-- Paste your Wordwall embed URL (iframe src) below -->
-            <iframe
-              class="wordwall-embed"
-              title="Wordwall activity"
-              src="PASTE_WORDWALL_EMBED_URL_1_HERE"
-              allowfullscreen
-            ></iframe>
+            <div class="wordwall-embed-row">
+              <iframe
+                class="wordwall-embed"
+                title="Wordwall activity"
+                src="PASTE_WORDWALL_EMBED_URL_1_HERE"
+                allowfullscreen
+              ></iframe>
+              <label class="wordwall-activity-upload" aria-label="Upload activity file">
+                <span class="wordwall-activity-upload-text" aria-hidden="true">
+                  <span class="wordwall-activity-upload-line">Upload</span>
+                  <span class="wordwall-activity-upload-line">activity</span>
+                </span>
+                <input type="file" class="wordwall-activity-file sr-only" accept="image/*,.pdf,application/pdf" />
+              </label>
+            </div>
           </div>
           <div class="card">
             <div class="small" style="color: rgba(15,23,42,0.7); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
@@ -106,14 +115,22 @@
               <div class="small" style="color: rgba(15,23,42,0.7); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
                 Optional Wordwall Activity 2
               </div>
-              <!-- If you don't need a second activity, remove this iframe -->
-              <iframe
-                class="wordwall-embed"
-                title="Wordwall activity 2"
-                src="PASTE_WORDWALL_EMBED_URL_2_HERE"
-                allowfullscreen
-                style="margin-top: 12px"
-              ></iframe>
+              <!-- If you don't need a second activity, remove this iframe + upload row -->
+              <div class="wordwall-embed-row" style="margin-top: 12px">
+                <iframe
+                  class="wordwall-embed"
+                  title="Wordwall activity 2"
+                  src="PASTE_WORDWALL_EMBED_URL_2_HERE"
+                  allowfullscreen
+                ></iframe>
+                <label class="wordwall-activity-upload" aria-label="Upload activity file">
+                  <span class="wordwall-activity-upload-text" aria-hidden="true">
+                    <span class="wordwall-activity-upload-line">Upload</span>
+                    <span class="wordwall-activity-upload-line">activity</span>
+                  </span>
+                  <input type="file" class="wordwall-activity-file sr-only" accept="image/*,.pdf,application/pdf" />
+                </label>
+              </div>
             </div>
             <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px">
               <a class="btn btn-forward" href="contact.html">Forward</a>

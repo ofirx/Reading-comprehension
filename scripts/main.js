@@ -120,5 +120,20 @@
       clearBtn.hidden = true;
     });
   });
+
+  // Practicing 3: Wordwall upload buttons — update accessible label when a file is chosen (local only).
+  if (page === "practicing") {
+    document.querySelectorAll(".wordwall-activity-upload").forEach((label) => {
+      const input = label.querySelector(".wordwall-activity-file");
+      if (!input) return;
+      input.addEventListener("change", () => {
+        const f = input.files && input.files[0];
+        label.setAttribute(
+          "aria-label",
+          f ? `Uploaded file: ${f.name}. Click to choose another.` : "Upload activity file"
+        );
+      });
+    });
+  }
 })();
 
