@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -51,8 +51,13 @@
     </header>
 
     <main>
-      <!-- Section 1: Hero -->
-      <section class="hero" aria-label="Home 1">
+      <!-- Orange line: start of page content below header -->
+      <div class="container">
+        <div class="divider-line divider-line--first" aria-hidden="true"></div>
+      </div>
+
+      <!-- First page (below the first orange line) -->
+      <section class="hero" aria-label="Home 1 — first page">
         <div class="container hero-inner">
           <div>
             <div
@@ -80,73 +85,91 @@
         </div>
       </section>
 
-      <!-- Section 2: Media + Text -->
-      <section class="page-block" aria-label="Home content section">
-        <div class="container page-split">
-          <div class="media-box">
-            <!-- Replace the mp4 filename with your real video in `assets/` -->
-            <video
-              class="page-video"
-              controls
-              preload="metadata"
-              poster="assets/video-poster.jpg"
-            >
-              <source src="assets/page1-video.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-          <div class="card">
-            <div class="small" style="color: rgba(15,23,42,0.7); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
-              Section 2
+      <!-- Orange line: before two main sections -->
+      <div class="container">
+        <div class="divider-line divider-line--section" aria-hidden="true"></div>
+      </div>
+
+      <!-- Section 1 of 2: media + dialogue -->
+      <section class="page-block home-section" aria-label="Home — section 1 of 2">
+        <div class="container">
+          <p class="home-section-title">Section 1</p>
+          <div class="page-split">
+            <div class="media-box home-video-wrap">
+              <video
+                id="homePageVideo"
+                class="page-video"
+                preload="metadata"
+                poster="assets/video-poster.jpg"
+                playsinline
+              >
+                <source src="assets/page1-video.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <div class="home-video-toolbar">
+                <label class="btn btn-primary home-video-upload-label">
+                  Upload video
+                  <input type="file" accept="video/*" class="sr-only" id="homeVideoFile" aria-label="Upload a video file" />
+                </label>
+                <div class="home-video-controls" role="group" aria-label="Video playback">
+                  <button type="button" class="btn btn-forward" id="homeVideoPlay">Play</button>
+                  <button type="button" class="btn" id="homeVideoPause">Pause</button>
+                  <button type="button" class="btn btn-back" id="homeVideoStop">Stop</button>
+                </div>
+              </div>
             </div>
-            <h2 style="margin: 10px 0 10px; letter-spacing: -0.02em">HELLO / שלום</h2>
-            <p style="margin: 0; color: var(--muted)">
-              Replace this with your lesson dialogue or vocabulary example (English + Hebrew).
-            </p>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px">
-              <a class="btn btn-forward" href="about.html">Forward</a>
-              <a class="btn" href="index.html">Refresh</a>
+            <div class="card">
+              <div class="small" style="color: rgba(15,23,42,0.7); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
+                Media &amp; text
+              </div>
+              <h2 style="margin: 10px 0 10px; letter-spacing: -0.02em">HELLO / <span lang="he" dir="rtl">שלום</span></h2>
+              <p style="margin: 0; color: var(--muted)">
+                Replace this with your lesson dialogue or vocabulary example (English + Hebrew).
+              </p>
+              <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px">
+                <a class="btn" href="index.html">Refresh</a>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Section 3: Divider + Big Text -->
-      <section class="page-block" aria-label="Home divider section">
-        <div class="container">
-          <div class="divider-line" aria-hidden="true"></div>
+      <!-- Orange line: between section 1 and section 2 -->
+      <div class="container">
+        <div class="divider-line divider-line--section" aria-hidden="true"></div>
+      </div>
 
-          <div class="divider-stack" aria-label="Home: 3 dividers">
+      <!-- Section 2 of 2: divider blocks -->
+      <section class="page-block home-section" aria-label="Home — section 2 of 2">
+        <div class="container">
+          <p class="home-section-title">Section 2</p>
+          <div class="divider-stack" aria-label="Home: 2 dividers">
             <div class="divider-item">
               <h3>Divider 1 title (Home)</h3>
-              <div class="rtl">טקסט בעברית (לא חובה) עבור מחיצה 1 בעמוד הבית.</div>
+              <div class="rtl" lang="he" dir="rtl">טקסט בעברית (לא חובה) עבור מחיצה 1 בעמוד הבית.</div>
               <div class="divider-mini is-orange" aria-hidden="true"></div>
               <p>Edit this text for divider 1 on the Home page.</p>
             </div>
 
-            <div class="divider-mini" aria-hidden="true"></div>
+            <div class="divider-line divider-line--between" aria-hidden="true"></div>
 
             <div class="divider-item">
               <h3>Divider 2 title (Home)</h3>
-              <div class="rtl">טקסט בעברית (לא חובה) עבור מחיצה 2 בעמוד הבית.</div>
+              <div class="rtl" lang="he" dir="rtl">טקסט בעברית (לא חובה) עבור מחיצה 2 בעמוד הבית.</div>
               <div class="divider-mini is-orange" aria-hidden="true"></div>
               <p>Edit this text for divider 2 on the Home page.</p>
-            </div>
-
-            <div class="divider-mini" aria-hidden="true"></div>
-
-            <div class="divider-item">
-              <h3>Divider 3 title (Home)</h3>
-              <div class="rtl">טקסט בעברית (לא חובה) עבור מחיצה 3 בעמוד הבית.</div>
-              <div class="divider-mini is-orange" aria-hidden="true"></div>
-              <p>Edit this text for divider 3 on the Home page.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Section 4: Prev / Next cursor -->
-      <section class="page-block" aria-label="Home navigation section">
+      <!-- Orange line: separates content from Back / Forward -->
+      <div class="container">
+        <div class="divider-line divider-line--section" aria-hidden="true"></div>
+      </div>
+
+      <!-- Back / Forward only below the last orange line -->
+      <section class="page-block" aria-label="Home navigation section" style="padding-top: 8px">
         <div class="container">
           <div class="pager" role="navigation" aria-label="Step navigation">
             <a class="btn btn-back" href="contact.html">Back</a>

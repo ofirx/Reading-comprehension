@@ -99,6 +99,32 @@ a {
   display: block;
 }
 
+/* Home page Section 1: video upload + play / pause / stop */
+.home-video-wrap {
+  overflow: visible;
+}
+.home-video-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px 16px;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.55);
+}
+.home-video-upload-label {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+}
+.home-video-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
 .wordwall-embed {
   width: 100%;
   height: min(52vh, 420px);
@@ -111,6 +137,163 @@ a {
   background: linear-gradient(90deg, rgba(247, 148, 29, 0.65), rgba(15, 23, 42, 0.10));
   border-radius: 999px;
   margin: 10px 0 18px;
+}
+
+/* Home page: orange rules between first page, two body sections, and pager */
+.divider-line--section {
+  margin: 28px 0;
+}
+.divider-line--first {
+  margin: 0 0 24px;
+}
+.divider-line--between {
+  margin: 20px 0 22px;
+}
+
+/* Hebrew and other RTL text */
+.rtl {
+  direction: rtl;
+  text-align: right;
+  unicode-bidi: embed;
+}
+.rtl p {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Presentation (about.html): text above gallery + 2 rows × 3 images */
+.gallery-panel {
+  overflow: visible;
+}
+.gallery-intro {
+  padding: 16px 16px 4px;
+}
+.gallery-kicker {
+  color: rgba(15, 23, 42, 0.65) !important;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+.gallery-heading {
+  margin: 0 0 8px;
+  font-size: clamp(1.15rem, 2vw, 1.35rem);
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.gallery-lede {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.5;
+  max-width: 62ch;
+}
+.gallery-lede code {
+  font-size: 0.9em;
+  font-weight: 600;
+  background: rgba(15, 23, 42, 0.06);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+.gallery_wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 0 16px 16px;
+}
+.gallery-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+.gallery-caption {
+  margin: 0 0 8px;
+  padding: 10px 12px;
+  min-height: 2.75em;
+  border: 1px solid rgba(247, 148, 29, 0.4);
+  border-radius: 10px;
+  background: rgba(247, 148, 29, 0.08);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: rgba(15, 23, 42, 0.82);
+  box-sizing: border-box;
+}
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  object-fit: cover;
+  aspect-ratio: 4 / 3;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(15, 23, 42, 0.04);
+}
+@media (max-width: 900px) {
+  .gallery_wrapper {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px) {
+  .gallery_wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Practicing (services.html): divider image upload + screen-reader-only file input */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.divider-upload {
+  margin: 14px 0 16px;
+}
+.divider-upload-btn {
+  position: relative;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+.divider-upload-preview {
+  margin-top: 12px;
+  padding: 12px;
+  min-height: 100px;
+  border: 1px dashed rgba(247, 148, 29, 0.45);
+  border-radius: 12px;
+  background: rgba(247, 148, 29, 0.06);
+}
+.divider-upload-placeholder {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+.divider-upload-img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+}
+.divider-upload-clear {
+  margin-top: 8px;
+}
+
+.home-section-title {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(15, 23, 42, 0.55);
 }
 
 .big-callout {

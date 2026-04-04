@@ -53,5 +53,72 @@
       form.reset();
     });
   }
+
+  // Home page: video file upload + play / pause / stop (local preview only).
+  if (page === "home") {
+    const video = document.getElementById("homePageVideo");
+    const fileInput = document.getElementById("homeVideoFile");
+    const btnPlay = document.getElementById("homeVideoPlay");
+    const btnPause = document.getElementById("homeVideoPause");
+    const btnStop = document.getElementById("homeVideoStop");
+    if (video && fileInput && btnPlay && btnPause && btnStop) {
+      let blobUrl = "";
+      fileInput.addEventListener("change", () => {
+        const file = fileInput.files && fileInput.files[0];
+        if (blobUrl) {
+          URL.revokeObjectURL(blobUrl);
+          blobUrl = "";
+        }
+        if (!file || !file.type.startsWith("video/")) return;
+        blobUrl = URL.createObjectURL(file);
+        video.querySelectorAll("source").forEach((s) => s.remove());
+        video.src = blobUrl;
+        video.load();
+      });
+      btnPlay.addEventListener("click", () => {
+        video.play().catch(() => {});
+      });
+      btnPause.addEventListener("click", () => {
+        video.pause();
+      });
+      btnStop.addEventListener("click", () => {
+        video.pause();
+        video.currentTime = 0;
+      });
+    }
+  }
+
+  // Practicing page: local preview for divider image uploads (no server; session only).
+  document.querySelectorAll(".divider-upload").forEach((root) => {
+    const input = root.querySelector(".divider-file-input");
+    const img = root.querySelector(".divider-upload-img");
+    const placeholder = root.querySelector(".divider-upload-placeholder");
+    const clearBtn = root.querySelector(".divider-upload-clear");
+    if (!input || !img) return;
+    let lastUrl = "";
+    input.addEventListener("change", () => {
+      if (lastUrl) {
+        URL.revokeObjectURL(lastUrl);
+        lastUrl = "";
+      }
+      const file = input.files && input.files[0];
+      if (!file || !file.type.startsWith("image/")) return;
+      lastUrl = URL.createObjectURL(file);
+      img.src = lastUrl;
+      img.hidden = false;
+      img.alt = file.name;
+      if (placeholder) placeholder.hidden = true;
+      if (clearBtn) clearBtn.hidden = false;
+    });
+    clearBtn?.addEventListener("click", () => {
+      if (lastUrl) URL.revokeObjectURL(lastUrl);
+      lastUrl = "";
+      img.removeAttribute("src");
+      img.hidden = true;
+      input.value = "";
+      if (placeholder) placeholder.hidden = false;
+      clearBtn.hidden = true;
+    });
+  });
 })();
 

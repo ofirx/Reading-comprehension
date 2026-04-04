@@ -1,10 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contact - EFL</title>
+    <title>Testing - EFL</title>
     <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles/testing.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   </head>
   <body data-page="testing">
     <header class="topbar">
@@ -51,7 +53,6 @@
     </header>
 
     <main>
-      <!-- Section 1: Hero -->
       <section class="hero" aria-label="Testing 4">
         <div class="container hero-inner">
           <div>
@@ -63,7 +64,8 @@
             </div>
             <h1>Final Check</h1>
             <p>
-              This is the Testing page section. Replace with a short quiz, role-play, or checklist.
+              Embedded activity below, then a three-part self-graded quiz. Replace questions and answers in
+              <code>scripts/testing-quiz.js</code> and this file.
             </p>
             <div class="hero-actions">
               <a class="btn btn-primary" href="services.html">Back to Practicing 3</a>
@@ -74,69 +76,257 @@
           <div class="hero-card" aria-label="Testing header image placeholder">
             <div class="hero-image">Add your testing cover image</div>
             <div class="small" style="margin-top: 12px; color: rgba(15,23,42,0.7)">
-              Tip: replace the hero background with `assets/hero.jpg`
+              Tip: replace the hero background with <code>assets/hero.jpg</code>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Section 2: Media + Text -->
-      <section class="page-block" aria-label="Testing content section">
-        <div class="container page-split">
-          <div class="media-box">
-            <div class="media-placeholder">Quiz / Task</div>
-          </div>
-          <div class="card">
-            <div class="small" style="color: rgba(15,23,42,0.7); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
-              Section 2
+      <!-- Wordwall / embed: Hebrew above, English below -->
+      <section class="page-block" aria-label="Embedded activity">
+        <div class="testing-embed-block">
+          <p class="testing-embed-he" lang="he" dir="rtl">
+            הוראות בעברית: הדביקו כתובת ה־embed של פעילות Wordwall (או קישור הטמעה), ולחצו על «טען פעילות». אפשר
+            להחליף את הטקסט הזה בדף.
+          </p>
+          <div class="testing-embed-box">
+            <div class="testing-embed-row">
+              <label class="sr-only" for="testingEmbedUrl">Embed URL</label>
+              <input
+                id="testingEmbedUrl"
+                class="testing-embed-url"
+                type="url"
+                placeholder="https://wordwall.net/embed/..."
+              />
+              <button type="button" class="btn btn-primary" id="testingEmbedLoad">Load activity</button>
             </div>
-            <h2 style="margin: 10px 0 10px; letter-spacing: -0.02em">How did you do?</h2>
-            <p style="margin: 0; color: var(--muted)">
-              Add an activity: match answers, record a short audio, or choose the correct phrase.
-            </p>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px">
-              <a class="btn btn-forward" href="index.html">Restart</a>
-              <a class="btn btn-back" href="services.html">Back</a>
+            <div class="testing-embed-frame-wrap">
+              <iframe
+                id="testingEmbedFrame"
+                title="Embedded Wordwall or activity"
+                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                src="about:blank"
+              ></iframe>
+            </div>
+          </div>
+          <p class="testing-embed-en">
+            English: Paste your Wordwall embed URL above and click <strong>Load activity</strong>. The iframe loads
+            that page. Edit this paragraph in <code>contact.html</code>.
+          </p>
+        </div>
+      </section>
+
+      <!-- Self-graded quiz: 3 parts, sidebar, 10 MC + 5 file uploads -->
+      <section class="page-block" aria-label="Self-graded quiz">
+        <div class="quiz-shell" id="testingQuiz">
+          <aside class="quiz-sidebar" aria-label="Quiz parts">
+            <p class="quiz-sidebar-title">Progress</p>
+            <ol class="quiz-steps">
+              <li>
+                <button type="button" class="quiz-step-btn is-active" data-step="1">
+                  <span class="quiz-step-num">1</span>
+                  <span>Part 1 — Vocabulary &amp; reading</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="quiz-step-btn" data-step="2">
+                  <span class="quiz-step-num">2</span>
+                  <span>Part 2 — Grammar &amp; listening</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="quiz-step-btn" data-step="3">
+                  <span class="quiz-step-num">3</span>
+                  <span>Part 3 — Production</span>
+                </button>
+              </li>
+            </ol>
+          </aside>
+
+          <div class="quiz-main">
+            <!-- Part 1: Q1–Q4 -->
+            <div class="quiz-pane" data-pane="1">
+              <p class="quiz-pane-he" lang="he" dir="rtl">
+                חלק 1: ענו על ארבע שאלות. בשאלות המסומנות ניתן להעלות תמונה או קובץ שמע.
+              </p>
+              <p class="quiz-pane-en">
+                Part 1: Answer four questions. Questions marked with upload let you add a picture or audio file.
+              </p>
+
+              <div class="quiz-q">
+                <span class="quiz-q-label">1. What does “Hello” usually mean?</span>
+                <div class="quiz-options">
+                  <label><input type="radio" name="q1" value="a" /> Goodbye</label>
+                  <label><input type="radio" name="q1" value="b" /> A greeting / hi</label>
+                  <label><input type="radio" name="q1" value="c" /> Thank you</label>
+                  <label><input type="radio" name="q1" value="d" /> Please</label>
+                </div>
+                <div class="quiz-upload">
+                  <span class="quiz-upload-label">Upload a picture or audio (for this question)</span>
+                  <input type="file" accept="image/*,audio/*" aria-label="Upload for question 1" />
+                </div>
+              </div>
+
+              <div class="quiz-q">
+                <span class="quiz-q-label">2. Which is a complete sentence?</span>
+                <div class="quiz-options">
+                  <label><input type="radio" name="q2" value="a" /> She reads every day.</label>
+                  <label><input type="radio" name="q2" value="b" /> Reading book.</label>
+                  <label><input type="radio" name="q2" value="c" /> Under the table quickly.</label>
+                  <label><input type="radio" name="q2" value="d" /> Because tired.</label>
+                </div>
+              </div>
+
+              <div class="quiz-q">
+                <span class="quiz-q-label">3. “They” refers to…</span>
+                <div class="quiz-options">
+                  <label><input type="radio" name="q3" value="a" /> One man</label>
+                  <label><input type="radio" name="q3" value="b" /> One woman</label>
+                  <label><input type="radio" name="q3" value="c" /> More than one person / thing</label>
+                  <label><input type="radio" name="q3" value="d" /> Only objects</label>
+                </div>
+                <div class="quiz-upload">
+                  <span class="quiz-upload-label">Upload a picture or audio (for this question)</span>
+                  <input type="file" accept="image/*,audio/*" aria-label="Upload for question 3" />
+                </div>
+              </div>
+
+              <div class="quiz-q">
+                <span class="quiz-q-label">4. Choose the correct spelling.</span>
+                <div class="quiz-options">
+                  <label><input type="radio" name="q4" value="a" /> Recieve</label>
+                  <label><input type="radio" name="q4" value="b" /> Receive</label>
+                  <label><input type="radio" name="q4" value="c" /> Receeve</label>
+                  <label><input type="radio" name="q4" value="d" /> Receiv</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Part 2: Q5–Q7 -->
+            <div class="quiz-pane" data-pane="2" hidden>
+              <p class="quiz-pane-he" lang="he" dir="rtl">
+                חלק 2: שלוש שאלות. בשתיים מהן יש אפשרות להעלות קובץ תמונה או מוזיקה.
+              </p>
+              <p class="quiz-pane-en">
+                Part 2: Three questions. Two of them include an optional picture or audio upload.
+              </p>
+
+              <div class="quiz-q">
+                <span class="quiz-q-label">5. Which tense is “I have studied”?</span>
+                <div class="quiz-options">
+                  <label><input type="radio" name="q5" value="a" /> Present perfect</label>
+                  <label><input type="radio" name="q5" value="b" /> Past simple</label>
+                  <label><input type="radio" name="q5" value="c" /> Future</label>
+                  <label><input type="radio" name="q5" value="d" /> Present continuous</label>
+                </div>
+                <div class="quiz-upload">
+                  <span class="quiz-upload-label">Upload a picture or audio (for this question)</span>
+                  <input type="file" accept="image/*,audio/*" aria-label="Upload for question 5" />
+                </div>
+              </div>
+
+              <div class="quiz-q">
+                <span class="quiz-q-label">6. “If I ___ rich, I would travel.”</span>
+                <div class="quiz-options">
+                  <label><input type="radio" name="q6" value="a" /> am</label>
+                  <label><input type="radio" name="q6" value="b" /> was</label>
+                  <label><input type="radio" name="q6" value="c" /> will be</label>
+                  <label><input type="radio" name="q6" value="d" /> were</label>
+                </div>
+                <div class="quiz-upload">
+                  <span class="quiz-upload-label">Upload a picture or audio (for this question)</span>
+                  <input type="file" accept="image/*,audio/*" aria-label="Upload for question 6" />
+                </div>
+              </div>
+
+              <div class="quiz-q">
+                <span class="quiz-q-label">7. Which word is a preposition?</span>
+                <div class="quiz-options">
+                  <label><input type="radio" name="q7" value="a" /> Quickly</label>
+                  <label><input type="radio" name="q7" value="b" /> Under</label>
+                  <label><input type="radio" name="q7" value="c" /> Happy</label>
+                  <label><input type="radio" name="q7" value="d" /> Run</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Part 3: Q8–Q10 -->
+            <div class="quiz-pane" data-pane="3" hidden>
+              <p class="quiz-pane-he" lang="he" dir="rtl">
+                חלק 3: שלוש שאלות אחרונות. בשאלה אחת ניתן להעלות קובץ מדיה.
+              </p>
+              <p class="quiz-pane-en">Part 3: Final three questions. One includes a media upload.</p>
+
+              <div class="quiz-q">
+                <span class="quiz-q-label">8. “Fewer” is used with…</span>
+                <div class="quiz-options">
+                  <label><input type="radio" name="q8" value="a" /> Uncountable nouns</label>
+                  <label><input type="radio" name="q8" value="b" /> Plural verbs only</label>
+                  <label><input type="radio" name="q8" value="c" /> Countable plural nouns</label>
+                  <label><input type="radio" name="q8" value="d" /> Adjectives only</label>
+                </div>
+              </div>
+
+              <div class="quiz-q">
+                <span class="quiz-q-label">9. Which is formal?</span>
+                <div class="quiz-options">
+                  <label><input type="radio" name="q9" value="a" /> Could you please help me?</label>
+                  <label><input type="radio" name="q9" value="b" /> Gimme that.</label>
+                  <label><input type="radio" name="q9" value="c" /> Stuff’s over there.</label>
+                  <label><input type="radio" name="q9" value="d" /> Nah, skip it.</label>
+                </div>
+                <div class="quiz-upload">
+                  <span class="quiz-upload-label">Upload a picture or audio (for this question)</span>
+                  <input type="file" accept="image/*,audio/*" aria-label="Upload for question 9" />
+                </div>
+              </div>
+
+              <div class="quiz-q">
+                <span class="quiz-q-label">10. Main idea of a paragraph is usually found…</span>
+                <div class="quiz-options">
+                  <label><input type="radio" name="q10" value="a" /> Only in the last word</label>
+                  <label><input type="radio" name="q10" value="b" /> In the topic sentence / first sentences</label>
+                  <label><input type="radio" name="q10" value="c" /> Only in footnotes</label>
+                  <label><input type="radio" name="q10" value="d" /> Never in academic text</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="quiz-footer-nav" id="quizFooterNav">
+              <button type="button" class="quiz-prev" id="quizBtnPrev">Previous step</button>
+              <button type="button" class="quiz-next" id="quizBtnNext">Next step</button>
+              <button type="button" class="quiz-submit" id="quizBtnSubmit" hidden>Finish &amp; see results</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="quiz-results" id="quizResults" hidden>
+          <h2>Results</h2>
+          <p class="quiz-results-summary" id="quizScoreText"></p>
+          <p style="margin: 0 0 12px; color: var(--muted); font-size: 14px">
+            Multiple-choice score only. File uploads are for your task — not auto-graded. Edit
+            <code>ANSWERS</code> in <code>scripts/testing-quiz.js</code> to match your keys.
+          </p>
+          <div class="quiz-charts">
+            <div class="quiz-chart-box">
+              <h3>Part 1</h3>
+              <canvas id="chartPart1" width="240" height="200"></canvas>
+              <div class="quiz-chart-stats" id="statsPart1"></div>
+            </div>
+            <div class="quiz-chart-box">
+              <h3>Part 2</h3>
+              <canvas id="chartPart2" width="240" height="200"></canvas>
+              <div class="quiz-chart-stats" id="statsPart2"></div>
+            </div>
+            <div class="quiz-chart-box">
+              <h3>Part 3</h3>
+              <canvas id="chartPart3" width="240" height="200"></canvas>
+              <div class="quiz-chart-stats" id="statsPart3"></div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Section 3: Divider + Big Text -->
-      <section class="page-block" aria-label="Testing divider section">
-        <div class="container">
-          <div class="divider-line" aria-hidden="true"></div>
-
-          <div class="divider-stack" aria-label="Testing: 3 dividers">
-            <div class="divider-item">
-              <h3>Divider 1 title (Testing)</h3>
-              <div class="rtl">טקסט בעברית (לא חובה) עבור מחיצה 1 בעמוד המבחן.</div>
-              <div class="divider-mini is-orange" aria-hidden="true"></div>
-              <p>Edit this text for divider 1 on the Testing page.</p>
-            </div>
-
-            <div class="divider-mini" aria-hidden="true"></div>
-
-            <div class="divider-item">
-              <h3>Divider 2 title (Testing)</h3>
-              <div class="rtl">טקסט בעברית (לא חובה) עבור מחיצה 2 בעמוד המבחן.</div>
-              <div class="divider-mini is-orange" aria-hidden="true"></div>
-              <p>Edit this text for divider 2 on the Testing page.</p>
-            </div>
-
-            <div class="divider-mini" aria-hidden="true"></div>
-
-            <div class="divider-item">
-              <h3>Divider 3 title (Testing)</h3>
-              <div class="rtl">טקסט בעברית (לא חובה) עבור מחיצה 3 בעמוד המבחן.</div>
-              <div class="divider-mini is-orange" aria-hidden="true"></div>
-              <p>Edit this text for divider 3 on the Testing page.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Section 4: Prev / Next cursor -->
       <section class="page-block" aria-label="Testing navigation section">
         <div class="container">
           <div class="pager" role="navigation" aria-label="Step navigation">
@@ -175,6 +365,6 @@
     </footer>
 
     <script defer src="scripts/main.js"></script>
+    <script defer src="scripts/testing-quiz.js"></script>
   </body>
 </html>
-
