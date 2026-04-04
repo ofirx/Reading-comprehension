@@ -113,6 +113,17 @@ main h3 {
   align-items: center;
 }
 
+/* Presentation 2 (about.html): gallery full width so images are ~2× larger than in a half-width column */
+.presentation-section-2 {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  align-items: stretch;
+}
+.presentation-key-card {
+  max-width: min(640px, 100%);
+}
+
 .media-box {
   border-radius: var(--radius);
   background: var(--glass-bg-strong);
