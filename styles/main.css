@@ -240,6 +240,28 @@ a {
   box-shadow: 0 14px 34px rgba(242, 103, 39, 0.22);
 }
 
+/* Step navigation: Back = red, Forward = green (all pages use .btn-back / .btn-forward) */
+.btn-back {
+  background: #c62828;
+  color: #fff;
+  border-color: rgba(0, 0, 0, 0.14);
+}
+.btn-back:hover {
+  background: #b71c1c;
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(198, 40, 40, 0.35);
+}
+.btn-forward {
+  background: #2e7d32;
+  color: #fff;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+.btn-forward:hover {
+  background: #1b5e20;
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(46, 125, 50, 0.35);
+}
+
 .menu-btn {
   display: none;
 }
