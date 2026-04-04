@@ -158,6 +158,8 @@
 
   // Practicing 3: paste Wordwall iframe HTML or embed URL → load adjacent iframe.
   if (page === "practicing") {
+    const wordwallStorageKey = (iframeId) => "reading-comprehension-wordwall-" + iframeId;
+
     function wordwallUrlFromPaste(text) {
       const t = text.trim();
       if (!t) return "";
@@ -184,6 +186,25 @@
         return false;
       }
     }
+
+    function restoreWordwallEmbedsFromStorage() {
+      ["wordwallEmbed1", "wordwallEmbed2"].forEach((iframeId) => {
+        let saved = "";
+        try {
+          saved = localStorage.getItem(wordwallStorageKey(iframeId)) || "";
+        } catch (_) {
+          return;
+        }
+        if (!saved || !isWordwallEmbedUrl(saved)) return;
+        const iframe = document.getElementById(iframeId);
+        if (!iframe) return;
+        iframe.src = saved;
+        const pasteNum = iframeId.replace("wordwallEmbed", "");
+        const ta = document.getElementById("wordwallPaste" + pasteNum);
+        if (ta) ta.value = saved;
+      });
+    }
+    restoreWordwallEmbedsFromStorage();
 
     document.querySelectorAll("[data-wordwall-open]").forEach((btn) => {
       const id = btn.getAttribute("data-wordwall-open");
@@ -243,6 +264,11 @@
         }
         if (err) err.hidden = true;
         iframe.src = url;
+        try {
+          localStorage.setItem(wordwallStorageKey(targetId), url);
+        } catch (_) {
+          /* quota / private mode */
+        }
         if (typeof dlg.close === "function") dlg.close();
         else dlg.removeAttribute("open");
       });

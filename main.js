@@ -155,5 +155,124 @@
       clearBtn.hidden = true;
     });
   });
+
+  // Practicing 3: paste Wordwall iframe HTML or embed URL → load adjacent iframe.
+  if (page === "practicing") {
+    const wordwallStorageKey = (iframeId) => "reading-comprehension-wordwall-" + iframeId;
+
+    function wordwallUrlFromPaste(text) {
+      const t = text.trim();
+      if (!t) return "";
+      if (/^https?:\/\//i.test(t) && !/[<>]/.test(t)) {
+        return t.split(/\s/)[0];
+      }
+      try {
+        const doc = new DOMParser().parseFromString(t, "text/html");
+        const iframe = doc.querySelector("iframe");
+        const src = iframe && iframe.getAttribute("src");
+        if (src) return src.trim();
+      } catch (_) {
+        /* ignore */
+      }
+      const m = t.match(/src\s*=\s*["']([^"']+)["']/i);
+      return m ? m[1].trim() : "";
+    }
+
+    function isWordwallEmbedUrl(u) {
+      try {
+        const host = new URL(u).hostname;
+        return host === "wordwall.net" || host.endsWith(".wordwall.net");
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function restoreWordwallEmbedsFromStorage() {
+      ["wordwallEmbed1", "wordwallEmbed2"].forEach((iframeId) => {
+        let saved = "";
+        try {
+          saved = localStorage.getItem(wordwallStorageKey(iframeId)) || "";
+        } catch (_) {
+          return;
+        }
+        if (!saved || !isWordwallEmbedUrl(saved)) return;
+        const iframe = document.getElementById(iframeId);
+        if (!iframe) return;
+        iframe.src = saved;
+        const pasteNum = iframeId.replace("wordwallEmbed", "");
+        const ta = document.getElementById("wordwallPaste" + pasteNum);
+        if (ta) ta.value = saved;
+      });
+    }
+    restoreWordwallEmbedsFromStorage();
+
+    document.querySelectorAll("[data-wordwall-open]").forEach((btn) => {
+      const id = btn.getAttribute("data-wordwall-open");
+      const dlg = document.getElementById("wordwallDialog" + id);
+      const ta = document.getElementById("wordwallPaste" + id);
+      const err = document.getElementById("wordwallError" + id);
+      if (!dlg || !ta) return;
+
+      btn.addEventListener("click", () => {
+        if (err) {
+          err.hidden = true;
+          err.textContent = "";
+        }
+        if (typeof dlg.showModal === "function") {
+          dlg.showModal();
+        } else {
+          dlg.setAttribute("open", "");
+        }
+        ta.focus();
+      });
+    });
+
+    document.querySelectorAll("[data-wordwall-close]").forEach((btn) => {
+      const id = btn.getAttribute("data-wordwall-close");
+      const dlg = document.getElementById("wordwallDialog" + id);
+      if (!dlg) return;
+      btn.addEventListener("click", () => {
+        if (typeof dlg.close === "function") dlg.close();
+        else dlg.removeAttribute("open");
+      });
+    });
+
+    document.querySelectorAll("[data-wordwall-load]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-wordwall-load");
+        const targetId = btn.getAttribute("data-wordwall-target");
+        const iframe = targetId ? document.getElementById(targetId) : null;
+        const ta = document.getElementById("wordwallPaste" + id);
+        const err = document.getElementById("wordwallError" + id);
+        const dlg = document.getElementById("wordwallDialog" + id);
+        if (!iframe || !ta || !dlg) return;
+
+        const url = wordwallUrlFromPaste(ta.value);
+        if (!url) {
+          if (err) {
+            err.textContent = "Paste the iframe code from Wordwall or the embed URL.";
+            err.hidden = false;
+          }
+          return;
+        }
+        if (!isWordwallEmbedUrl(url)) {
+          if (err) {
+            err.textContent = "Use a Wordwall embed URL (https://wordwall.net/embed/…).";
+            err.hidden = false;
+          }
+          return;
+        }
+        if (err) err.hidden = true;
+        iframe.src = url;
+        try {
+          localStorage.setItem(wordwallStorageKey(targetId), url);
+        } catch (_) {
+          /* quota / private mode */
+        }
+        if (typeof dlg.close === "function") dlg.close();
+        else dlg.removeAttribute("open");
+      });
+    });
+  }
 })();
 
