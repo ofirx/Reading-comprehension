@@ -572,11 +572,13 @@ button.wordwall-activity-upload {
   padding: 8px 10px;
   border-radius: 10px;
   border: 1px solid transparent;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .nav a:hover {
-  background: var(--surface-alt);
-  border: 1px solid var(--border);
+  background: rgba(255, 240, 223, 0.95);
+  border-color: rgba(242, 140, 40, 0.45);
+  color: var(--orange-2);
 }
 
 .nav a.is-active {
@@ -990,5 +992,13 @@ footer {
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border: 1px solid var(--border);
+  color: var(--purple);
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.mobile-links a:hover {
+  background: rgba(255, 240, 223, 0.95);
+  border-color: rgba(242, 140, 40, 0.45);
+  color: var(--orange-2);
 }
 
