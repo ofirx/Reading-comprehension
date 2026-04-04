@@ -109,6 +109,32 @@
                 </span>
               </button>
             </div>
+            <div class="small" style="padding: 16px 16px 0; color: rgba(15,23,42,0.7); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
+              Optional Wordwall Activity 2
+            </div>
+            <!-- Same column width as Activity 1 — iframe + upload row -->
+            <div class="wordwall-embed-row">
+              <iframe
+                id="wordwallEmbed2"
+                class="wordwall-embed"
+                title="Wordwall activity 2"
+                src="about:blank"
+                allowfullscreen
+              ></iframe>
+              <button
+                type="button"
+                class="wordwall-activity-upload"
+                data-wordwall-open="2"
+                aria-haspopup="dialog"
+                aria-controls="wordwallDialog2"
+                aria-label="Load Wordwall activity — paste embed HTML"
+              >
+                <span class="wordwall-activity-upload-text" aria-hidden="true">
+                  <span class="wordwall-activity-upload-line">Upload</span>
+                  <span class="wordwall-activity-upload-line">activity</span>
+                </span>
+              </button>
+            </div>
           </div>
           <div class="card">
             <div class="small" style="color: rgba(15,23,42,0.7); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
@@ -118,34 +144,6 @@
             <p style="margin: 0; color: var(--muted)">
               Add a prompt like: “Say hello to a friend” with 2-3 example responses.
             </p>
-            <div style="margin-top: 18px">
-              <div class="small" style="color: rgba(15,23,42,0.7); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
-                Optional Wordwall Activity 2
-              </div>
-              <!-- If you don't need a second activity, remove this iframe + upload row -->
-              <div class="wordwall-embed-row" style="margin-top: 12px">
-                <iframe
-                  id="wordwallEmbed2"
-                  class="wordwall-embed"
-                  title="Wordwall activity 2"
-                  src="about:blank"
-                  allowfullscreen
-                ></iframe>
-                <button
-                  type="button"
-                  class="wordwall-activity-upload"
-                  data-wordwall-open="2"
-                  aria-haspopup="dialog"
-                  aria-controls="wordwallDialog2"
-                  aria-label="Load Wordwall activity — paste embed HTML"
-                >
-                  <span class="wordwall-activity-upload-text" aria-hidden="true">
-                    <span class="wordwall-activity-upload-line">Upload</span>
-                    <span class="wordwall-activity-upload-line">activity</span>
-                  </span>
-                </button>
-              </div>
-            </div>
             <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px">
               <a class="btn btn-forward" href="contact.html">Forward</a>
               <a class="btn btn-back" href="about.html">Back</a>
