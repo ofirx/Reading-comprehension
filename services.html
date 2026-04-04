@@ -86,21 +86,28 @@
             <div class="small" style="padding: 16px 16px 0; color: rgba(15,23,42,0.7); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
               Wordwall Activity
             </div>
-            <!-- Paste your Wordwall embed URL (iframe src) below -->
+            <!-- Load activity: use the orange button to paste Wordwall iframe HTML or embed URL -->
             <div class="wordwall-embed-row">
               <iframe
+                id="wordwallEmbed1"
                 class="wordwall-embed"
                 title="Wordwall activity"
-                src="PASTE_WORDWALL_EMBED_URL_1_HERE"
+                src="about:blank"
                 allowfullscreen
               ></iframe>
-              <label class="wordwall-activity-upload" aria-label="Upload activity file">
+              <button
+                type="button"
+                class="wordwall-activity-upload"
+                data-wordwall-open="1"
+                aria-haspopup="dialog"
+                aria-controls="wordwallDialog1"
+                aria-label="Load Wordwall activity — paste embed HTML"
+              >
                 <span class="wordwall-activity-upload-text" aria-hidden="true">
                   <span class="wordwall-activity-upload-line">Upload</span>
                   <span class="wordwall-activity-upload-line">activity</span>
                 </span>
-                <input type="file" class="wordwall-activity-file sr-only" accept="image/*,.pdf,application/pdf" />
-              </label>
+              </button>
             </div>
           </div>
           <div class="card">
@@ -118,18 +125,25 @@
               <!-- If you don't need a second activity, remove this iframe + upload row -->
               <div class="wordwall-embed-row" style="margin-top: 12px">
                 <iframe
+                  id="wordwallEmbed2"
                   class="wordwall-embed"
                   title="Wordwall activity 2"
-                  src="PASTE_WORDWALL_EMBED_URL_2_HERE"
+                  src="about:blank"
                   allowfullscreen
                 ></iframe>
-                <label class="wordwall-activity-upload" aria-label="Upload activity file">
+                <button
+                  type="button"
+                  class="wordwall-activity-upload"
+                  data-wordwall-open="2"
+                  aria-haspopup="dialog"
+                  aria-controls="wordwallDialog2"
+                  aria-label="Load Wordwall activity — paste embed HTML"
+                >
                   <span class="wordwall-activity-upload-text" aria-hidden="true">
                     <span class="wordwall-activity-upload-line">Upload</span>
                     <span class="wordwall-activity-upload-line">activity</span>
                   </span>
-                  <input type="file" class="wordwall-activity-file sr-only" accept="image/*,.pdf,application/pdf" />
-                </label>
+                </button>
               </div>
             </div>
             <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px">
@@ -206,6 +220,57 @@
           </div>
         </div>
       </section>
+
+      <!-- Wordwall embed paste dialogs (Practicing 3) -->
+      <dialog class="wordwall-embed-dialog" id="wordwallDialog1" aria-labelledby="wordwallDialog1Title">
+        <div class="wordwall-embed-dialog-inner">
+          <h2 id="wordwallDialog1Title" class="wordwall-embed-dialog-title">Load Wordwall activity</h2>
+          <p class="wordwall-embed-dialog-help">
+            Paste the <strong>full iframe HTML</strong> from Wordwall (<em>Embed on your own website</em> → copy the code),
+            or paste only the <strong>https://wordwall.net/embed/…</strong> URL.
+          </p>
+          <label class="wordwall-embed-dialog-label" for="wordwallPaste1">Embed HTML or URL</label>
+          <textarea
+            id="wordwallPaste1"
+            class="wordwall-embed-dialog-textarea"
+            rows="5"
+            spellcheck="false"
+            placeholder='&lt;iframe style="max-width:100%" src="https://wordwall.net/embed/..." ...&gt;&lt;/iframe&gt;'
+          ></textarea>
+          <p class="wordwall-embed-dialog-error" id="wordwallError1" hidden></p>
+          <div class="wordwall-embed-dialog-actions">
+            <button type="button" class="btn wordwall-embed-dialog-cancel" data-wordwall-close="1">Cancel</button>
+            <button type="button" class="btn btn-primary" data-wordwall-load="1" data-wordwall-target="wordwallEmbed1">
+              Load activity
+            </button>
+          </div>
+        </div>
+      </dialog>
+
+      <dialog class="wordwall-embed-dialog" id="wordwallDialog2" aria-labelledby="wordwallDialog2Title">
+        <div class="wordwall-embed-dialog-inner">
+          <h2 id="wordwallDialog2Title" class="wordwall-embed-dialog-title">Load Wordwall activity</h2>
+          <p class="wordwall-embed-dialog-help">
+            Paste the <strong>full iframe HTML</strong> from Wordwall (<em>Embed on your own website</em> → copy the code),
+            or paste only the <strong>https://wordwall.net/embed/…</strong> URL.
+          </p>
+          <label class="wordwall-embed-dialog-label" for="wordwallPaste2">Embed HTML or URL</label>
+          <textarea
+            id="wordwallPaste2"
+            class="wordwall-embed-dialog-textarea"
+            rows="5"
+            spellcheck="false"
+            placeholder='&lt;iframe style="max-width:100%" src="https://wordwall.net/embed/..." ...&gt;&lt;/iframe&gt;'
+          ></textarea>
+          <p class="wordwall-embed-dialog-error" id="wordwallError2" hidden></p>
+          <div class="wordwall-embed-dialog-actions">
+            <button type="button" class="btn wordwall-embed-dialog-cancel" data-wordwall-close="2">Cancel</button>
+            <button type="button" class="btn btn-primary" data-wordwall-load="2" data-wordwall-target="wordwallEmbed2">
+              Load activity
+            </button>
+          </div>
+        </div>
+      </dialog>
 
       <!-- Section 4: Prev / Next cursor -->
       <section class="page-block" aria-label="Practicing navigation section">
