@@ -581,10 +581,11 @@ button.wordwall-activity-upload {
   color: var(--orange-2);
 }
 
-.nav a.is-active {
-  background: var(--surface-alt);
-  color: var(--purple);
-  border: 1px solid var(--border);
+.nav a.is-active,
+.mobile-links a.is-active {
+  background: rgba(255, 240, 223, 0.95);
+  border-color: rgba(242, 140, 40, 0.45);
+  color: var(--orange-2);
 }
 
 .topbar-cta {
@@ -999,6 +1000,13 @@ footer {
 .mobile-links a:hover {
   background: rgba(255, 240, 223, 0.95);
   border-color: rgba(242, 140, 40, 0.45);
+  color: var(--orange-2);
+}
+
+.nav a.is-active:hover,
+.mobile-links a.is-active:hover {
+  background: rgba(255, 240, 223, 0.95);
+  border-color: rgba(242, 140, 40, 0.55);
   color: var(--orange-2);
 }
 
