@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Testing - EFL</title>
-    <link rel="stylesheet" href="styles/main.css" />
-    <link rel="stylesheet" href="styles/testing.css" />
+    <link rel="stylesheet" href="styles/main.css?v=20260404" />
+    <link rel="stylesheet" href="styles/testing.css?v=20260404h" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   </head>
   <body data-page="testing">
@@ -38,7 +38,6 @@
           >
             Menu
           </button>
-          <a class="btn btn-primary" href="contact.html">Join Us Now</a>
         </div>
       </div>
 
@@ -116,26 +115,34 @@
         </div>
       </section>
 
-      <!-- Self-graded quiz: 3 parts, sidebar, 10 MC + 5 file uploads -->
-      <section class="page-block" aria-label="Self-graded quiz">
-        <div class="quiz-shell" id="testingQuiz">
+      <!-- Self-graded quiz: 3 parts, sidebar (quiz-step--p1 / p2 / p3 accent colors), 10 MC + 5 file uploads -->
+      <section class="page-block quiz-form-section" aria-label="Self-graded quiz">
+        <div class="quiz-shell-wrap">
+          <div class="quiz-shell" id="testingQuiz">
           <aside class="quiz-sidebar" aria-label="Quiz parts">
-            <p class="quiz-sidebar-title">Progress</p>
+            <div class="quiz-sidebar-brand">
+              <div class="quiz-brand-mark" aria-hidden="true">EFL</div>
+              <div class="quiz-brand-text">
+                <span class="quiz-brand-name">Reading Comprehension</span>
+                <span class="quiz-brand-tag">Self-check form</span>
+              </div>
+            </div>
+            <p class="quiz-sidebar-title">Your progress</p>
             <ol class="quiz-steps">
               <li>
-                <button type="button" class="quiz-step-btn is-active" data-step="1">
+                <button type="button" class="quiz-step-btn quiz-step--p1 is-active" data-step="1">
                   <span class="quiz-step-num">1</span>
                   <span>Part 1 — Vocabulary &amp; reading</span>
                 </button>
               </li>
               <li>
-                <button type="button" class="quiz-step-btn" data-step="2">
+                <button type="button" class="quiz-step-btn quiz-step--p2" data-step="2">
                   <span class="quiz-step-num">2</span>
                   <span>Part 2 — Grammar &amp; listening</span>
                 </button>
               </li>
               <li>
-                <button type="button" class="quiz-step-btn" data-step="3">
+                <button type="button" class="quiz-step-btn quiz-step--p3" data-step="3">
                   <span class="quiz-step-num">3</span>
                   <span>Part 3 — Production</span>
                 </button>
@@ -146,6 +153,12 @@
           <div class="quiz-main">
             <!-- Part 1: Q1–Q4 -->
             <div class="quiz-pane" data-pane="1">
+              <div class="quiz-pane-layout">
+                <div class="quiz-pane-body">
+              <header class="quiz-pane-header">
+                <h2 class="quiz-pane-heading">Part 1 — Vocabulary &amp; reading</h2>
+                <p class="quiz-pane-lead">Answer every question in this step. Uploads are optional unless your teacher asks for them.</p>
+              </header>
               <p class="quiz-pane-he" lang="he" dir="rtl">
                 חלק 1: ענו על ארבע שאלות. בשאלות המסומנות ניתן להעלות תמונה או קובץ שמע.
               </p>
@@ -200,10 +213,25 @@
                   <label><input type="radio" name="q4" value="d" /> Receiv</label>
                 </div>
               </div>
+                </div>
+                <aside class="quiz-pane-rail" aria-label="Progress for this part">
+                  <div class="quiz-pane-sticky-bar">
+                    <p class="quiz-pane-rail-title">Progress</p>
+                    <p class="quiz-pane-counter" id="quizCounterPart1" aria-live="polite" aria-atomic="true">0 / 4</p>
+                    <p class="quiz-pane-counter-hint" id="quizCounterHintPart1" hidden aria-live="polite"></p>
+                  </div>
+                </aside>
+              </div>
             </div>
 
             <!-- Part 2: Q5–Q7 -->
             <div class="quiz-pane" data-pane="2" hidden>
+              <div class="quiz-pane-layout">
+                <div class="quiz-pane-body">
+              <header class="quiz-pane-header">
+                <h2 class="quiz-pane-heading">Part 2 — Grammar &amp; listening</h2>
+                <p class="quiz-pane-lead">Choose the best answer for each item. Two questions include a media upload.</p>
+              </header>
               <p class="quiz-pane-he" lang="he" dir="rtl">
                 חלק 2: שלוש שאלות. בשתיים מהן יש אפשרות להעלות קובץ תמונה או מוזיקה.
               </p>
@@ -248,10 +276,25 @@
                   <label><input type="radio" name="q7" value="d" /> Run</label>
                 </div>
               </div>
+                </div>
+                <aside class="quiz-pane-rail" aria-label="Progress for this part">
+                  <div class="quiz-pane-sticky-bar">
+                    <p class="quiz-pane-rail-title">Progress</p>
+                    <p class="quiz-pane-counter" id="quizCounterPart2" aria-live="polite" aria-atomic="true">0 / 3</p>
+                    <p class="quiz-pane-counter-hint" id="quizCounterHintPart2" hidden aria-live="polite"></p>
+                  </div>
+                </aside>
+              </div>
             </div>
 
             <!-- Part 3: Q8–Q10 -->
             <div class="quiz-pane" data-pane="3" hidden>
+              <div class="quiz-pane-layout">
+                <div class="quiz-pane-body">
+              <header class="quiz-pane-header">
+                <h2 class="quiz-pane-heading">Part 3 — Production</h2>
+                <p class="quiz-pane-lead">Finish the last questions, then submit to see your score and charts.</p>
+              </header>
               <p class="quiz-pane-he" lang="he" dir="rtl">
                 חלק 3: שלוש שאלות אחרונות. בשאלה אחת ניתן להעלות קובץ מדיה.
               </p>
@@ -290,6 +333,15 @@
                   <label><input type="radio" name="q10" value="d" /> Never in academic text</label>
                 </div>
               </div>
+                </div>
+                <aside class="quiz-pane-rail" aria-label="Progress for this part">
+                  <div class="quiz-pane-sticky-bar">
+                    <p class="quiz-pane-rail-title">Progress</p>
+                    <p class="quiz-pane-counter" id="quizCounterPart3" aria-live="polite" aria-atomic="true">0 / 3</p>
+                    <p class="quiz-pane-counter-hint" id="quizCounterHintPart3" hidden aria-live="polite"></p>
+                  </div>
+                </aside>
+              </div>
             </div>
 
             <div class="quiz-footer-nav" id="quizFooterNav">
@@ -297,6 +349,7 @@
               <button type="button" class="quiz-next" id="quizBtnNext">Next step</button>
               <button type="button" class="quiz-submit" id="quizBtnSubmit" hidden>Finish &amp; see results</button>
             </div>
+          </div>
           </div>
         </div>
 
@@ -365,6 +418,6 @@
     </footer>
 
     <script defer src="scripts/main.js"></script>
-    <script defer src="scripts/testing-quiz.js"></script>
+    <script defer src="scripts/testing-quiz.js?v=20260404h"></script>
   </body>
 </html>
