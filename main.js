@@ -157,8 +157,12 @@
   });
 
   // Practicing 3: paste Wordwall iframe HTML or embed URL → load adjacent iframe.
+  // Persists full paste + URL in localStorage until you load a different embed (Load activity).
   if (page === "practicing") {
-    const wordwallStorageKey = (iframeId) => "reading-comprehension-wordwall-" + iframeId;
+    const wordwallUrlKey = (iframeId) => "reading-comprehension-wordwall-url-" + iframeId;
+    const wordwallPasteKey = (iframeId) => "reading-comprehension-wordwall-paste-" + iframeId;
+    /** @deprecated legacy single-key URL storage */
+    const wordwallLegacyKey = (iframeId) => "reading-comprehension-wordwall-" + iframeId;
 
     function wordwallUrlFromPaste(text) {
       const t = text.trim();
@@ -189,19 +193,29 @@
 
     function restoreWordwallEmbedsFromStorage() {
       ["wordwallEmbed1", "wordwallEmbed2"].forEach((iframeId) => {
-        let saved = "";
+        let pasteRaw = "";
+        let urlOnly = "";
         try {
-          saved = localStorage.getItem(wordwallStorageKey(iframeId)) || "";
+          pasteRaw = localStorage.getItem(wordwallPasteKey(iframeId)) || "";
+          urlOnly = localStorage.getItem(wordwallUrlKey(iframeId)) || "";
+          if (!pasteRaw && !urlOnly) {
+            const legacy = localStorage.getItem(wordwallLegacyKey(iframeId)) || "";
+            if (legacy) {
+              urlOnly = legacy;
+              pasteRaw = legacy;
+            }
+          }
         } catch (_) {
           return;
         }
-        if (!saved || !isWordwallEmbedUrl(saved)) return;
+        const resolvedUrl = wordwallUrlFromPaste(pasteRaw) || urlOnly;
+        if (!resolvedUrl || !isWordwallEmbedUrl(resolvedUrl)) return;
         const iframe = document.getElementById(iframeId);
         if (!iframe) return;
-        iframe.src = saved;
+        iframe.src = resolvedUrl;
         const pasteNum = iframeId.replace("wordwallEmbed", "");
         const ta = document.getElementById("wordwallPaste" + pasteNum);
-        if (ta) ta.value = saved;
+        if (ta) ta.value = pasteRaw || urlOnly || resolvedUrl;
       });
     }
     restoreWordwallEmbedsFromStorage();
@@ -265,7 +279,9 @@
         if (err) err.hidden = true;
         iframe.src = url;
         try {
-          localStorage.setItem(wordwallStorageKey(targetId), url);
+          localStorage.setItem(wordwallUrlKey(targetId), url);
+          localStorage.setItem(wordwallPasteKey(targetId), ta.value);
+          localStorage.removeItem(wordwallLegacyKey(targetId));
         } catch (_) {
           /* quota / private mode */
         }
