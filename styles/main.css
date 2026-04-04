@@ -4,7 +4,7 @@
 }
 
 :root {
-  --bg: #f6f7fb;
+  --bg: #fff8f0;
   --surface: #ffffff;
   --text: #0f172a;
   --muted: #5b677a;
@@ -17,18 +17,37 @@
   --container: 1120px;
 }
 
-html,
-body {
+html {
   height: 100%;
+  background: #0a0a0a;
 }
 
 body {
+  min-height: 100%;
   margin: 0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
     Arial, "Apple Color Emoji", "Segoe UI Emoji";
   color: var(--text);
-  background: var(--bg);
   line-height: 1.5;
+  /* Site-wide: black → orange → warm white */
+  background: linear-gradient(
+    155deg,
+    #0a0a0a 0%,
+    #14100c 14%,
+    #2a1810 28%,
+    #6b3408 44%,
+    #f7941d 58%,
+    #fde5c8 76%,
+    #fffefb 92%,
+    #ffffff 100%
+  );
+  background-attachment: fixed;
+}
+
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+  }
 }
 
 img {
@@ -480,9 +499,9 @@ button.wordwall-activity-upload {
   position: sticky;
   top: 0;
   z-index: 50;
-  backdrop-filter: blur(10px);
-  background: rgba(246, 247, 251, 0.72);
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(12px);
+  background: rgba(255, 252, 248, 0.82);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.1);
 }
 
 .topbar-inner {

@@ -64,8 +64,15 @@
 .quiz-form-section {
   padding: 32px 0 40px;
   margin-top: 8px;
-  background: linear-gradient(165deg, #1e40af 0%, #2563eb 18%, #60a5fa 42%, #bfdbfe 65%, #eff6ff 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: linear-gradient(
+    165deg,
+    #0f0d0b 0%,
+    #2a1a0e 22%,
+    #c45a08 48%,
+    #ffd7a8 72%,
+    rgba(255, 255, 255, 0.97) 100%
+  );
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 .quiz-shell-wrap {
   max-width: 1020px;
