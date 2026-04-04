@@ -191,6 +191,12 @@
       }
     }
 
+    /** Maps e.g. wordwallEmbed2 → wordwallPaste2 (explicit so Activity 2 always restores). */
+    function wordwallPasteFieldId(iframeId) {
+      const m = /^wordwallEmbed(\d+)$/.exec(iframeId);
+      return m ? "wordwallPaste" + m[1] : null;
+    }
+
     function restoreWordwallEmbedsFromStorage() {
       ["wordwallEmbed1", "wordwallEmbed2"].forEach((iframeId) => {
         let pasteRaw = "";
@@ -213,8 +219,8 @@
         const iframe = document.getElementById(iframeId);
         if (!iframe) return;
         iframe.src = resolvedUrl;
-        const pasteNum = iframeId.replace("wordwallEmbed", "");
-        const ta = document.getElementById("wordwallPaste" + pasteNum);
+        const pasteId = wordwallPasteFieldId(iframeId);
+        const ta = pasteId ? document.getElementById(pasteId) : null;
         if (ta) ta.value = pasteRaw || urlOnly || resolvedUrl;
       });
     }

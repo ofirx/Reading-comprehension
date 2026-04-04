@@ -25,11 +25,47 @@
   var embedUrl = document.getElementById("testingEmbedUrl");
   var embedFrame = document.getElementById("testingEmbedFrame");
 
+  var STORAGE_TESTING_EMBED_URL = "reading-comprehension-testing-wordwall-url";
+  var STORAGE_TESTING_EMBED_PASTE = "reading-comprehension-testing-wordwall-paste";
+
+  function isWordwallTestingUrl(u) {
+    try {
+      var host = new URL(u).hostname;
+      return host === "wordwall.net" || host.indexOf(".wordwall.net") !== -1;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function restoreTestingEmbedFromStorage() {
+    if (!embedUrl || !embedFrame) return;
+    var paste = "";
+    var urlOnly = "";
+    try {
+      paste = localStorage.getItem(STORAGE_TESTING_EMBED_PASTE) || "";
+      urlOnly = localStorage.getItem(STORAGE_TESTING_EMBED_URL) || "";
+    } catch (e) {
+      return;
+    }
+    var u = (paste || urlOnly).trim();
+    if (!u || !isWordwallTestingUrl(u)) return;
+    embedUrl.value = paste || urlOnly;
+    embedFrame.src = u;
+  }
+
   if (embedBtn && embedUrl && embedFrame) {
+    restoreTestingEmbedFromStorage();
     embedBtn.addEventListener("click", function () {
       var u = (embedUrl.value || "").trim();
       if (!u) return;
+      if (!isWordwallTestingUrl(u)) return;
       embedFrame.src = u;
+      try {
+        localStorage.setItem(STORAGE_TESTING_EMBED_URL, u);
+        localStorage.setItem(STORAGE_TESTING_EMBED_PASTE, embedUrl.value);
+      } catch (e) {
+        /* quota / private mode */
+      }
     });
   }
 
