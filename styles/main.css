@@ -414,6 +414,11 @@ button.wordwall-activity-upload {
   color: var(--text);
   box-sizing: border-box;
 }
+.gallery-photo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
 .gallery-item img {
   width: 100%;
   height: auto;
@@ -423,6 +428,34 @@ button.wordwall-activity-upload {
   aspect-ratio: 4 / 3;
   border: 1px solid var(--border);
   background: rgba(75, 46, 131, 0.04);
+}
+.gallery-item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+.gallery-upload-btn {
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  width: fit-content;
+}
+.gallery-upload-clear {
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+.gallery-upload-clear:hover {
+  border-color: rgba(242, 140, 40, 0.45);
+  background: rgba(255, 240, 223, 0.6);
 }
 @media (max-width: 900px) {
   .gallery_wrapper {
