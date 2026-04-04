@@ -4,25 +4,33 @@
 }
 
 :root {
-  --bg: #fff8f0;
+  --bg: #f5f3ef;
+  --bg-soft: #efe8fa;
   --surface: #ffffff;
-  --text: #0f172a;
-  --muted: #5b677a;
-  --primary: #f7941d;
-  --primary-2: #f26727;
-  --border: rgba(15, 23, 42, 0.12);
-  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-  --radius: 16px;
+  --surface-alt: #f3eeff;
+  --border: #d8cce8;
+  --text: #1f1f1f;
+  --muted: #5f5a67;
+  --purple: #4b2e83;
+  --purple-2: #6d4db3;
+  --orange: #f28c28;
+  --orange-2: #d96d00;
+  /* Legacy aliases (components still reference these) */
+  --primary: var(--orange);
+  --primary-2: var(--orange-2);
+  --success: #2e8b57;
+  --danger: #c94a4a;
+  --shadow: 0 10px 30px rgba(75, 46, 131, 0.08);
+  --radius: 18px;
   --radius-sm: 12px;
   --container: 1120px;
-  /* Frosted panels so the body gradient reads through on every page */
-  --glass-bg: rgba(255, 255, 255, 0.42);
-  --glass-bg-strong: rgba(255, 255, 255, 0.55);
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-bg-strong: rgba(255, 255, 255, 0.92);
 }
 
 html {
   height: 100%;
-  background: #0a0a0a;
+  background: var(--bg);
 }
 
 body {
@@ -32,18 +40,7 @@ body {
     Arial, "Apple Color Emoji", "Segoe UI Emoji";
   color: var(--text);
   line-height: 1.5;
-  /* Single continuous page background (sections stay transparent so this reads as one surface) */
-  background: linear-gradient(
-    155deg,
-    #0a0a0a 0%,
-    #14100c 14%,
-    #2a1810 28%,
-    #6b3408 44%,
-    #f7941d 58%,
-    #fde5c8 76%,
-    #fffefb 92%,
-    #ffffff 100%
-  );
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
   background-attachment: fixed;
 }
 
@@ -87,6 +84,14 @@ a {
   margin: 0 0 18px;
   font-size: clamp(20px, 3vw, 34px);
   letter-spacing: -0.02em;
+  color: var(--purple);
+}
+
+.hero h1,
+main h1,
+main h2,
+main h3 {
+  color: var(--purple);
 }
 
 .section-subtitle {
@@ -113,8 +118,8 @@ a {
   background: var(--glass-bg-strong);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
-  border: 1px solid rgba(15, 23, 42, 0.10);
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
   overflow: hidden;
 }
 
@@ -122,8 +127,8 @@ a {
   height: 240px;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, rgba(247, 148, 29, 0.18), rgba(242, 103, 39, 0.12));
-  color: rgba(15, 23, 42, 0.55);
+  background: linear-gradient(135deg, rgba(242, 140, 40, 0.2), rgba(75, 46, 131, 0.08));
+  color: var(--muted);
   font-weight: 800;
 }
 
@@ -143,7 +148,7 @@ a {
   align-items: center;
   gap: 12px;
   padding: 14px 16px 16px;
-  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  border-top: 1px solid var(--border);
   background: var(--glass-bg);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
@@ -194,22 +199,22 @@ a {
   min-height: 118px;
   padding: 14px 16px;
   border-radius: 999px;
-  border: 2px solid rgba(0, 0, 0, 0.45);
-  background: linear-gradient(135deg, #f7941d, #f26727);
-  color: #0a0a0a;
+  border: 2px solid rgba(75, 46, 131, 0.35);
+  background: linear-gradient(135deg, var(--orange), var(--orange-2));
+  color: #fff;
   font-weight: 850;
   font-size: 15px;
   line-height: 1.12;
   letter-spacing: 0.03em;
   cursor: pointer;
   text-align: center;
-  box-shadow: 0 8px 20px rgba(242, 103, 39, 0.28);
+  box-shadow: 0 8px 20px rgba(242, 140, 40, 0.28);
   transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
   align-self: center;
 }
 .wordwall-activity-upload:hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 26px rgba(242, 103, 39, 0.35);
+  box-shadow: 0 12px 26px rgba(242, 140, 40, 0.35);
   filter: brightness(1.03);
 }
 .wordwall-activity-upload:active {
@@ -229,13 +234,13 @@ button.wordwall-activity-upload {
   max-width: min(520px, calc(100vw - 2rem));
   width: 100%;
   padding: 0;
-  border: 1px solid rgba(15, 23, 42, 0.14);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+  box-shadow: 0 24px 60px rgba(75, 46, 131, 0.15);
   background: #fff;
 }
 .wordwall-embed-dialog::backdrop {
-  background: rgba(15, 23, 42, 0.45);
+  background: rgba(75, 46, 131, 0.35);
 }
 .wordwall-embed-dialog-inner {
   padding: 22px 22px 18px;
@@ -257,7 +262,7 @@ button.wordwall-activity-upload {
   font-weight: 750;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: rgba(15, 23, 42, 0.55);
+  color: var(--muted);
   margin-bottom: 6px;
 }
 .wordwall-embed-dialog-textarea {
@@ -265,7 +270,7 @@ button.wordwall-activity-upload {
   box-sizing: border-box;
   padding: 10px 12px;
   border-radius: 12px;
-  border: 1px solid rgba(15, 23, 42, 0.14);
+  border: 1px solid var(--border);
   font-family: ui-monospace, Consolas, monospace;
   font-size: 12px;
   line-height: 1.45;
@@ -274,14 +279,14 @@ button.wordwall-activity-upload {
 }
 .wordwall-embed-dialog-textarea:focus {
   outline: none;
-  border-color: rgba(247, 148, 29, 0.65);
-  box-shadow: 0 0 0 3px rgba(247, 148, 29, 0.18);
+  border-color: rgba(75, 46, 131, 0.45);
+  box-shadow: 0 0 0 3px rgba(75, 46, 131, 0.15);
 }
 .wordwall-embed-dialog-error {
   margin: 8px 0 0;
   font-size: 13px;
   font-weight: 650;
-  color: #b91c1c;
+  color: var(--danger);
 }
 .wordwall-embed-dialog-actions {
   display: flex;
@@ -291,8 +296,8 @@ button.wordwall-activity-upload {
   margin-top: 16px;
 }
 .wordwall-embed-dialog-cancel {
-  border: 1px solid rgba(15, 23, 42, 0.14);
-  background: rgba(248, 250, 252, 0.95);
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
 }
 @media (max-width: 640px) {
   .wordwall-embed-row {
@@ -323,7 +328,7 @@ button.wordwall-activity-upload {
 
 .divider-line {
   height: 2px;
-  background: linear-gradient(90deg, rgba(247, 148, 29, 0.65), rgba(15, 23, 42, 0.10));
+  background: linear-gradient(90deg, rgba(75, 46, 131, 0.45), rgba(216, 204, 232, 0.85));
   border-radius: 999px;
   margin: 10px 0 18px;
 }
@@ -358,7 +363,7 @@ button.wordwall-activity-upload {
   padding: 16px 16px 4px;
 }
 .gallery-kicker {
-  color: rgba(15, 23, 42, 0.65) !important;
+  color: var(--muted) !important;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -380,7 +385,7 @@ button.wordwall-activity-upload {
 .gallery-lede code {
   font-size: 0.9em;
   font-weight: 600;
-  background: rgba(15, 23, 42, 0.06);
+  background: rgba(75, 46, 131, 0.06);
   padding: 2px 6px;
   border-radius: 6px;
 }
@@ -400,13 +405,13 @@ button.wordwall-activity-upload {
   margin: 0 0 8px;
   padding: 10px 12px;
   min-height: 2.75em;
-  border: 1px solid rgba(247, 148, 29, 0.4);
+  border: 1px solid rgba(242, 140, 40, 0.35);
   border-radius: 10px;
-  background: rgba(247, 148, 29, 0.08);
+  background: rgba(255, 240, 223, 0.85);
   font-size: 13px;
   font-weight: 600;
   line-height: 1.45;
-  color: rgba(15, 23, 42, 0.82);
+  color: var(--text);
   box-sizing: border-box;
 }
 .gallery-item img {
@@ -416,8 +421,8 @@ button.wordwall-activity-upload {
   border-radius: 12px;
   object-fit: cover;
   aspect-ratio: 4 / 3;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  background: rgba(15, 23, 42, 0.04);
+  border: 1px solid var(--border);
+  background: rgba(75, 46, 131, 0.04);
 }
 @media (max-width: 900px) {
   .gallery_wrapper {
@@ -455,9 +460,9 @@ button.wordwall-activity-upload {
   margin-top: 12px;
   padding: 12px;
   min-height: 100px;
-  border: 1px dashed rgba(247, 148, 29, 0.45);
+  border: 1px dashed rgba(242, 140, 40, 0.4);
   border-radius: 12px;
-  background: rgba(247, 148, 29, 0.06);
+  background: rgba(255, 240, 223, 0.5);
 }
 .divider-upload-placeholder {
   margin: 0;
@@ -470,7 +475,7 @@ button.wordwall-activity-upload {
   height: auto;
   display: block;
   border-radius: 10px;
-  border: 1px solid rgba(15, 23, 42, 0.1);
+  border: 1px solid var(--border);
 }
 .divider-upload-clear {
   margin-top: 8px;
@@ -482,7 +487,7 @@ button.wordwall-activity-upload {
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(15, 23, 42, 0.55);
+  color: var(--muted);
 }
 
 .big-callout {
@@ -500,11 +505,11 @@ button.wordwall-activity-upload {
   flex-wrap: wrap;
   padding: 16px 16px;
   border-radius: calc(var(--radius) + 6px);
-  border: 1px solid rgba(15, 23, 42, 0.10);
+  border: 1px solid var(--border);
   background: var(--glass-bg-strong);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
-  box-shadow: 0 14px 38px rgba(15, 23, 42, 0.06);
+  box-shadow: var(--shadow);
 }
 
 .btn.is-disabled {
@@ -521,7 +526,7 @@ button.wordwall-activity-upload {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   background: rgba(255, 252, 248, 0.65);
-  border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+  border-bottom: 1px solid var(--border);
 }
 
 .topbar-inner {
@@ -544,13 +549,13 @@ button.wordwall-activity-upload {
   border-radius: 14px;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, rgba(247, 148, 29, 0.18), rgba(242, 103, 39, 0.12));
-  border: 1px solid rgba(247, 148, 29, 0.25);
+  background: linear-gradient(135deg, rgba(242, 140, 40, 0.2), rgba(75, 46, 131, 0.08));
+  border: 1px solid rgba(75, 46, 131, 0.25);
 }
 
 .brand-mark span {
   font-size: 18px;
-  color: var(--primary-2);
+  color: var(--purple);
   font-weight: 800;
 }
 
@@ -561,21 +566,23 @@ button.wordwall-activity-upload {
 }
 
 .nav a {
-  color: rgba(15, 23, 42, 0.9);
+  color: var(--purple);
   font-weight: 600;
   font-size: 14px;
   padding: 8px 10px;
   border-radius: 10px;
+  border: 1px solid transparent;
 }
 
 .nav a:hover {
-  background: rgba(15, 23, 42, 0.06);
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
 }
 
 .nav a.is-active {
-  background: rgba(247, 148, 29, 0.14);
-  color: var(--text);
-  border: 1px solid rgba(247, 148, 29, 0.2);
+  background: var(--surface-alt);
+  color: var(--purple);
+  border: 1px solid var(--border);
 }
 
 .topbar-cta {
@@ -591,7 +598,7 @@ button.wordwall-activity-upload {
   gap: 10px;
   padding: 11px 16px;
   border-radius: 999px;
-  border: 1px solid rgba(15, 23, 42, 0.12);
+  border: 1px solid var(--border);
   font-weight: 700;
   font-size: 14px;
   cursor: pointer;
@@ -606,35 +613,35 @@ button.wordwall-activity-upload {
 }
 
 .btn-primary {
-  border: 1px solid rgba(247, 148, 29, 0.45);
-  background: linear-gradient(135deg, var(--primary), var(--primary-2));
-  color: #111827;
+  border: 1px solid rgba(217, 109, 0, 0.45);
+  background: var(--orange);
+  color: #fff;
 }
 
 .btn-primary:hover {
-  box-shadow: 0 14px 34px rgba(242, 103, 39, 0.22);
+  box-shadow: 0 14px 34px rgba(242, 140, 40, 0.35);
 }
 
 /* Step navigation: Back = red, Forward = green (all pages use .btn-back / .btn-forward) */
 .btn-back {
-  background: #c62828;
+  background: var(--danger);
   color: #fff;
   border-color: rgba(0, 0, 0, 0.14);
 }
 .btn-back:hover {
-  background: #b71c1c;
+  background: #b03d3d;
   color: #fff;
-  box-shadow: 0 12px 28px rgba(198, 40, 40, 0.35);
+  box-shadow: 0 12px 28px rgba(201, 74, 74, 0.35);
 }
 .btn-forward {
-  background: #2e7d32;
+  background: var(--success);
   color: #fff;
   border-color: rgba(0, 0, 0, 0.12);
 }
 .btn-forward:hover {
-  background: #1b5e20;
+  background: #267a4d;
   color: #fff;
-  box-shadow: 0 12px 28px rgba(46, 125, 50, 0.35);
+  box-shadow: 0 12px 28px rgba(46, 139, 87, 0.35);
 }
 
 .menu-btn {
@@ -683,7 +690,7 @@ button.wordwall-activity-upload {
   background: var(--glass-bg-strong);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
-  border: 1px solid rgba(15, 23, 42, 0.10);
+  border: 1px solid var(--border);
   box-shadow: var(--shadow);
   padding: 18px;
 }
@@ -692,11 +699,11 @@ button.wordwall-activity-upload {
   border-radius: 18px;
   overflow: hidden;
   height: 210px;
-  background: linear-gradient(135deg, rgba(247, 148, 29, 0.18), rgba(242, 103, 39, 0.12));
-  border: 1px dashed rgba(15, 23, 42, 0.18);
+  background: linear-gradient(135deg, rgba(242, 140, 40, 0.2), rgba(75, 46, 131, 0.08));
+  border: 1px dashed var(--border);
   display: grid;
   place-items: center;
-  color: rgba(15, 23, 42, 0.5);
+  color: var(--muted);
   font-weight: 700;
 }
 
@@ -715,7 +722,7 @@ button.wordwall-activity-upload {
   background: var(--glass-bg-strong);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(15, 23, 42, 0.10);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 18px 16px;
 }
@@ -724,6 +731,7 @@ button.wordwall-activity-upload {
   display: block;
   font-size: 26px;
   letter-spacing: -0.02em;
+  color: var(--purple);
 }
 
 .stat span {
@@ -743,7 +751,7 @@ button.wordwall-activity-upload {
   background: var(--glass-bg-strong);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
-  border: 1px solid rgba(15, 23, 42, 0.10);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 18px 18px 16px;
 }
@@ -752,7 +760,7 @@ button.wordwall-activity-upload {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: rgba(15, 23, 42, 0.7);
+  color: var(--muted);
   font-weight: 750;
   font-size: 13px;
   margin-bottom: 10px;
@@ -762,7 +770,7 @@ button.wordwall-activity-upload {
   width: 10px;
   height: 10px;
   border-radius: 999px;
-  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  background: linear-gradient(135deg, var(--purple), var(--orange));
 }
 
 .service-card h3 {
@@ -795,7 +803,7 @@ button.wordwall-activity-upload {
   align-items: center;
   padding: 14px 14px;
   border-radius: var(--radius);
-  border: 1px solid rgba(15, 23, 42, 0.10);
+  border: 1px solid var(--border);
   background: var(--glass-bg-strong);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
@@ -808,9 +816,9 @@ button.wordwall-activity-upload {
   display: grid;
   place-items: center;
   font-weight: 900;
-  color: rgba(247, 148, 29, 0.9);
-  background: rgba(247, 148, 29, 0.12);
-  border: 1px solid rgba(247, 148, 29, 0.2);
+  color: var(--orange-2);
+  background: rgba(255, 240, 223, 0.85);
+  border: 1px solid rgba(242, 140, 40, 0.35);
   font-size: 18px;
 }
 
@@ -832,8 +840,8 @@ button.wordwall-activity-upload {
 
 .cta {
   border-radius: calc(var(--radius) + 4px);
-  border: 1px solid rgba(247, 148, 29, 0.22);
-  background: rgba(255, 255, 255, 0.32);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.55);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   padding: 22px;
@@ -841,7 +849,7 @@ button.wordwall-activity-upload {
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  box-shadow: 0 16px 44px rgba(242, 103, 39, 0.10);
+  box-shadow: var(--shadow);
 }
 
 .cta h3 {
@@ -870,7 +878,7 @@ button.wordwall-activity-upload {
 label {
   font-weight: 700;
   font-size: 13px;
-  color: rgba(15, 23, 42, 0.88);
+  color: var(--text);
 }
 
 input,
@@ -878,7 +886,7 @@ textarea {
   width: 100%;
   padding: 12px 12px;
   border-radius: 12px;
-  border: 1px solid rgba(15, 23, 42, 0.14);
+  border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.55);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
@@ -893,14 +901,14 @@ textarea {
 
 input:focus,
 textarea:focus {
-  border-color: rgba(247, 148, 29, 0.6);
-  box-shadow: 0 0 0 4px rgba(247, 148, 29, 0.16);
+  border-color: rgba(75, 46, 131, 0.45);
+  box-shadow: 0 0 0 4px rgba(75, 46, 131, 0.12);
 }
 
 /* Footer */
 footer {
   padding: 34px 0 44px;
-  border-top: 1px solid rgba(15, 23, 42, 0.12);
+  border-top: 1px solid var(--border);
   background: transparent;
   backdrop-filter: none;
 }
@@ -919,7 +927,7 @@ footer {
 }
 
 .footer-links a {
-  color: rgba(15, 23, 42, 0.75);
+  color: var(--purple);
   font-weight: 650;
   font-size: 14px;
 }
@@ -981,6 +989,6 @@ footer {
   background: var(--glass-bg);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(15, 23, 42, 0.10);
+  border: 1px solid var(--border);
 }
 
