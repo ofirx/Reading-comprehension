@@ -41,6 +41,50 @@
   var current = 0;
   var totalSteps = panes.length;
 
+  function countAnsweredInPart(keys) {
+    var n = 0;
+    keys.forEach(function (key) {
+      var el = document.querySelector('input[name="' + key + '"]:checked');
+      if (el) n++;
+    });
+    return n;
+  }
+
+  function updatePartCounters() {
+    PARTS.forEach(function (part) {
+      var el = document.getElementById("quizCounterPart" + part.id);
+      if (!el) return;
+      var answered = countAnsweredInPart(part.keys);
+      var total = part.keys.length;
+      var remaining = total - answered;
+      el.textContent = answered + " / " + total;
+      el.setAttribute("aria-label", answered + " of " + total + " questions answered in this part");
+
+      var hintEl = document.getElementById("quizCounterHintPart" + part.id);
+      if (hintEl) {
+        if (remaining > 0) {
+          hintEl.hidden = false;
+          hintEl.classList.remove("is-complete");
+          if (remaining === 1) {
+            hintEl.textContent =
+              "You still have 1 question unanswered in this section.";
+          } else {
+            hintEl.textContent =
+              "You still have " + remaining + " questions unanswered in this section.";
+          }
+        } else if (total > 0) {
+          hintEl.hidden = false;
+          hintEl.classList.add("is-complete");
+          hintEl.textContent = "Great job! You've answered every question in this section.";
+        } else {
+          hintEl.hidden = true;
+          hintEl.classList.remove("is-complete");
+          hintEl.textContent = "";
+        }
+      }
+    });
+  }
+
   function showStep(i) {
     current = Math.max(0, Math.min(i, totalSteps - 1));
     panes.forEach(function (p, idx) {
@@ -49,6 +93,7 @@
     stepBtns.forEach(function (b, idx) {
       b.classList.toggle("is-active", idx === current);
       b.classList.toggle("is-done", idx < current);
+      b.classList.toggle("is-upcoming", idx > current);
     });
     if (btnPrev) btnPrev.disabled = current === 0;
     if (btnNext) {
@@ -175,5 +220,15 @@
     });
   }
 
+  var quizRoot = document.getElementById("testingQuiz");
+  if (quizRoot) {
+    quizRoot.addEventListener("change", function (e) {
+      var t = e.target;
+      if (t && t.matches && t.matches('input[type="radio"]')) {
+        updatePartCounters();
+      }
+    });
+  }
+  updatePartCounters();
   showStep(0);
 })();
