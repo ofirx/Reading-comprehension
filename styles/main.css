@@ -29,7 +29,7 @@ body {
     Arial, "Apple Color Emoji", "Segoe UI Emoji";
   color: var(--text);
   line-height: 1.5;
-  /* Site-wide: black → orange → warm white */
+  /* Single continuous page background (sections stay transparent so this reads as one surface) */
   background: linear-gradient(
     155deg,
     #0a0a0a 0%,
@@ -42,6 +42,10 @@ body {
     #ffffff 100%
   );
   background-attachment: fixed;
+}
+
+main {
+  background: transparent;
 }
 
 @media (max-width: 768px) {
@@ -621,40 +625,17 @@ button.wordwall-activity-upload {
   display: none;
 }
 
-/* Hero */
+/* Hero — no full-bleed overlay so the body gradient stays one uninterrupted field */
 .hero {
   position: relative;
   padding: 62px 0 46px;
-  overflow: hidden;
-}
-
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: -40px;
-  background-image: url("../assets/hero.jpg");
-  background-size: cover;
-  background-position: center;
-  transform: scale(1.05);
-  filter: blur(10px);
-  opacity: 0.7;
-}
-
-.hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(246, 247, 251, 0.92) 0%,
-    rgba(246, 247, 251, 0.65) 45%,
-    rgba(246, 247, 251, 0.25) 100%
-  );
+  overflow: visible;
+  background: transparent;
 }
 
 .hero-inner {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   gap: 34px;
@@ -895,8 +876,9 @@ textarea:focus {
 /* Footer */
 footer {
   padding: 34px 0 44px;
-  border-top: 1px solid rgba(15, 23, 42, 0.10);
-  background: rgba(255, 255, 255, 0.5);
+  border-top: 1px solid rgba(15, 23, 42, 0.12);
+  background: transparent;
+  backdrop-filter: none;
 }
 
 .footer-inner {
