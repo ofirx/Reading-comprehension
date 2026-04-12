@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Post reading - EFL</title>
     <link rel="stylesheet" href="styles/main.css?v=20260404j" />
-    <link rel="stylesheet" href="styles/testing.css?v=20260404d" />
+    <link rel="stylesheet" href="styles/testing.css?v=20260412c" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   </head>
   <body data-page="testing">
@@ -81,13 +81,17 @@
         </div>
       </section>
 
-      <!-- Wordwall / embed: Hebrew above, English below -->
+      <!-- Wordwall / embed: activity prompt (Hebrew RTL, English LTR), then controls -->
       <section class="page-block" aria-label="Embedded activity">
         <div class="testing-embed-block">
-          <p class="testing-embed-he" lang="he" dir="rtl">
-            הוראות בעברית: הדביקו כתובת ה־embed של פעילות Wordwall (או קישור הטמעה), ולחצו על «טען פעילות». אפשר
-            להחליף את הטקסט הזה בדף.
-          </p>
+          <div class="testing-embed-prompt">
+            <p class="testing-embed-he" lang="he" dir="rtl">
+              התאם הארועים לסדר הנכון על פי הסיפור שקראת
+            </p>
+            <p class="testing-embed-prompt-en" lang="en" dir="ltr">
+              Match the events to the correct order according to the story you read.
+            </p>
+          </div>
           <div class="testing-embed-box">
             <div class="testing-embed-row">
               <label class="sr-only" for="testingEmbedUrl">Embed URL</label>
