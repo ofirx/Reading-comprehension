@@ -1050,21 +1050,9 @@ footer {
 
 .footer-inner {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 18px;
   flex-wrap: wrap;
-}
-
-.footer-links {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.footer-links a {
-  color: var(--purple);
-  font-weight: 650;
-  font-size: 14px;
 }
 
 .small {
