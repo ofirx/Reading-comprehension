@@ -10,7 +10,6 @@ Open `index.html` in your browser.
 - `about.html` (About)
 - `services.html` (Services)
 - `contact.html` (Contact)
-- `privacy.html` (Example extra page)
 
 ## Assets
 The hero background references `assets/hero.jpg`.
