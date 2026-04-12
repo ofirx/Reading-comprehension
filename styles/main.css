@@ -198,6 +198,13 @@ main h3 {
 label.listening-text-upload-btn {
   font-family: inherit;
 }
+.listening-text-zoom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 14px;
+}
 .listening-text-preview {
   margin: 0;
   min-height: 140px;

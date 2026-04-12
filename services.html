@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Services - EFL</title>
-    <link rel="stylesheet" href="styles/main.css?v=20260412a" />
+    <link rel="stylesheet" href="styles/main.css?v=20260412b" />
   </head>
   <body data-page="practicing">
     <header class="topbar">
@@ -100,6 +100,10 @@
                   aria-label="Upload a text file"
                 />
               </label>
+              <div class="listening-text-zoom" role="group" aria-label="Text size">
+                <button type="button" class="btn" id="listeningTextZoomOut">Zoom out</button>
+                <button type="button" class="btn btn-forward" id="listeningTextZoomIn">Zoom in</button>
+              </div>
               <pre class="listening-text-preview" id="listeningTextPreview" aria-live="polite">No text file loaded — choose a .txt file to show it here (preview only in this browser).</pre>
             </div>
             <div class="listening-audio-panel">
@@ -350,7 +354,7 @@
       </div>
     </footer>
 
-    <script defer src="scripts/main.js?v=20260412a"></script>
+    <script defer src="scripts/main.js?v=20260412b"></script>
   </body>
 </html>
 

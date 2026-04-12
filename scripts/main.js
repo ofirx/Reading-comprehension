@@ -161,11 +161,31 @@
   if (page === "practicing") {
     const listeningTextFile = document.getElementById("listeningTextFile");
     const listeningTextPreview = document.getElementById("listeningTextPreview");
+    const listeningTextZoomIn = document.getElementById("listeningTextZoomIn");
+    const listeningTextZoomOut = document.getElementById("listeningTextZoomOut");
     const listeningAudio = document.getElementById("listeningPageAudio");
     const listeningAudioFile = document.getElementById("listeningAudioFile");
     const listeningAudioPlay = document.getElementById("listeningAudioPlay");
     const listeningAudioPause = document.getElementById("listeningAudioPause");
     const listeningAudioStop = document.getElementById("listeningAudioStop");
+
+    if (listeningTextPreview && listeningTextZoomIn && listeningTextZoomOut) {
+      const zoomMin = 12;
+      const zoomMax = 36;
+      const zoomStep = 2;
+      let listeningTextFontPx = 15;
+      function applyListeningTextZoom() {
+        listeningTextPreview.style.fontSize = listeningTextFontPx + "px";
+      }
+      listeningTextZoomIn.addEventListener("click", () => {
+        listeningTextFontPx = Math.min(zoomMax, listeningTextFontPx + zoomStep);
+        applyListeningTextZoom();
+      });
+      listeningTextZoomOut.addEventListener("click", () => {
+        listeningTextFontPx = Math.max(zoomMin, listeningTextFontPx - zoomStep);
+        applyListeningTextZoom();
+      });
+    }
 
     if (listeningTextFile && listeningTextPreview) {
       listeningTextFile.addEventListener("change", () => {
