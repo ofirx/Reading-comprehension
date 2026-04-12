@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Services - EFL</title>
-    <link rel="stylesheet" href="styles/main.css?v=20260404j" />
+    <link rel="stylesheet" href="styles/main.css?v=20260412a" />
   </head>
   <body data-page="practicing">
     <header class="topbar">
@@ -79,7 +79,52 @@
         </div>
       </section>
 
-      <!-- Section 2: Media + Text -->
+      <!-- Listening activity: text (top) + audio + controls (bottom); other activities follow below -->
+      <section class="page-block" aria-label="Listening activity">
+        <div class="container">
+          <div class="media-box listening-activity-wrap">
+            <div
+              class="small"
+              style="padding: 16px 16px 0; color: var(--purple); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em"
+            >
+              Listening activity
+            </div>
+            <div class="listening-text-panel">
+              <label class="btn btn-primary listening-text-upload-btn">
+                Upload text
+                <input
+                  type="file"
+                  accept=".txt,text/plain"
+                  class="sr-only"
+                  id="listeningTextFile"
+                  aria-label="Upload a text file"
+                />
+              </label>
+              <pre class="listening-text-preview" id="listeningTextPreview" aria-live="polite">No text file loaded — choose a .txt file to show it here (preview only in this browser).</pre>
+            </div>
+            <div class="listening-audio-panel">
+              <label class="btn btn-primary listening-audio-upload-btn">
+                Upload audio
+                <input
+                  type="file"
+                  accept="audio/*"
+                  class="sr-only"
+                  id="listeningAudioFile"
+                  aria-label="Upload an audio file"
+                />
+              </label>
+              <audio id="listeningPageAudio" class="sr-only" preload="metadata"></audio>
+              <div class="listening-audio-controls" role="group" aria-label="Audio playback">
+                <button type="button" class="btn btn-forward" id="listeningAudioPlay">Play</button>
+                <button type="button" class="btn" id="listeningAudioPause">Pause</button>
+                <button type="button" class="btn btn-back" id="listeningAudioStop">Stop</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Wordwall + Speak/Practice -->
       <section class="page-block" aria-label="While reading content section">
         <div class="container page-split">
           <div class="media-box">
@@ -305,7 +350,7 @@
       </div>
     </footer>
 
-    <script defer src="scripts/main.js?v=20260404k"></script>
+    <script defer src="scripts/main.js?v=20260412a"></script>
   </body>
 </html>
 

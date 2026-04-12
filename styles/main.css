@@ -177,6 +177,69 @@ main h3 {
   align-items: center;
 }
 
+/* While reading (services.html): listening activity — text upload + audio + controls */
+.listening-activity-wrap {
+  overflow: visible;
+}
+.listening-text-panel {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.listening-text-upload-btn {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  min-height: 48px;
+  margin: 0 0 14px;
+  cursor: pointer;
+}
+label.listening-text-upload-btn {
+  font-family: inherit;
+}
+.listening-text-preview {
+  margin: 0;
+  min-height: 140px;
+  max-height: min(40vh, 320px);
+  overflow: auto;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.72);
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #1e1b24;
+}
+.listening-audio-panel {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.listening-audio-upload-btn {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  min-height: 48px;
+  margin: 0;
+  cursor: pointer;
+}
+label.listening-audio-upload-btn {
+  font-family: inherit;
+}
+.listening-audio-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
 .wordwall-embed-row {
   display: flex;
   flex-wrap: wrap;

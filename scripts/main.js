@@ -159,6 +159,55 @@
   // Practicing 3: paste Wordwall iframe HTML or embed URL → load adjacent iframe.
   // Persists full paste + URL in localStorage until you load a different embed (Load activity).
   if (page === "practicing") {
+    const listeningTextFile = document.getElementById("listeningTextFile");
+    const listeningTextPreview = document.getElementById("listeningTextPreview");
+    const listeningAudio = document.getElementById("listeningPageAudio");
+    const listeningAudioFile = document.getElementById("listeningAudioFile");
+    const listeningAudioPlay = document.getElementById("listeningAudioPlay");
+    const listeningAudioPause = document.getElementById("listeningAudioPause");
+    const listeningAudioStop = document.getElementById("listeningAudioStop");
+
+    if (listeningTextFile && listeningTextPreview) {
+      listeningTextFile.addEventListener("change", () => {
+        const file = listeningTextFile.files && listeningTextFile.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          listeningTextPreview.textContent =
+            typeof reader.result === "string" ? reader.result : "";
+        };
+        reader.onerror = () => {
+          listeningTextPreview.textContent = "Could not read this file.";
+        };
+        reader.readAsText(file);
+      });
+    }
+
+    let listeningAudioBlobUrl = "";
+    if (listeningAudio && listeningAudioFile && listeningAudioPlay && listeningAudioPause && listeningAudioStop) {
+      listeningAudioFile.addEventListener("change", () => {
+        const file = listeningAudioFile.files && listeningAudioFile.files[0];
+        if (listeningAudioBlobUrl) {
+          URL.revokeObjectURL(listeningAudioBlobUrl);
+          listeningAudioBlobUrl = "";
+        }
+        if (!file) return;
+        listeningAudioBlobUrl = URL.createObjectURL(file);
+        listeningAudio.src = listeningAudioBlobUrl;
+        listeningAudio.load();
+      });
+      listeningAudioPlay.addEventListener("click", () => {
+        listeningAudio.play().catch(() => {});
+      });
+      listeningAudioPause.addEventListener("click", () => {
+        listeningAudio.pause();
+      });
+      listeningAudioStop.addEventListener("click", () => {
+        listeningAudio.pause();
+        listeningAudio.currentTime = 0;
+      });
+    }
+
     const wordwallUrlKey = (iframeId) => "reading-comprehension-wordwall-url-" + iframeId;
     const wordwallPasteKey = (iframeId) => "reading-comprehension-wordwall-paste-" + iframeId;
     /** @deprecated legacy single-key URL storage */
