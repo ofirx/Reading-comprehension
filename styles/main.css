@@ -628,8 +628,36 @@ button.wordwall-activity-upload {
 
 .btn.is-disabled {
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.62;
   transform: none !important;
+  cursor: not-allowed !important;
+}
+
+/* Greyed-out upload controls (labels styled like buttons, and upload-only buttons). */
+.btn.is-upload-disabled {
+  background: #b9bec8 !important;
+  border-color: rgba(31, 31, 31, 0.18) !important;
+  color: rgba(31, 31, 31, 0.78) !important;
+  box-shadow: none !important;
+  filter: grayscale(1);
+}
+
+input[type="file"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  filter: grayscale(1);
+}
+
+.wordwall-activity-upload.is-disabled,
+.wordwall-activity-upload.is-upload-disabled {
+  pointer-events: none;
+  opacity: 0.62;
+  cursor: not-allowed;
+  background: #b9bec8 !important;
+  border-color: rgba(31, 31, 31, 0.18) !important;
+  color: rgba(31, 31, 31, 0.78) !important;
+  box-shadow: none !important;
+  filter: grayscale(1);
 }
 
 /* Header / Nav — Aurora-style gradient + glass (frosted blur over page) */

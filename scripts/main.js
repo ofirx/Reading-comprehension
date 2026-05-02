@@ -2,6 +2,39 @@
   const body = document.body;
   const page = (body && body.dataset && body.dataset.page) || "";
 
+  // Disable ALL upload controls (GitHub Pages can't accept uploads; keep UI read-only).
+  function disableAllUploads() {
+    document.querySelectorAll('input[type="file"]').forEach((input) => {
+      input.disabled = true;
+      input.setAttribute("aria-disabled", "true");
+      input.tabIndex = -1;
+
+      const label = input.closest("label");
+      const btnLike = input.closest(".btn") || label;
+      if (btnLike) {
+        btnLike.classList.add("is-disabled", "is-upload-disabled");
+        btnLike.setAttribute("aria-disabled", "true");
+      }
+    });
+
+    // Any explicit upload “buttons” that aren't file inputs (e.g., Wordwall activity upload).
+    document.querySelectorAll(".wordwall-activity-upload").forEach((el) => {
+      el.classList.add("is-disabled", "is-upload-disabled");
+      el.setAttribute("aria-disabled", "true");
+    });
+
+    // Remove buttons should not be clickable either.
+    document
+      .querySelectorAll(".gallery-upload-clear, .divider-upload-clear")
+      .forEach((btn) => {
+        btn.disabled = true;
+        btn.classList.add("is-disabled", "is-upload-disabled");
+        btn.setAttribute("aria-disabled", "true");
+      });
+  }
+
+  disableAllUploads();
+
   // Highlight active link based on data-page.
   if (page) {
     document
