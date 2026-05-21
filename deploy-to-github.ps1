@@ -20,7 +20,7 @@ Set-Location $RepoRoot
 if (-not $NoWait) {
   Write-Host ""
   Write-Host " Press ENTER to add, commit, and push to GitHub." -ForegroundColor Cyan
-  Write-Host " Tip: Use 'GitHub save' on the site to upload lesson files to assets/uploads/ first." -ForegroundColor DarkGray
+  Write-Host " Tip: Run auto-save-to-github.ps1 to save listening files into services.html first." -ForegroundColor DarkGray
   Read-Host | Out-Null
 }
 

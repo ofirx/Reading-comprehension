@@ -20,7 +20,21 @@ The token is stored only in **session storage** for this tab (not in the public 
   - Updates **`services.html`** with the audio `src` and the text inside the page
 - Run **Deploy to GitHub** (`deploy-to-github.ps1`) so the live site updates for everyone.
 
-Without a token: use **Download services.html**, copy your audio into `assets/uploads/`, replace `services.html` in the project, then deploy.
+## Automatic script (easiest — Option A)
+
+1. Copy your files into `assets/uploads-staging/`:
+   - `listening-text.txt`
+   - `listening-audio.mp3` (or `.wav`, `.ogg`, `.webm`)
+2. Double-click **`Auto save to GitHub.bat`** (or run `.\auto-save-to-github.ps1`).
+3. Press Enter when asked — the script updates `services.html`, commits, and pushes.
+
+Or with explicit paths:
+
+```powershell
+.\auto-save-to-github.ps1 -AudioPath "C:\path\audio.mp3" -TextPath "C:\path\story.txt"
+```
+
+Without a token: use **Download services.html** on the site, or the script above (uses git, not the browser).
 
 ## Limits
 

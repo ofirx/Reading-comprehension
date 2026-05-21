@@ -1,0 +1,4 @@
+.github-token
+*.token
+.env
+.env.local
