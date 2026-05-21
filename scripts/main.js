@@ -26,12 +26,18 @@
 
   function saveToGitHub(id, data) {
     if (!ghSave || !ghSave.isConfigured()) return;
-    ghSave
-      .saveUpload(id, data)
+    var isListening = id === "listening-audio" || id === "listening-text";
+    var saveFn =
+      isListening && ghSave.saveUploadAndHtml
+        ? ghSave.saveUploadAndHtml.bind(ghSave)
+        : ghSave.saveUpload.bind(ghSave);
+    saveFn(id, data)
       .then(function () {
         publishedFilesCache = null;
         window.showGitHubSaveStatus(
-          "Saved to GitHub. Run Deploy to GitHub so the live site updates.",
+          isListening
+            ? "Saved to GitHub (file + services.html). Deploy so the live site updates."
+            : "Saved to GitHub. Run Deploy to GitHub so the live site updates.",
           false
         );
       })
@@ -380,6 +386,10 @@
     }
 
     if (listeningTextFile && listeningTextPreview) {
+      var defaultTextHint = "No text file loaded";
+      var htmlText = (listeningTextPreview.textContent || "").trim();
+      var hasTextInHtml = htmlText && htmlText.indexOf(defaultTextHint) !== 0;
+
       function restoreListeningText() {
         if (!uploadStore) {
           return tryLoadPublished(LISTENING_TEXT_KEY, function (text) {
@@ -396,7 +406,7 @@
           });
         });
       }
-      restoreListeningText();
+      if (!hasTextInHtml) restoreListeningText();
 
       listeningTextFile.addEventListener("change", () => {
         const file = listeningTextFile.files && listeningTextFile.files[0];
@@ -452,7 +462,13 @@
           return tryLoadPublished(LISTENING_AUDIO_KEY, null, applyListeningAudioUrl);
         });
       }
-      restoreListeningAudio();
+
+      var htmlAudioSrc = (listeningAudio.getAttribute("src") || "").trim();
+      if (htmlAudioSrc) {
+        applyListeningAudioUrl(htmlAudioSrc);
+      } else {
+        restoreListeningAudio();
+      }
 
       listeningAudioFile.addEventListener("change", () => {
         const file = listeningAudioFile.files && listeningAudioFile.files[0];
@@ -473,6 +489,54 @@
       listeningAudioStop.addEventListener("click", () => {
         listeningAudio.pause();
         listeningAudio.currentTime = 0;
+      });
+    }
+
+    var exportHtmlBtn = document.getElementById("exportServicesHtmlBtn");
+    if (exportHtmlBtn && window.ReadingHtmlPatch) {
+      exportHtmlBtn.addEventListener("click", function () {
+        var patch = { audioSrc: "", text: listeningTextPreview ? listeningTextPreview.textContent : "" };
+        if (listeningAudio) {
+          var src = listeningAudio.getAttribute("src") || "";
+          if (src.indexOf("assets/uploads/") === 0) patch.audioSrc = src;
+          else if (uploadStore) {
+            return uploadStore.getBlob(LISTENING_AUDIO_KEY).then(function (rec) {
+              if (rec && rec.name) {
+                var ext = rec.name.split(".").pop() || "mp3";
+                patch.audioSrc = "assets/uploads/listening-audio." + ext;
+              }
+              return fetch("services.html")
+                .then(function (r) {
+                  return r.text();
+                })
+                .then(function (html) {
+                  window.ReadingHtmlPatch.downloadServicesHtml(
+                    window.ReadingHtmlPatch.patchServicesHtml(html, patch)
+                  );
+                  window.showGitHubSaveStatus(
+                    "Downloaded services.html — copy the audio file into assets/uploads/, then deploy.",
+                    false
+                  );
+                });
+            });
+          }
+        }
+        fetch("services.html")
+          .then(function (r) {
+            return r.text();
+          })
+          .then(function (html) {
+            window.ReadingHtmlPatch.downloadServicesHtml(
+              window.ReadingHtmlPatch.patchServicesHtml(html, patch)
+            );
+            window.showGitHubSaveStatus(
+              "Downloaded services.html — add your audio to assets/uploads/ if needed, then deploy.",
+              false
+            );
+          })
+          .catch(function () {
+            window.showGitHubSaveStatus("Could not load services.html", true);
+          });
       });
     }
 

@@ -12,12 +12,15 @@ GitHub Pages cannot receive files by itself. This site can **write uploads into 
 
 The token is stored only in **session storage** for this tab (not in the public site code).
 
-## When you upload a file
+## When you upload on While reading (text or audio)
 
-- It is saved in this browser (IndexedDB) immediately.
-- If GitHub is connected, it is also committed to `assets/uploads/` in the repo.
-- Run **Deploy to GitHub** (`deploy-to-github.ps1`) or push manually so GitHub Pages rebuilds.
-- After 1–2 minutes, everyone opening the live site sees the files from `assets/uploads/`.
+- It is saved in this browser immediately (works after refresh on the same computer).
+- If **GitHub save** is connected, it also:
+  - Saves the file under `assets/uploads/`
+  - Updates **`services.html`** with the audio `src` and the text inside the page
+- Run **Deploy to GitHub** (`deploy-to-github.ps1`) so the live site updates for everyone.
+
+Without a token: use **Download services.html**, copy your audio into `assets/uploads/`, replace `services.html` in the project, then deploy.
 
 ## Limits
 

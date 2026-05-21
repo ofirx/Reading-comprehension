@@ -124,12 +124,19 @@
                   aria-label="Upload an audio file"
                 />
               </label>
-              <audio id="listeningPageAudio" class="sr-only" preload="metadata"></audio>
+              <audio id="listeningPageAudio" class="sr-only" preload="metadata" src=""></audio>
               <div class="listening-audio-controls" role="group" aria-label="Audio playback">
-                <button type="button" class="btn btn-forward" id="listeningAudioPlay">Play</button>
-                <button type="button" class="btn" id="listeningAudioPause">Pause</button>
-                <button type="button" class="btn btn-back" id="listeningAudioStop">Stop</button>
+                <button type="button" class="btn btn-forward" id="listeningAudioPlay" disabled>Play</button>
+                <button type="button" class="btn" id="listeningAudioPause" disabled>Pause</button>
+                <button type="button" class="btn btn-back" id="listeningAudioStop" disabled>Stop</button>
               </div>
+              <p class="listening-save-hint small" style="margin: 12px 0 0; color: var(--muted)">
+                To save in <strong>services.html</strong> on GitHub: connect <strong>GitHub save</strong>, upload text/audio, then deploy.
+                Or click <strong>Download services.html</strong> and deploy manually.
+              </p>
+              <button type="button" class="btn" id="exportServicesHtmlBtn" style="margin-top: 8px">
+                Download services.html
+              </button>
             </div>
           </div>
         </div>
@@ -354,10 +361,11 @@
       </div>
     </footer>
 
-    <script defer src="scripts/upload-persistence.js?v=20260522b"></script>
-    <script defer src="scripts/github-save.js?v=20260522a"></script>
-    <script defer src="scripts/github-settings.js?v=20260522a"></script>
-    <script defer src="scripts/main.js?v=20260522b"></script>
+    <script defer src="scripts/upload-persistence.js?v=20260522c"></script>
+    <script defer src="scripts/html-patch.js?v=20260522c"></script>
+    <script defer src="scripts/github-save.js?v=20260522c"></script>
+    <script defer src="scripts/github-settings.js?v=20260522c"></script>
+    <script defer src="scripts/main.js?v=20260522c"></script>
   </body>
 </html>
 

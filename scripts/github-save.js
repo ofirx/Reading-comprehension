@@ -225,6 +225,64 @@
     });
   }
 
+  function decodeGitHubContent(b64) {
+    var bin = atob(b64.replace(/\n/g, ""));
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder("utf-8").decode(bytes);
+  }
+
+  function encodeGitHubContent(text) {
+    return btoa(unescape(encodeURIComponent(text)));
+  }
+
+  function getHtmlFromRepo(path, cfg) {
+    return getFileMeta(path, cfg).then(function (meta) {
+      if (!meta || !meta.content) return { html: null, sha: null };
+      return { html: decodeGitHubContent(meta.content), sha: meta.sha };
+    });
+  }
+
+  function putHtmlFile(path, htmlString, message, cfg, sha) {
+    return putContent(path, encodeGitHubContent(htmlString), message, cfg, sha);
+  }
+
+  /** Write audio src + text into services.html in the repository. */
+  function updateServicesHtml(patch, cfg) {
+    var patcher = global.ReadingHtmlPatch;
+    if (!patcher) return Promise.reject(new Error("HTML patch module missing"));
+    cfg = cfg || getConfig();
+    if (!cfg) return Promise.reject(new Error("GitHub not connected"));
+
+    return getHtmlFromRepo("services.html", cfg).then(function (file) {
+      if (!file.html) throw new Error("services.html not found in repository");
+      var current = {
+        audioSrc: patcher.readAudioSrcFromHtml(file.html),
+        text: patcher.readTextFromHtml(file.html),
+      };
+      var merged = {
+        audioSrc: patch.audioSrc !== undefined ? patch.audioSrc : current.audioSrc,
+        text: patch.text !== undefined ? patch.text : current.text,
+      };
+      var updated = patcher.patchServicesHtml(file.html, merged);
+      return putHtmlFile("services.html", updated, "Update listening activity in services.html", cfg, file.sha);
+    });
+  }
+
+  function saveUploadAndHtml(id, data) {
+    return saveUpload(id, data).then(function () {
+      var cfg = getConfig();
+      if (!cfg) return;
+      if (id === "listening-audio" && data instanceof Blob) {
+        var path = uploadPathForId(id, data.type, data.name || id);
+        return updateServicesHtml({ audioSrc: path }, cfg);
+      }
+      if (id === "listening-text" && typeof data === "string") {
+        return updateServicesHtml({ text: data }, cfg);
+      }
+    });
+  }
+
   /** Load manifest published on the live site (after deploy). */
   function fetchPublishedManifest() {
     var url = MANIFEST_PATH + "?t=" + Date.now();
@@ -240,6 +298,8 @@
     clearConfig: clearConfig,
     isConfigured: isConfigured,
     saveUpload: saveUpload,
+    saveUploadAndHtml: saveUploadAndHtml,
+    updateServicesHtml: updateServicesHtml,
     removeUpload: removeUpload,
     fetchPublishedManifest: fetchPublishedManifest,
     MANIFEST_PATH: MANIFEST_PATH,
