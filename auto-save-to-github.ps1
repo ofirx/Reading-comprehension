@@ -20,6 +20,7 @@ param(
 $ErrorActionPreference = "Stop"
 $RepoRoot = $PSScriptRoot
 Set-Location $RepoRoot
+$RxIgnore = [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
 
 $StagingDir = Join-Path $RepoRoot "assets\uploads-staging"
 $UploadsDir = Join-Path $RepoRoot "assets\uploads"
@@ -45,11 +46,10 @@ function Patch-ServicesHtml {
       '<audio([^>]*id=["'']listeningPageAudio["''][^>]*)>',
       {
         param($m)
-        $attrs = $m.Groups[1].Value -replace '\s+src=["''][^"'']*["'']', '', 'IgnoreCase'
+        $attrs = $m.Groups[1].Value -replace '(?i)\s+src=["''][^"'']*["'']', ''
         return "<audio$attrs src=`"$safe`">"
       },
-      1,
-      'IgnoreCase'
+      $RxIgnore
     )
   }
   if ($null -ne $Text) {
@@ -58,21 +58,20 @@ function Patch-ServicesHtml {
       $out,
       '(<pre[^>]*id=["'']listeningTextPreview["''][^>]*>)([\s\S]*?)(</pre>)',
       "`${1}$body`${3}",
-      1,
-      'IgnoreCase'
+      $RxIgnore
     )
   }
   return $out
 }
 
 function Read-AudioSrcFromHtml([string]$Html) {
-  $m = [regex]::Match($Html, '<audio[^>]*id=["'']listeningPageAudio["''][^>]*\ssrc=["'']([^"'']+)["'']', 'IgnoreCase')
+  $m = [regex]::Match($Html, '<audio[^>]*id=["'']listeningPageAudio["''][^>]*\ssrc=["'']([^"'']+)["'']', $RxIgnore)
   if ($m.Success) { return $m.Groups[1].Value }
   return ""
 }
 
 function Read-TextFromHtml([string]$Html) {
-  $m = [regex]::Match($Html, '<pre[^>]*id=["'']listeningTextPreview["''][^>]*>([\s\S]*?)</pre>', 'IgnoreCase')
+  $m = [regex]::Match($Html, '<pre[^>]*id=["'']listeningTextPreview["''][^>]*>([\s\S]*?)</pre>', $RxIgnore)
   if (-not $m.Success) { return "" }
   $raw = $m.Groups[1].Value
   $raw = $raw -replace '&amp;', '&' -replace '&lt;', '<' -replace '&gt;', '>'

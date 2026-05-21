@@ -1,4 +1,11 @@
-{
-  "version": 1,
-  "files": {}
+﻿{
+    "version":  1,
+    "files":  {
+                  "listening-text":  {
+                                         "path":  "assets/uploads/listening-text.txt",
+                                         "kind":  "text",
+                                         "mimeType":  "text/plain",
+                                         "updatedAt":  "2026-05-21T15:42:10.5828474Z"
+                                     }
+              }
 }
