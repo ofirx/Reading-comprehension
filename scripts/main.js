@@ -41,9 +41,10 @@
   }
 
   function saveBlob(id, file) {
-    if (!uploadStore || !file) return;
-    uploadStore.setBlob(id, file).catch(() => {});
-    saveToGitHub(id, file);
+    if (!uploadStore || !file) return Promise.resolve();
+    return uploadStore.setBlob(id, file).then(function () {
+      saveToGitHub(id, file);
+    }).catch(function () {});
   }
 
   function saveText(id, text) {
@@ -99,8 +100,15 @@
           });
       }
       if (onUrl) {
-        onUrl(entry.path);
-        return true;
+        return fetch(entry.path, { method: "HEAD" })
+          .then(function (res) {
+            if (!res.ok) return false;
+            onUrl(entry.path);
+            return true;
+          })
+          .catch(function () {
+            return false;
+          });
       }
       return false;
     });
@@ -372,14 +380,23 @@
     }
 
     if (listeningTextFile && listeningTextPreview) {
-      tryLoadPublished(LISTENING_TEXT_KEY, function (text) {
-        listeningTextPreview.textContent = text;
-      }).then(function (loaded) {
-        if (loaded || !uploadStore) return;
-        uploadStore.getText(LISTENING_TEXT_KEY).then((text) => {
-          if (text) listeningTextPreview.textContent = text;
+      function restoreListeningText() {
+        if (!uploadStore) {
+          return tryLoadPublished(LISTENING_TEXT_KEY, function (text) {
+            listeningTextPreview.textContent = text;
+          });
+        }
+        return uploadStore.getText(LISTENING_TEXT_KEY).then(function (text) {
+          if (text) {
+            listeningTextPreview.textContent = text;
+            return true;
+          }
+          return tryLoadPublished(LISTENING_TEXT_KEY, function (t) {
+            listeningTextPreview.textContent = t;
+          });
         });
-      });
+      }
+      restoreListeningText();
 
       listeningTextFile.addEventListener("change", () => {
         const file = listeningTextFile.files && listeningTextFile.files[0];
@@ -399,30 +416,53 @@
 
     let listeningAudioBlobUrl = "";
     if (listeningAudio && listeningAudioFile && listeningAudioPlay && listeningAudioPause && listeningAudioStop) {
+      function revokeListeningAudioUrl() {
+        if (listeningAudioBlobUrl && listeningAudioBlobUrl.indexOf("blob:") === 0) {
+          URL.revokeObjectURL(listeningAudioBlobUrl);
+        }
+        listeningAudioBlobUrl = "";
+      }
+
       function applyListeningAudioUrl(url) {
+        revokeListeningAudioUrl();
         listeningAudioBlobUrl = url;
         listeningAudio.src = url;
         listeningAudio.load();
+        listeningAudioPlay.disabled = false;
+        listeningAudioPause.disabled = false;
+        listeningAudioStop.disabled = false;
       }
 
-      tryLoadPublished(LISTENING_AUDIO_KEY, null, applyListeningAudioUrl).then(function (loaded) {
-        if (loaded || !uploadStore) return;
-        uploadStore.getBlob(LISTENING_AUDIO_KEY).then((rec) => {
-          if (!rec) return;
-          const url = uploadStore.createObjectUrl(rec);
-          if (url) applyListeningAudioUrl(url);
+      listeningAudioPlay.disabled = true;
+      listeningAudioPause.disabled = true;
+      listeningAudioStop.disabled = true;
+
+      function restoreListeningAudio() {
+        if (!uploadStore) {
+          return tryLoadPublished(LISTENING_AUDIO_KEY, null, applyListeningAudioUrl);
+        }
+        return uploadStore.getBlob(LISTENING_AUDIO_KEY).then(function (rec) {
+          if (rec) {
+            const url = uploadStore.createObjectUrl(rec);
+            if (url) {
+              applyListeningAudioUrl(url);
+              return true;
+            }
+          }
+          return tryLoadPublished(LISTENING_AUDIO_KEY, null, applyListeningAudioUrl);
         });
-      });
+      }
+      restoreListeningAudio();
 
       listeningAudioFile.addEventListener("change", () => {
         const file = listeningAudioFile.files && listeningAudioFile.files[0];
-        if (listeningAudioBlobUrl) {
-          URL.revokeObjectURL(listeningAudioBlobUrl);
-          listeningAudioBlobUrl = "";
-        }
         if (!file) return;
-        saveBlob(LISTENING_AUDIO_KEY, file);
         applyListeningAudioUrl(URL.createObjectURL(file));
+        saveBlob(LISTENING_AUDIO_KEY, file).catch(function () {
+          if (window.showGitHubSaveStatus) {
+            window.showGitHubSaveStatus("Could not save audio in this browser.", true);
+          }
+        });
       });
       listeningAudioPlay.addEventListener("click", () => {
         listeningAudio.play().catch(() => {});

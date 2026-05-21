@@ -106,19 +106,29 @@
 
   function setBlob(id, file) {
     if (!file) return Promise.resolve();
-    return setRecord(id, {
-      kind: "blob",
-      blob: file,
-      mimeType: file.type || "",
-      name: file.name || "",
-      savedAt: Date.now(),
+    return file.arrayBuffer().then(function (buffer) {
+      return setRecord(id, {
+        kind: "blob",
+        buffer: buffer,
+        mimeType: file.type || "application/octet-stream",
+        name: file.name || "",
+        savedAt: Date.now(),
+      });
     });
   }
 
   function getBlob(id) {
     return getRecord(id).then(function (rec) {
-      if (!rec || rec.kind !== "blob" || !rec.blob) return null;
-      return rec;
+      if (!rec || rec.kind !== "blob") return null;
+      if (rec.buffer) {
+        return {
+          blob: new Blob([rec.buffer], { type: rec.mimeType || "application/octet-stream" }),
+          mimeType: rec.mimeType || "",
+          name: rec.name || "",
+        };
+      }
+      if (rec.blob) return rec;
+      return null;
     });
   }
 
