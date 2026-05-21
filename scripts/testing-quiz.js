@@ -4,15 +4,15 @@
 (function () {
   var ANSWERS = {
     q1: "b",
-    q2: "a",
-    q3: "c",
-    q4: "b",
+    q2: "b",
+    q3: "a",
+    q4: "c",
     q5: "a",
-    q6: "d",
-    q7: "b",
-    q8: "c",
-    q9: "a",
-    q10: "b",
+    q6: "b",
+    q7: "c",
+    q8: "a",
+    q9: "b",
+    q10: "c",
   };
 
   var PARTS = [

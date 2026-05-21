@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Post reading - EFL</title>
     <link rel="stylesheet" href="styles/main.css?v=20260412e" />
-    <link rel="stylesheet" href="styles/testing.css?v=20260412c" />
+    <link rel="stylesheet" href="styles/testing.css?v=20260521a" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   </head>
   <body data-page="testing">
@@ -63,8 +63,8 @@
             </div>
             <h1>Final Check</h1>
             <p>
-              Embedded activity below, then a three-part self-graded quiz. Replace questions and answers in
-              <code>scripts/testing-quiz.js</code> and this file.
+              Read Tali&apos;s welcome message, complete the sequence activity, then answer 10 self-check questions
+              about the text.
             </p>
             <div class="hero-actions">
               <a class="btn btn-primary" href="services.html">Back to While reading 3</a>
@@ -93,10 +93,10 @@
         <div class="testing-embed-block">
           <div class="testing-embed-prompt">
             <p class="testing-embed-he" lang="he" dir="rtl">
-              התאם את הארועים לסדר הנכון על פי הסיפור שקראת
+              התאימו את האירועים לסדר הנכון לפי ההודעה של טלי (פעילות Wordwall — הדביקו קישור למטה)
             </p>
             <p class="testing-embed-prompt-en" lang="en" dir="ltr">
-              Match the events to the correct order based on the story you read.
+              Put the events in the correct order based on Tali&apos;s message (paste your Wordwall embed link below).
             </p>
           </div>
           <div class="testing-embed-box">
@@ -120,13 +120,28 @@
             </div>
           </div>
           <p class="testing-embed-en">
-            English: Paste your Wordwall embed URL above and click <strong>Load activity</strong>. The iframe loads
-            that page. Edit this paragraph in <code>contact.html</code>.
+            Suggested order for your Wordwall activity: (1) Tali welcomes the class, (2) she asks for name, phone and
+            address, (3) she says when lessons are, (4) she lists what to bring.
           </p>
         </div>
       </section>
 
-      <!-- Self-graded quiz: 3 parts, sidebar (quiz-step--p1 / p2 / p3 accent colors), 10 MC + 5 file uploads -->
+      <section class="page-block testing-reading-block" aria-label="Reading passage">
+        <h2>Read the text</h2>
+        <p class="testing-reading-passage" lang="en">
+<strong>Hello pupils,</strong>
+Welcome to English class! I am happy to be your new teacher. We will learn, speak, read, and have fun together.
+
+My name is Tali. I'm your new English teacher. It's nice to meet you.
+Please write to me. I want your name, phone number and address.
+English lessons are on Mondays and Thursdays.
+You need a book, a notebook and a pencil. No food, please.
+See you on Monday.
+Tali
+        </p>
+      </section>
+
+      <!-- Self-graded quiz: 3 parts, sidebar (quiz-step--p1 / p2 / p3 accent colors), 10 MC + file uploads -->
       <section class="page-block quiz-form-section" aria-label="Self-graded quiz">
         <div class="quiz-shell-wrap">
           <div class="quiz-shell" id="testingQuiz">
@@ -143,19 +158,19 @@
               <li>
                 <button type="button" class="quiz-step-btn quiz-step--p1 is-active" data-step="1">
                   <span class="quiz-step-num">1</span>
-                  <span>Part 1 — Vocabulary &amp; reading</span>
+                  <span>Part 1 — WH &amp; main idea</span>
                 </button>
               </li>
               <li>
                 <button type="button" class="quiz-step-btn quiz-step--p2" data-step="2">
                   <span class="quiz-step-num">2</span>
-                  <span>Part 2 — Grammar &amp; listening</span>
+                  <span>Part 2 — Details &amp; T/F</span>
                 </button>
               </li>
               <li>
                 <button type="button" class="quiz-step-btn quiz-step--p3" data-step="3">
                   <span class="quiz-step-num">3</span>
-                  <span>Part 3 — Production</span>
+                  <span>Part 3 — Inference</span>
                 </button>
               </li>
             </ol>
@@ -167,61 +182,57 @@
               <div class="quiz-pane-layout">
                 <div class="quiz-pane-body">
               <header class="quiz-pane-header">
-                <h2 class="quiz-pane-heading">Part 1 — Vocabulary &amp; reading</h2>
-                <p class="quiz-pane-lead">Answer every question in this step. Uploads are optional unless your teacher asks for them.</p>
+                <h2 class="quiz-pane-heading">Part 1 — WH &amp; main idea</h2>
+                <p class="quiz-pane-lead">Use Tali&apos;s message above. Answer all four questions before you continue.</p>
               </header>
               <p class="quiz-pane-he" lang="he" dir="rtl">
-                חלק 1: ענו על ארבע שאלות. בשאלות המסומנות ניתן להעלות תמונה או קובץ שמע.
+                חלק 1: ארבע שאלות — מי, מתי ורעיון מרכזי. בשאלה 1 אפשר להעלות תמונה או שמע (אופציונלי).
               </p>
               <p class="quiz-pane-en">
-                Part 1: Answer four questions. Questions marked with upload let you add a picture or audio file.
+                Part 1: Four questions — who, when, and main idea. Question 1 has an optional picture or audio upload.
               </p>
 
               <div class="quiz-q">
-                <span class="quiz-q-label">1. What does “Hello” usually mean?</span>
+                <span class="quiz-q-label">1. Who is the new English teacher?</span>
                 <div class="quiz-options">
-                  <label><input type="radio" name="q1" value="a" /> Goodbye</label>
-                  <label><input type="radio" name="q1" value="b" /> A greeting / hi</label>
-                  <label><input type="radio" name="q1" value="c" /> Thank you</label>
-                  <label><input type="radio" name="q1" value="d" /> Please</label>
+                  <label><input type="radio" name="q1" value="a" /> The pupils</label>
+                  <label><input type="radio" name="q1" value="b" /> Tali</label>
+                  <label><input type="radio" name="q1" value="c" /> The principal</label>
+                  <label><input type="radio" name="q1" value="d" /> Monday</label>
                 </div>
                 <div class="quiz-upload">
-                  <span class="quiz-upload-label">Upload a picture or audio (for this question)</span>
+                  <span class="quiz-upload-label">Upload a picture or audio (optional — e.g. underline the line in the text)</span>
                   <input type="file" accept="image/*,audio/*" aria-label="Upload for question 1" />
                 </div>
               </div>
 
               <div class="quiz-q">
-                <span class="quiz-q-label">2. Which is a complete sentence?</span>
+                <span class="quiz-q-label">2. When are English lessons?</span>
                 <div class="quiz-options">
-                  <label><input type="radio" name="q2" value="a" /> She reads every day.</label>
-                  <label><input type="radio" name="q2" value="b" /> Reading book.</label>
-                  <label><input type="radio" name="q2" value="c" /> Under the table quickly.</label>
-                  <label><input type="radio" name="q2" value="d" /> Because tired.</label>
+                  <label><input type="radio" name="q2" value="a" /> Every day</label>
+                  <label><input type="radio" name="q2" value="b" /> Mondays and Thursdays</label>
+                  <label><input type="radio" name="q2" value="c" /> Only on Monday</label>
+                  <label><input type="radio" name="q2" value="d" /> Fridays and Sundays</label>
                 </div>
               </div>
 
               <div class="quiz-q">
-                <span class="quiz-q-label">3. “They” refers to…</span>
+                <span class="quiz-q-label">3. What is the main idea of the text?</span>
                 <div class="quiz-options">
-                  <label><input type="radio" name="q3" value="a" /> One man</label>
-                  <label><input type="radio" name="q3" value="b" /> One woman</label>
-                  <label><input type="radio" name="q3" value="c" /> More than one person / thing</label>
-                  <label><input type="radio" name="q3" value="d" /> Only objects</label>
-                </div>
-                <div class="quiz-upload">
-                  <span class="quiz-upload-label">Upload a picture or audio (for this question)</span>
-                  <input type="file" accept="image/*,audio/*" aria-label="Upload for question 3" />
+                  <label><input type="radio" name="q3" value="a" /> A welcome from a new teacher with class information</label>
+                  <label><input type="radio" name="q3" value="b" /> A story about a school trip</label>
+                  <label><input type="radio" name="q3" value="c" /> How to cook food in class</label>
+                  <label><input type="radio" name="q3" value="d" /> A math test schedule</label>
                 </div>
               </div>
 
               <div class="quiz-q">
-                <span class="quiz-q-label">4. Choose the correct spelling.</span>
+                <span class="quiz-q-label">4. In the text, &ldquo;pupils&rdquo; means&hellip;</span>
                 <div class="quiz-options">
-                  <label><input type="radio" name="q4" value="a" /> Recieve</label>
-                  <label><input type="radio" name="q4" value="b" /> Receive</label>
-                  <label><input type="radio" name="q4" value="c" /> Receeve</label>
-                  <label><input type="radio" name="q4" value="d" /> Receiv</label>
+                  <label><input type="radio" name="q4" value="a" /> Teachers</label>
+                  <label><input type="radio" name="q4" value="b" /> Books</label>
+                  <label><input type="radio" name="q4" value="c" /> Students</label>
+                  <label><input type="radio" name="q4" value="d" /> Pencils</label>
                 </div>
               </div>
                 </div>
@@ -240,51 +251,47 @@
               <div class="quiz-pane-layout">
                 <div class="quiz-pane-body">
               <header class="quiz-pane-header">
-                <h2 class="quiz-pane-heading">Part 2 — Grammar &amp; listening</h2>
-                <p class="quiz-pane-lead">Choose the best answer for each item. Two questions include a media upload.</p>
+                <h2 class="quiz-pane-heading">Part 2 — Details &amp; T/F</h2>
+                <p class="quiz-pane-lead">Read carefully. For question 6, you can upload a photo of the line that proves your answer.</p>
               </header>
               <p class="quiz-pane-he" lang="he" dir="rtl">
-                חלק 2: שלוש שאלות. בשתיים מהן יש אפשרות להעלות קובץ תמונה או מוזיקה.
+                חלק 2: שלוש שאלות על פרטים ונכון/לא נכון. בשאלה 6 אפשר להעלות צילום של המשפט מהטקסט.
               </p>
               <p class="quiz-pane-en">
-                Part 2: Three questions. Two of them include an optional picture or audio upload.
+                Part 2: Three detail and true/false questions. Question 6 has an optional upload for evidence from the text.
               </p>
 
               <div class="quiz-q">
-                <span class="quiz-q-label">5. Which tense is “I have studied”?</span>
+                <span class="quiz-q-label">5. What does Tali want students to write to her?</span>
                 <div class="quiz-options">
-                  <label><input type="radio" name="q5" value="a" /> Present perfect</label>
-                  <label><input type="radio" name="q5" value="b" /> Past simple</label>
-                  <label><input type="radio" name="q5" value="c" /> Future</label>
-                  <label><input type="radio" name="q5" value="d" /> Present continuous</label>
-                </div>
-                <div class="quiz-upload">
-                  <span class="quiz-upload-label">Upload a picture or audio (for this question)</span>
-                  <input type="file" accept="image/*,audio/*" aria-label="Upload for question 5" />
+                  <label><input type="radio" name="q5" value="a" /> Name, phone number and address</label>
+                  <label><input type="radio" name="q5" value="b" /> Only food</label>
+                  <label><input type="radio" name="q5" value="c" /> A notebook only</label>
+                  <label><input type="radio" name="q5" value="d" /> Games and toys</label>
                 </div>
               </div>
 
               <div class="quiz-q">
-                <span class="quiz-q-label">6. “If I ___ rich, I would travel.”</span>
+                <span class="quiz-q-label">6. True or False: Students may bring food to English class.</span>
                 <div class="quiz-options">
-                  <label><input type="radio" name="q6" value="a" /> am</label>
-                  <label><input type="radio" name="q6" value="b" /> was</label>
-                  <label><input type="radio" name="q6" value="c" /> will be</label>
-                  <label><input type="radio" name="q6" value="d" /> were</label>
+                  <label><input type="radio" name="q6" value="a" /> True</label>
+                  <label><input type="radio" name="q6" value="b" /> False</label>
+                  <label><input type="radio" name="q6" value="c" /> The text does not say</label>
+                  <label><input type="radio" name="q6" value="d" /> Only on Thursdays</label>
                 </div>
                 <div class="quiz-upload">
-                  <span class="quiz-upload-label">Upload a picture or audio (for this question)</span>
-                  <input type="file" accept="image/*,audio/*" aria-label="Upload for question 6" />
+                  <span class="quiz-upload-label">Upload a picture showing the line from the text (evidence)</span>
+                  <input type="file" accept="image/*,audio/*" aria-label="Upload evidence for question 6" />
                 </div>
               </div>
 
               <div class="quiz-q">
-                <span class="quiz-q-label">7. Which word is a preposition?</span>
+                <span class="quiz-q-label">7. What must students bring to class?</span>
                 <div class="quiz-options">
-                  <label><input type="radio" name="q7" value="a" /> Quickly</label>
-                  <label><input type="radio" name="q7" value="b" /> Under</label>
-                  <label><input type="radio" name="q7" value="c" /> Happy</label>
-                  <label><input type="radio" name="q7" value="d" /> Run</label>
+                  <label><input type="radio" name="q7" value="a" /> Food and drinks</label>
+                  <label><input type="radio" name="q7" value="b" /> Phone and address</label>
+                  <label><input type="radio" name="q7" value="c" /> A book, a notebook and a pencil</label>
+                  <label><input type="radio" name="q7" value="d" /> Nothing</label>
                 </div>
               </div>
                 </div>
@@ -303,45 +310,45 @@
               <div class="quiz-pane-layout">
                 <div class="quiz-pane-body">
               <header class="quiz-pane-header">
-                <h2 class="quiz-pane-heading">Part 3 — Production</h2>
-                <p class="quiz-pane-lead">Finish the last questions, then submit to see your score and charts.</p>
+                <h2 class="quiz-pane-heading">Part 3 — Inference</h2>
+                <p class="quiz-pane-lead">Use what you read to answer the last questions, then submit to see your score.</p>
               </header>
               <p class="quiz-pane-he" lang="he" dir="rtl">
-                חלק 3: שלוש שאלות אחרונות. בשאלה אחת ניתן להעלות קובץ מדיה.
+                חלק 3: שלוש שאלות הסקה. בשאלה 9 אפשר להעלות משפט אחד בסיכום (אופציונלי).
               </p>
-              <p class="quiz-pane-en">Part 3: Final three questions. One includes a media upload.</p>
+              <p class="quiz-pane-en">Part 3: Three inference questions. Question 9 has an optional one-sentence summary upload.</p>
 
               <div class="quiz-q">
-                <span class="quiz-q-label">8. “Fewer” is used with…</span>
+                <span class="quiz-q-label">8. Why does Tali write &ldquo;See you on Monday&rdquo;?</span>
                 <div class="quiz-options">
-                  <label><input type="radio" name="q8" value="a" /> Uncountable nouns</label>
-                  <label><input type="radio" name="q8" value="b" /> Plural verbs only</label>
-                  <label><input type="radio" name="q8" value="c" /> Countable plural nouns</label>
-                  <label><input type="radio" name="q8" value="d" /> Adjectives only</label>
+                  <label><input type="radio" name="q8" value="a" /> Monday is one of the English lesson days</label>
+                  <label><input type="radio" name="q8" value="b" /> Lessons are only on Thursday</label>
+                  <label><input type="radio" name="q8" value="c" /> School is closed on Monday</label>
+                  <label><input type="radio" name="q8" value="d" /> Students never come on Monday</label>
                 </div>
               </div>
 
               <div class="quiz-q">
-                <span class="quiz-q-label">9. Which is formal?</span>
+                <span class="quiz-q-label">9. How does Tali feel in the first paragraph?</span>
                 <div class="quiz-options">
-                  <label><input type="radio" name="q9" value="a" /> Could you please help me?</label>
-                  <label><input type="radio" name="q9" value="b" /> Gimme that.</label>
-                  <label><input type="radio" name="q9" value="c" /> Stuff’s over there.</label>
-                  <label><input type="radio" name="q9" value="d" /> Nah, skip it.</label>
+                  <label><input type="radio" name="q9" value="a" /> Angry</label>
+                  <label><input type="radio" name="q9" value="b" /> Happy</label>
+                  <label><input type="radio" name="q9" value="c" /> Sad</label>
+                  <label><input type="radio" name="q9" value="d" /> Bored</label>
                 </div>
                 <div class="quiz-upload">
-                  <span class="quiz-upload-label">Upload a picture or audio (for this question)</span>
-                  <input type="file" accept="image/*,audio/*" aria-label="Upload for question 9" />
+                  <span class="quiz-upload-label">Optional: upload audio or a photo of your one-sentence summary</span>
+                  <input type="file" accept="image/*,audio/*" aria-label="Upload summary for question 9" />
                 </div>
               </div>
 
               <div class="quiz-q">
-                <span class="quiz-q-label">10. Main idea of a paragraph is usually found…</span>
+                <span class="quiz-q-label">10. Which day is NOT an English lesson day?</span>
                 <div class="quiz-options">
-                  <label><input type="radio" name="q10" value="a" /> Only in the last word</label>
-                  <label><input type="radio" name="q10" value="b" /> In the topic sentence / first sentences</label>
-                  <label><input type="radio" name="q10" value="c" /> Only in footnotes</label>
-                  <label><input type="radio" name="q10" value="d" /> Never in academic text</label>
+                  <label><input type="radio" name="q10" value="a" /> Monday</label>
+                  <label><input type="radio" name="q10" value="b" /> Thursday</label>
+                  <label><input type="radio" name="q10" value="c" /> Wednesday</label>
+                  <label><input type="radio" name="q10" value="d" /> Both Monday and Thursday</label>
                 </div>
               </div>
                 </div>
@@ -419,7 +426,7 @@
     </footer>
 
     <script defer src="scripts/main.js?v=20260404k"></script>
-    <script defer src="scripts/testing-quiz.js?v=20260404k"></script>
+    <script defer src="scripts/testing-quiz.js?v=20260521a"></script>
   </body>
 </html>
 
