@@ -240,6 +240,12 @@ label.listening-text-upload-btn {
 label.listening-audio-upload-btn {
   font-family: inherit;
 }
+label.listening-text-upload-btn.is-upload-disabled,
+label.listening-audio-upload-btn.is-upload-disabled {
+  display: none !important;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
 .listening-audio-controls {
   display: flex;
   flex-wrap: wrap;

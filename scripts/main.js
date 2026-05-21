@@ -140,6 +140,25 @@
 
   disableQuizUploads();
 
+  function disableListeningUploads() {
+    if (page !== "practicing") return;
+    ["listeningTextFile", "listeningAudioFile"].forEach(function (id) {
+      var input = document.getElementById(id);
+      if (!input) return;
+      input.disabled = true;
+      input.hidden = true;
+      input.tabIndex = -1;
+      var label = input.closest("label");
+      if (label) {
+        label.hidden = true;
+        label.setAttribute("aria-hidden", "true");
+        label.classList.add("is-upload-disabled");
+      }
+    });
+  }
+
+  disableListeningUploads();
+
   // Highlight active link based on data-page.
   if (page) {
     document
