@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Services - EFL</title>
-    <link rel="stylesheet" href="styles/main.css?v=20260412e" />
+    <link rel="stylesheet" href="styles/main.css?v=20260522d" />
   </head>
   <body data-page="practicing">
     <header class="topbar">
@@ -97,7 +97,7 @@
               Listening activity
             </div>
             <div class="listening-text-panel">
-              <label class="btn btn-primary listening-text-upload-btn">
+              <label class="btn btn-primary listening-text-upload-btn is-upload-disabled" aria-disabled="true">
                 Upload text
                 <input
                   type="file"
@@ -105,6 +105,9 @@
                   class="sr-only"
                   id="listeningTextFile"
                   aria-label="Upload a text file"
+                  disabled
+                  aria-disabled="true"
+                  tabindex="-1"
                 />
               </label>
               <div class="listening-text-zoom" role="group" aria-label="Text size">
@@ -128,7 +131,7 @@ Tali 🙂
 </pre>
             </div>
             <div class="listening-audio-panel">
-              <label class="btn btn-primary listening-audio-upload-btn">
+              <label class="btn btn-primary listening-audio-upload-btn is-upload-disabled" aria-disabled="true">
                 Upload audio
                 <input
                   type="file"
@@ -136,6 +139,9 @@ Tali 🙂
                   class="sr-only"
                   id="listeningAudioFile"
                   aria-label="Upload an audio file"
+                  disabled
+                  aria-disabled="true"
+                  tabindex="-1"
                 />
               </label>
               <audio id="listeningPageAudio" class="sr-only" preload="metadata" src="assets/uploads/listening-audio.mp3"></audio>

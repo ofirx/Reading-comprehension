@@ -640,6 +640,8 @@ button.wordwall-activity-upload {
   color: rgba(31, 31, 31, 0.78) !important;
   box-shadow: none !important;
   filter: grayscale(1);
+  pointer-events: none;
+  cursor: not-allowed;
 }
 
 input[type="file"]:disabled {
