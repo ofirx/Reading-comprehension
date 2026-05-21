@@ -1,6 +1,28 @@
 (() => {
   const body = document.body;
   const page = (body && body.dataset && body.dataset.page) || "";
+  const uploadStore = window.ReadingUploadStore;
+
+  function saveBlob(id, file) {
+    if (!uploadStore || !file) return;
+    uploadStore.setBlob(id, file).catch(() => {});
+  }
+
+  function saveText(id, text) {
+    if (!uploadStore) return;
+    uploadStore.setText(id, text).catch(() => {});
+  }
+
+  function removeUpload(id) {
+    if (!uploadStore) return;
+    uploadStore.remove(id).catch(() => {});
+    try {
+      localStorage.removeItem("reading-comprehension-upload-" + id + "-text");
+      localStorage.removeItem("reading-comprehension-upload-" + id + "-num");
+    } catch (_) {
+      /* ignore */
+    }
+  }
 
   // Quiz uploads stay off (static site — no server). Other pages: file pickers work locally.
   function disableQuizUploads() {
@@ -74,7 +96,7 @@
     });
   }
 
-  // Home page: video file upload + play / pause / stop (local preview only).
+  // Home page: video file upload + play / pause / stop (saved in this browser).
   if (page === "home") {
     const video = document.getElementById("homePageVideo");
     const fileInput = document.getElementById("homeVideoFile");
@@ -83,17 +105,29 @@
     const btnStop = document.getElementById("homeVideoStop");
     if (video && fileInput && btnPlay && btnPause && btnStop) {
       let blobUrl = "";
+      const HOME_VIDEO_KEY = "home-video";
+
+      function applyHomeVideoUrl(url) {
+        if (blobUrl && blobUrl !== url) URL.revokeObjectURL(blobUrl);
+        blobUrl = url;
+        video.querySelectorAll("source").forEach((s) => s.remove());
+        video.src = url;
+        video.load();
+      }
+
+      if (uploadStore) {
+        uploadStore.getBlob(HOME_VIDEO_KEY).then((rec) => {
+          if (!rec) return;
+          const url = uploadStore.createObjectUrl(rec);
+          if (url) applyHomeVideoUrl(url);
+        });
+      }
+
       fileInput.addEventListener("change", () => {
         const file = fileInput.files && fileInput.files[0];
-        if (blobUrl) {
-          URL.revokeObjectURL(blobUrl);
-          blobUrl = "";
-        }
         if (!file || !file.type.startsWith("video/")) return;
-        blobUrl = URL.createObjectURL(file);
-        video.querySelectorAll("source").forEach((s) => s.remove());
-        video.src = blobUrl;
-        video.load();
+        saveBlob(HOME_VIDEO_KEY, file);
+        applyHomeVideoUrl(URL.createObjectURL(file));
       });
       btnPlay.addEventListener("click", () => {
         video.play().catch(() => {});
@@ -108,32 +142,45 @@
     }
   }
 
-  // Presentation (about.html): per-image gallery uploads — local preview only (not saved to server).
-  document.querySelectorAll(".gallery-item").forEach((root) => {
+  // Presentation (about.html): gallery uploads — saved in this browser until Remove.
+  document.querySelectorAll(".gallery-item").forEach((root, index) => {
     const input = root.querySelector(".gallery-file-input");
     const img = root.querySelector(".gallery-photo img");
     const clearBtn = root.querySelector(".gallery-upload-clear");
     if (!input || !img) return;
+    const storeKey = "gallery-" + index;
     const originalSrc = img.dataset.originalSrc || img.getAttribute("src") || "";
     const originalAlt = img.getAttribute("alt") || "";
     let lastUrl = "";
+
+    function applyGalleryImage(url, altText) {
+      if (lastUrl && lastUrl !== url) URL.revokeObjectURL(lastUrl);
+      lastUrl = url;
+      img.src = url;
+      img.alt = altText || img.alt;
+      if (clearBtn) clearBtn.hidden = false;
+    }
+
+    if (uploadStore) {
+      uploadStore.getBlob(storeKey).then((rec) => {
+        if (!rec) return;
+        const url = uploadStore.createObjectUrl(rec);
+        if (url) applyGalleryImage(url, rec.name || originalAlt);
+      });
+    }
+
     input.addEventListener("change", () => {
-      if (lastUrl) {
-        URL.revokeObjectURL(lastUrl);
-        lastUrl = "";
-      }
       const file = input.files && input.files[0];
       if (!file || !file.type.startsWith("image/")) return;
-      lastUrl = URL.createObjectURL(file);
-      img.src = lastUrl;
-      img.alt = file.name;
-      if (clearBtn) clearBtn.hidden = false;
+      saveBlob(storeKey, file);
+      applyGalleryImage(URL.createObjectURL(file), file.name);
     });
     clearBtn?.addEventListener("click", () => {
       if (lastUrl) {
         URL.revokeObjectURL(lastUrl);
         lastUrl = "";
       }
+      removeUpload(storeKey);
       input.value = "";
       if (originalSrc) {
         img.src = originalSrc;
@@ -143,31 +190,44 @@
     });
   });
 
-  // Practicing page: local preview for divider image uploads (no server; session only).
-  document.querySelectorAll(".divider-upload").forEach((root) => {
+  // Divider image uploads (While reading) — saved in this browser until Remove.
+  document.querySelectorAll(".divider-upload").forEach((root, index) => {
     const input = root.querySelector(".divider-file-input");
     const img = root.querySelector(".divider-upload-img");
     const placeholder = root.querySelector(".divider-upload-placeholder");
     const clearBtn = root.querySelector(".divider-upload-clear");
     if (!input || !img) return;
+    const storeKey = "divider-" + index;
     let lastUrl = "";
-    input.addEventListener("change", () => {
-      if (lastUrl) {
-        URL.revokeObjectURL(lastUrl);
-        lastUrl = "";
-      }
-      const file = input.files && input.files[0];
-      if (!file || !file.type.startsWith("image/")) return;
-      lastUrl = URL.createObjectURL(file);
-      img.src = lastUrl;
+
+    function showDividerImage(url, altText) {
+      if (lastUrl && lastUrl !== url) URL.revokeObjectURL(lastUrl);
+      lastUrl = url;
+      img.src = url;
       img.hidden = false;
-      img.alt = file.name;
+      img.alt = altText || "";
       if (placeholder) placeholder.hidden = true;
       if (clearBtn) clearBtn.hidden = false;
+    }
+
+    if (uploadStore) {
+      uploadStore.getBlob(storeKey).then((rec) => {
+        if (!rec) return;
+        const url = uploadStore.createObjectUrl(rec);
+        if (url) showDividerImage(url, rec.name);
+      });
+    }
+
+    input.addEventListener("change", () => {
+      const file = input.files && input.files[0];
+      if (!file || !file.type.startsWith("image/")) return;
+      saveBlob(storeKey, file);
+      showDividerImage(URL.createObjectURL(file), file.name);
     });
     clearBtn?.addEventListener("click", () => {
       if (lastUrl) URL.revokeObjectURL(lastUrl);
       lastUrl = "";
+      removeUpload(storeKey);
       img.removeAttribute("src");
       img.hidden = true;
       input.value = "";
@@ -189,14 +249,22 @@
     const listeningAudioPause = document.getElementById("listeningAudioPause");
     const listeningAudioStop = document.getElementById("listeningAudioStop");
 
+    const LISTENING_TEXT_KEY = "listening-text";
+    const LISTENING_AUDIO_KEY = "listening-audio";
+    const LISTENING_ZOOM_KEY = "listening-text-zoom";
+
     if (listeningTextPreview && listeningTextZoomIn && listeningTextZoomOut) {
       const zoomMin = 12;
       const zoomMax = 36;
       const zoomStep = 2;
-      let listeningTextFontPx = 15;
+      let listeningTextFontPx = uploadStore
+        ? uploadStore.getNumber(LISTENING_ZOOM_KEY, 15)
+        : 15;
       function applyListeningTextZoom() {
         listeningTextPreview.style.fontSize = listeningTextFontPx + "px";
+        if (uploadStore) uploadStore.setNumber(LISTENING_ZOOM_KEY, listeningTextFontPx);
       }
+      applyListeningTextZoom();
       listeningTextZoomIn.addEventListener("click", () => {
         listeningTextFontPx = Math.min(zoomMax, listeningTextFontPx + zoomStep);
         applyListeningTextZoom();
@@ -208,13 +276,20 @@
     }
 
     if (listeningTextFile && listeningTextPreview) {
+      if (uploadStore) {
+        uploadStore.getText(LISTENING_TEXT_KEY).then((text) => {
+          if (text) listeningTextPreview.textContent = text;
+        });
+      }
+
       listeningTextFile.addEventListener("change", () => {
         const file = listeningTextFile.files && listeningTextFile.files[0];
         if (!file) return;
         const reader = new FileReader();
         reader.onload = () => {
-          listeningTextPreview.textContent =
-            typeof reader.result === "string" ? reader.result : "";
+          const content = typeof reader.result === "string" ? reader.result : "";
+          listeningTextPreview.textContent = content;
+          saveText(LISTENING_TEXT_KEY, content);
         };
         reader.onerror = () => {
           listeningTextPreview.textContent = "Could not read this file.";
@@ -225,6 +300,17 @@
 
     let listeningAudioBlobUrl = "";
     if (listeningAudio && listeningAudioFile && listeningAudioPlay && listeningAudioPause && listeningAudioStop) {
+      if (uploadStore) {
+        uploadStore.getBlob(LISTENING_AUDIO_KEY).then((rec) => {
+          if (!rec) return;
+          const url = uploadStore.createObjectUrl(rec);
+          if (!url) return;
+          listeningAudioBlobUrl = url;
+          listeningAudio.src = url;
+          listeningAudio.load();
+        });
+      }
+
       listeningAudioFile.addEventListener("change", () => {
         const file = listeningAudioFile.files && listeningAudioFile.files[0];
         if (listeningAudioBlobUrl) {
@@ -232,6 +318,7 @@
           listeningAudioBlobUrl = "";
         }
         if (!file) return;
+        saveBlob(LISTENING_AUDIO_KEY, file);
         listeningAudioBlobUrl = URL.createObjectURL(file);
         listeningAudio.src = listeningAudioBlobUrl;
         listeningAudio.load();

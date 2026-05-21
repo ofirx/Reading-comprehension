@@ -111,7 +111,7 @@
                 <button type="button" class="btn" id="listeningTextZoomOut">Zoom out</button>
                 <button type="button" class="btn btn-forward" id="listeningTextZoomIn">Zoom in</button>
               </div>
-              <pre class="listening-text-preview" id="listeningTextPreview" aria-live="polite">No text file loaded — choose a .txt file to show it here (preview only in this browser).</pre>
+              <pre class="listening-text-preview" id="listeningTextPreview" aria-live="polite">No text file loaded — choose a .txt file. Your text and audio stay saved in this browser after refresh.</pre>
             </div>
             <div class="listening-audio-panel">
               <label class="btn btn-primary listening-audio-upload-btn">
@@ -224,7 +224,7 @@
                   <input type="file" accept="image/*" class="divider-file-input sr-only" />
                 </label>
                 <div class="divider-upload-preview">
-                  <p class="divider-upload-placeholder">No image yet — choose a file to preview (saved in this browser only).</p>
+                  <p class="divider-upload-placeholder">No image yet — uploads stay saved in this browser after refresh.</p>
                   <img class="divider-upload-img" alt="" hidden />
                   <button type="button" class="btn divider-upload-clear" hidden>Remove</button>
                 </div>
@@ -244,7 +244,7 @@
                   <input type="file" accept="image/*" class="divider-file-input sr-only" />
                 </label>
                 <div class="divider-upload-preview">
-                  <p class="divider-upload-placeholder">No image yet — choose a file to preview (saved in this browser only).</p>
+                  <p class="divider-upload-placeholder">No image yet — uploads stay saved in this browser after refresh.</p>
                   <img class="divider-upload-img" alt="" hidden />
                   <button type="button" class="btn divider-upload-clear" hidden>Remove</button>
                 </div>
@@ -264,7 +264,7 @@
                   <input type="file" accept="image/*" class="divider-file-input sr-only" />
                 </label>
                 <div class="divider-upload-preview">
-                  <p class="divider-upload-placeholder">No image yet — choose a file to preview (saved in this browser only).</p>
+                  <p class="divider-upload-placeholder">No image yet — uploads stay saved in this browser after refresh.</p>
                   <img class="divider-upload-img" alt="" hidden />
                   <button type="button" class="btn divider-upload-clear" hidden>Remove</button>
                 </div>
@@ -354,7 +354,8 @@
       </div>
     </footer>
 
-    <script defer src="scripts/main.js?v=20260521c"></script>
+    <script defer src="scripts/upload-persistence.js?v=20260521d"></script>
+    <script defer src="scripts/main.js?v=20260521d"></script>
   </body>
 </html>
 
