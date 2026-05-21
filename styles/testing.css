@@ -772,6 +772,14 @@
   padding: 6px 0;
   cursor: pointer;
 }
+.quiz-upload.is-upload-disabled {
+  pointer-events: none;
+  opacity: 0.55;
+  filter: grayscale(1);
+}
+.quiz-upload.is-upload-disabled input[type="file"] {
+  cursor: not-allowed;
+}
 
 .quiz-footer-nav {
   display: flex;
