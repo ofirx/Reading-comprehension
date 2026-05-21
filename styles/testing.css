@@ -582,6 +582,19 @@
   padding-bottom: 8px;
   border-bottom: 1px solid rgba(242, 140, 40, 0.25);
 }
+/* Part 2: taller Hebrew instruction box for extra line */
+.quiz-pane-instr-he--part2 {
+  min-height: 118px;
+  padding: 16px 18px;
+  gap: 12px;
+}
+.quiz-pane-instr-he .quiz-pane-lead-he--callout {
+  margin-top: 2px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(242, 140, 40, 0.35);
+  font-weight: 700;
+  font-size: 15px;
+}
 .quiz-pane-instr-he .quiz-pane-lead-he {
   margin: 0;
   padding: 0;
