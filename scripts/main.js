@@ -2,26 +2,108 @@
   const body = document.body;
   const page = (body && body.dataset && body.dataset.page) || "";
   const uploadStore = window.ReadingUploadStore;
+  const ghSave = window.ReadingGitHubSave;
+  let publishedFilesCache = null;
+
+  window.showGitHubSaveStatus = function (msg, isError) {
+    var el = document.getElementById("githubSaveStatus");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "githubSaveStatus";
+      el.className = "github-save-status";
+      el.setAttribute("role", "status");
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.classList.toggle("is-err", !!isError);
+    el.classList.toggle("is-ok", !isError);
+    el.hidden = false;
+    clearTimeout(el._hideTimer);
+    el._hideTimer = setTimeout(function () {
+      el.hidden = true;
+    }, 6000);
+  };
+
+  function saveToGitHub(id, data) {
+    if (!ghSave || !ghSave.isConfigured()) return;
+    ghSave
+      .saveUpload(id, data)
+      .then(function () {
+        publishedFilesCache = null;
+        window.showGitHubSaveStatus(
+          "Saved to GitHub. Run Deploy to GitHub so the live site updates.",
+          false
+        );
+      })
+      .catch(function (err) {
+        window.showGitHubSaveStatus(err.message || "GitHub save failed", true);
+      });
+  }
 
   function saveBlob(id, file) {
     if (!uploadStore || !file) return;
     uploadStore.setBlob(id, file).catch(() => {});
+    saveToGitHub(id, file);
   }
 
   function saveText(id, text) {
     if (!uploadStore) return;
     uploadStore.setText(id, text).catch(() => {});
+    saveToGitHub(id, text);
   }
 
   function removeUpload(id) {
     if (!uploadStore) return;
     uploadStore.remove(id).catch(() => {});
+    if (ghSave && ghSave.isConfigured()) {
+      ghSave.removeUpload(id).catch(function () {});
+      publishedFilesCache = null;
+    }
     try {
       localStorage.removeItem("reading-comprehension-upload-" + id + "-text");
       localStorage.removeItem("reading-comprehension-upload-" + id + "-num");
     } catch (_) {
       /* ignore */
     }
+  }
+
+  function whenPublishedFiles() {
+    if (publishedFilesCache) return Promise.resolve(publishedFilesCache);
+    if (!ghSave) return Promise.resolve({});
+    return ghSave.fetchPublishedManifest().then(function (m) {
+      publishedFilesCache = (m && m.files) || {};
+      return publishedFilesCache;
+    }).catch(function () {
+      return {};
+    });
+  }
+
+  /** Load file from assets/uploads/ on the live site (after deploy). Returns true if loaded. */
+  function tryLoadPublished(id, onText, onUrl) {
+    return whenPublishedFiles().then(function (files) {
+      var entry = files[id];
+      if (!entry || !entry.path) return false;
+      if (entry.kind === "text" && onText) {
+        return fetch(entry.path + "?t=" + Date.now())
+          .then(function (r) {
+            if (!r.ok) return false;
+            return r.text();
+          })
+          .then(function (text) {
+            if (text == null) return false;
+            onText(text);
+            return true;
+          })
+          .catch(function () {
+            return false;
+          });
+      }
+      if (onUrl) {
+        onUrl(entry.path);
+        return true;
+      }
+      return false;
+    });
   }
 
   // Quiz uploads stay off (static site — no server). Other pages: file pickers work locally.
@@ -115,13 +197,14 @@
         video.load();
       }
 
-      if (uploadStore) {
+      tryLoadPublished(HOME_VIDEO_KEY, null, applyHomeVideoUrl).then(function (loaded) {
+        if (loaded || !uploadStore) return;
         uploadStore.getBlob(HOME_VIDEO_KEY).then((rec) => {
           if (!rec) return;
           const url = uploadStore.createObjectUrl(rec);
           if (url) applyHomeVideoUrl(url);
         });
-      }
+      });
 
       fileInput.addEventListener("change", () => {
         const file = fileInput.files && fileInput.files[0];
@@ -153,32 +236,39 @@
     const originalAlt = img.getAttribute("alt") || "";
     let lastUrl = "";
 
-    function applyGalleryImage(url, altText) {
-      if (lastUrl && lastUrl !== url) URL.revokeObjectURL(lastUrl);
-      lastUrl = url;
+    let lastUrlIsObject = false;
+
+    function applyGalleryImage(url, altText, isObjectUrl) {
+      if (lastUrl && lastUrlIsObject && lastUrl !== url) URL.revokeObjectURL(lastUrl);
+      lastUrl = isObjectUrl ? url : "";
+      lastUrlIsObject = !!isObjectUrl;
       img.src = url;
       img.alt = altText || img.alt;
       if (clearBtn) clearBtn.hidden = false;
     }
 
-    if (uploadStore) {
+    tryLoadPublished(storeKey, null, function (path) {
+      applyGalleryImage(path, originalAlt, false);
+    }).then(function (loaded) {
+      if (loaded || !uploadStore) return;
       uploadStore.getBlob(storeKey).then((rec) => {
         if (!rec) return;
         const url = uploadStore.createObjectUrl(rec);
-        if (url) applyGalleryImage(url, rec.name || originalAlt);
+        if (url) applyGalleryImage(url, rec.name || originalAlt, true);
       });
-    }
+    });
 
     input.addEventListener("change", () => {
       const file = input.files && input.files[0];
       if (!file || !file.type.startsWith("image/")) return;
       saveBlob(storeKey, file);
-      applyGalleryImage(URL.createObjectURL(file), file.name);
+      applyGalleryImage(URL.createObjectURL(file), file.name, true);
     });
     clearBtn?.addEventListener("click", () => {
-      if (lastUrl) {
+      if (lastUrl && lastUrlIsObject) {
         URL.revokeObjectURL(lastUrl);
         lastUrl = "";
+        lastUrlIsObject = false;
       }
       removeUpload(storeKey);
       input.value = "";
@@ -199,10 +289,12 @@
     if (!input || !img) return;
     const storeKey = "divider-" + index;
     let lastUrl = "";
+    let lastUrlIsObject = false;
 
-    function showDividerImage(url, altText) {
-      if (lastUrl && lastUrl !== url) URL.revokeObjectURL(lastUrl);
-      lastUrl = url;
+    function showDividerImage(url, altText, isObjectUrl) {
+      if (lastUrl && lastUrlIsObject && lastUrl !== url) URL.revokeObjectURL(lastUrl);
+      lastUrl = isObjectUrl ? url : "";
+      lastUrlIsObject = !!isObjectUrl;
       img.src = url;
       img.hidden = false;
       img.alt = altText || "";
@@ -210,23 +302,27 @@
       if (clearBtn) clearBtn.hidden = false;
     }
 
-    if (uploadStore) {
+    tryLoadPublished(storeKey, null, function (path) {
+      showDividerImage(path, "", false);
+    }).then(function (loaded) {
+      if (loaded || !uploadStore) return;
       uploadStore.getBlob(storeKey).then((rec) => {
         if (!rec) return;
         const url = uploadStore.createObjectUrl(rec);
-        if (url) showDividerImage(url, rec.name);
+        if (url) showDividerImage(url, rec.name, true);
       });
-    }
+    });
 
     input.addEventListener("change", () => {
       const file = input.files && input.files[0];
       if (!file || !file.type.startsWith("image/")) return;
       saveBlob(storeKey, file);
-      showDividerImage(URL.createObjectURL(file), file.name);
+      showDividerImage(URL.createObjectURL(file), file.name, true);
     });
     clearBtn?.addEventListener("click", () => {
-      if (lastUrl) URL.revokeObjectURL(lastUrl);
+      if (lastUrl && lastUrlIsObject) URL.revokeObjectURL(lastUrl);
       lastUrl = "";
+      lastUrlIsObject = false;
       removeUpload(storeKey);
       img.removeAttribute("src");
       img.hidden = true;
@@ -276,11 +372,14 @@
     }
 
     if (listeningTextFile && listeningTextPreview) {
-      if (uploadStore) {
+      tryLoadPublished(LISTENING_TEXT_KEY, function (text) {
+        listeningTextPreview.textContent = text;
+      }).then(function (loaded) {
+        if (loaded || !uploadStore) return;
         uploadStore.getText(LISTENING_TEXT_KEY).then((text) => {
           if (text) listeningTextPreview.textContent = text;
         });
-      }
+      });
 
       listeningTextFile.addEventListener("change", () => {
         const file = listeningTextFile.files && listeningTextFile.files[0];
@@ -300,16 +399,20 @@
 
     let listeningAudioBlobUrl = "";
     if (listeningAudio && listeningAudioFile && listeningAudioPlay && listeningAudioPause && listeningAudioStop) {
-      if (uploadStore) {
+      function applyListeningAudioUrl(url) {
+        listeningAudioBlobUrl = url;
+        listeningAudio.src = url;
+        listeningAudio.load();
+      }
+
+      tryLoadPublished(LISTENING_AUDIO_KEY, null, applyListeningAudioUrl).then(function (loaded) {
+        if (loaded || !uploadStore) return;
         uploadStore.getBlob(LISTENING_AUDIO_KEY).then((rec) => {
           if (!rec) return;
           const url = uploadStore.createObjectUrl(rec);
-          if (!url) return;
-          listeningAudioBlobUrl = url;
-          listeningAudio.src = url;
-          listeningAudio.load();
+          if (url) applyListeningAudioUrl(url);
         });
-      }
+      });
 
       listeningAudioFile.addEventListener("change", () => {
         const file = listeningAudioFile.files && listeningAudioFile.files[0];
@@ -319,9 +422,7 @@
         }
         if (!file) return;
         saveBlob(LISTENING_AUDIO_KEY, file);
-        listeningAudioBlobUrl = URL.createObjectURL(file);
-        listeningAudio.src = listeningAudioBlobUrl;
-        listeningAudio.load();
+        applyListeningAudioUrl(URL.createObjectURL(file));
       });
       listeningAudioPlay.addEventListener("click", () => {
         listeningAudio.play().catch(() => {});
