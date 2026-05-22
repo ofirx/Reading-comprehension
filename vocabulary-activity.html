@@ -10,13 +10,15 @@
         --card: #fff;
         --text: #1e1b24;
         --muted: #5c5668;
-        --orange: #f28c28;
-        --orange-dark: #d96d00;
-        --green: #2e9b5a;
-        --purple: #6b4c9a;
         --border: rgba(30, 27, 36, 0.12);
         --radius: 14px;
         --shadow: 0 10px 28px rgba(30, 27, 36, 0.08);
+        --learn: #2e9b5a;
+        --learn-dark: #1f7a45;
+        --flash: #6b4c9a;
+        --flash-dark: #553d7c;
+        --test: #2563eb;
+        --test-dark: #1d4ed8;
       }
       * {
         box-sizing: border-box;
@@ -60,14 +62,10 @@
         font-weight: 700;
         font-size: 13px;
         cursor: pointer;
-        transition: background 0.15s, border-color 0.15s, color 0.15s;
-      }
-      .word-tab:hover {
-        border-color: var(--orange);
       }
       .word-tab.is-active {
-        background: var(--orange);
-        border-color: var(--orange-dark);
+        background: #f28c28;
+        border-color: #d96d00;
         color: #fff;
       }
       .panel {
@@ -83,16 +81,16 @@
       }
       .panel-head {
         text-align: center;
-        margin-bottom: 12px;
+        margin-bottom: 14px;
       }
       .panel-head h2 {
         margin: 0 0 10px;
         font-size: 1.35rem;
-        color: var(--purple);
+        color: var(--flash);
       }
       .panel-img {
         width: 100%;
-        max-height: 220px;
+        max-height: 200px;
         object-fit: contain;
         border-radius: 10px;
         background: #f0f2f6;
@@ -102,59 +100,147 @@
         flex-wrap: wrap;
         gap: 8px;
         justify-content: center;
-        margin: 14px 0 12px;
+        margin-bottom: 14px;
       }
       .mode-btn {
         padding: 10px 18px;
-        border: 1px solid var(--border);
+        border: 2px solid transparent;
         border-radius: 999px;
-        background: #fff;
+        background: #eef1f6;
         font: inherit;
         font-weight: 700;
         font-size: 14px;
         cursor: pointer;
+        color: var(--text);
       }
-      .mode-btn:hover {
-        border-color: var(--orange);
-      }
-      .mode-btn.is-active {
-        background: var(--green);
-        border-color: var(--green);
+      .mode-btn[data-mode="learn"].is-active {
+        background: var(--learn);
+        border-color: var(--learn-dark);
         color: #fff;
       }
-      .mode-view {
-        display: none;
-        padding: 14px;
-        border-radius: 10px;
-        background: rgba(107, 76, 154, 0.06);
-        min-height: 120px;
+      .mode-btn[data-mode="flashcards"].is-active {
+        background: var(--flash);
+        border-color: var(--flash-dark);
+        color: #fff;
       }
-      .mode-view.is-active {
+      .mode-btn[data-mode="test"].is-active {
+        background: var(--test);
+        border-color: var(--test-dark);
+        color: #fff;
+      }
+      .mode-panel {
+        display: none;
+      }
+      .mode-panel.is-active {
         display: block;
       }
-      .mode-view h3 {
-        margin: 0 0 8px;
-        font-size: 1rem;
-        color: var(--purple);
+      .section-block {
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 12px;
       }
-      .mode-view p {
-        margin: 0 0 8px;
+      .section-learn {
+        background: rgba(46, 155, 90, 0.08);
+        border: 1px solid rgba(46, 155, 90, 0.25);
       }
-      .example {
-        font-style: italic;
+      .section-flashcards {
+        background: rgba(107, 76, 154, 0.08);
+        border: 1px solid rgba(107, 76, 154, 0.25);
+      }
+      .section-test {
+        background: rgba(37, 99, 235, 0.08);
+        border: 1px solid rgba(37, 99, 235, 0.25);
+      }
+      .instr-en {
+        margin: 0 0 6px;
+        font-size: 14px;
+      }
+      .instr-he {
+        margin: 0 0 12px;
+        font-size: 14px;
+        direction: rtl;
+        text-align: right;
         color: var(--muted);
       }
-      /* Flashcard */
+      .start-btn,
+      .restart-btn,
+      .test-nav-btn {
+        display: inline-block;
+        margin: 4px 6px 4px 0;
+        padding: 11px 22px;
+        border: none;
+        border-radius: 999px;
+        font: inherit;
+        font-weight: 800;
+        font-size: 14px;
+        cursor: pointer;
+        color: #fff;
+      }
+      .start-btn--learn {
+        background: var(--learn);
+      }
+      .start-btn--learn:hover {
+        background: var(--learn-dark);
+      }
+      .start-btn--flash {
+        background: var(--flash);
+      }
+      .start-btn--flash:hover {
+        background: var(--flash-dark);
+      }
+      .start-btn--test {
+        background: var(--test);
+      }
+      .start-btn--test:hover {
+        background: var(--test-dark);
+      }
+      .restart-btn {
+        background: #5c5668;
+        font-size: 13px;
+        padding: 8px 16px;
+      }
+      .restart-btn:hover {
+        background: #403a48;
+      }
+      .section-content {
+        display: none;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px dashed rgba(30, 27, 36, 0.15);
+      }
+      .section-content.is-open {
+        display: block;
+      }
+      .sentence-pair {
+        margin: 0 0 12px;
+        padding: 12px;
+        border-radius: 10px;
+        background: #fff;
+        border: 1px solid var(--border);
+      }
+      .sentence-pair p {
+        margin: 0 0 6px;
+      }
+      .sentence-pair .he-rtl {
+        margin: 0;
+        direction: rtl;
+        text-align: right;
+        color: var(--flash);
+        font-weight: 650;
+      }
+      .meaning-block {
+        margin-bottom: 12px;
+      }
       .flashcard {
         perspective: 900px;
         max-width: 360px;
-        margin: 0 auto;
-        min-height: 260px;
+        margin: 0 auto 12px;
+        min-height: 280px;
       }
       .flashcard-inner {
         position: relative;
         width: 100%;
-        min-height: 260px;
+        min-height: 280px;
         transition: transform 0.45s;
         transform-style: preserve-3d;
         cursor: pointer;
@@ -170,9 +256,9 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 20px;
+        padding: 18px;
         border-radius: 12px;
-        border: 2px solid var(--orange);
+        border: 2px solid var(--flash);
         background: #fff;
         text-align: center;
       }
@@ -182,19 +268,46 @@
       .flashcard-word {
         font-size: 1.75rem;
         font-weight: 800;
-        color: var(--purple);
+        color: var(--flash);
       }
       .flashcard-hint {
-        margin-top: 10px;
         font-size: 13px;
         color: var(--muted);
+        text-align: center;
+        margin-bottom: 8px;
       }
-      /* Test */
+      .he-block {
+        width: 100%;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px dashed rgba(107, 76, 154, 0.4);
+        direction: rtl;
+        text-align: right;
+      }
+      .he-word {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--flash);
+      }
+      .test-progress {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--test);
+        margin-bottom: 10px;
+      }
+      .test-word-tag {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(37, 99, 235, 0.12);
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
       .test-options {
         display: flex;
         flex-direction: column;
         gap: 8px;
-        margin-top: 10px;
+        margin: 10px 0;
       }
       .test-options label {
         display: flex;
@@ -207,76 +320,53 @@
         cursor: pointer;
       }
       .test-options label:has(input:checked) {
-        border-color: var(--green);
+        border-color: var(--learn);
         background: rgba(46, 155, 90, 0.08);
       }
-      .test-check {
-        margin-top: 12px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 999px;
-        background: var(--orange);
-        color: #fff;
-        font: inherit;
-        font-weight: 700;
-        cursor: pointer;
-      }
       .test-feedback {
-        margin-top: 10px;
+        margin: 8px 0;
         font-weight: 700;
-        min-height: 1.4em;
+        min-height: 1.3em;
       }
       .test-feedback.is-ok {
-        color: var(--green);
+        color: var(--learn);
       }
       .test-feedback.is-bad {
         color: #c62828;
       }
-      .he-rtl {
-        direction: rtl;
-        text-align: right;
-        font-size: 1.05em;
-        line-height: 1.55;
+      .test-nav-btn {
+        background: var(--test);
       }
-      .he-label {
-        display: block;
-        margin-top: 10px;
-        font-size: 12px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: var(--purple);
-        text-align: right;
-        direction: rtl;
+      .test-nav-btn:hover {
+        background: var(--test-dark);
       }
-      .flashcard-back .he-block {
-        width: 100%;
-        margin-top: 12px;
-        padding-top: 12px;
-        border-top: 1px dashed rgba(242, 140, 40, 0.55);
+      .test-nav-btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
       }
-      .flashcard-back .he-word {
-        font-size: 1.35rem;
-        font-weight: 800;
-        color: var(--purple);
+      .test-done {
+        padding: 12px;
+        border-radius: 10px;
+        background: rgba(46, 155, 90, 0.12);
+        font-weight: 700;
+        color: var(--learn-dark);
       }
     </style>
   </head>
   <body>
     <div class="wrap">
       <p class="intro" lang="en">
-        <u>Activity 1</u>: Practice the new vocabulary from Tali&apos;s message. Choose a word, then click
-        <strong>Learn</strong> to study it, <strong>Flashcards</strong> to practice, and <strong>Test</strong> to check
-        your knowledge. Good luck! 🙂
+        <u>Activity 1</u>: Choose a word. For each part — <strong>Learn</strong>, <strong>Flashcards</strong>,
+        <strong>Test</strong> — read the instructions and press <strong>Start</strong>. Good luck! 🙂
       </p>
 
       <div class="word-tabs" role="tablist" aria-label="Vocabulary words">
-        <button type="button" class="word-tab is-active" role="tab" aria-selected="true" data-word="meet">Meet</button>
-        <button type="button" class="word-tab" role="tab" aria-selected="false" data-word="name">Name</button>
-        <button type="button" class="word-tab" role="tab" aria-selected="false" data-word="phone">Phone- number</button>
-        <button type="button" class="word-tab" role="tab" aria-selected="false" data-word="address">Address</button>
-        <button type="button" class="word-tab" role="tab" aria-selected="false" data-word="pencil">Pencil</button>
-        <button type="button" class="word-tab" role="tab" aria-selected="false" data-word="food">Food</button>
+        <button type="button" class="word-tab is-active" data-word="meet">Meet</button>
+        <button type="button" class="word-tab" data-word="name">Name</button>
+        <button type="button" class="word-tab" data-word="phone">Phone- number</button>
+        <button type="button" class="word-tab" data-word="address">Address</button>
+        <button type="button" class="word-tab" data-word="pencil">Pencil</button>
+        <button type="button" class="word-tab" data-word="food">Food</button>
       </div>
 
       <div id="panels"></div>
@@ -290,11 +380,13 @@
             id: "meet",
             label: "Meet",
             img: BASE + "meet.png",
-            meaning: "To see someone for the first time and say hello.",
-            meaningHe: "להכיר מישהו ולהגיד שלום בפעם הראשונה",
-            example: "It's nice to meet you.",
-            exampleHe: "נעים להכיר",
-            labelHe: "להכיר / נעים להכיר",
+            meaning: "To see someone and say hello for the first time.",
+            meaningHe: "להכיר מישהו ולהגיד שלום",
+            labelHe: "להכיר",
+            sentences: [
+              { en: "It's nice to meet you.", he: "נעים להכיר." },
+              { en: "I'm your new English teacher. It's nice to meet you.", he: "אני המורה החדשה שלכם לאנגלית. נעים להכיר." },
+            ],
             testQ: "What does Tali say when she greets the class?",
             testOpts: [
               { v: "a", t: "It's nice to meet you." },
@@ -307,11 +399,13 @@
             id: "name",
             label: "Name",
             img: BASE + "name.png",
-            meaning: "The word people call you.",
+            meaning: "The word people use to call you.",
             meaningHe: "המילה שקוראים לך",
-            example: "I want your name.",
-            exampleHe: "אני רוצה את השם שלך",
             labelHe: "שם",
+            sentences: [
+              { en: "My name is Tali.", he: "קוראים לי טלי." },
+              { en: "I want your name.", he: "אני רוצה את השם שלך." },
+            ],
             testQ: "What does Tali ask students to write?",
             testOpts: [
               { v: "a", t: "Your name" },
@@ -324,15 +418,17 @@
             id: "phone",
             label: "Phone- number",
             img: BASE + "phone-number.png",
-            meaning: "Numbers you use to call someone on the phone.",
-            meaningHe: "מספרים שמשתמשים בהם כדי להתקשר בטלפון",
-            example: "I want your name, phone number and address.",
-            exampleHe: "אני רוצה את השם, מספר הטלפון והכתובת שלך",
+            meaning: "Numbers you use to call someone.",
+            meaningHe: "מספרים שמשתמשים בהם כדי להתקשר",
             labelHe: "מספר טלפון",
-            testQ: "Tali wants students to give their phone number. True or false?",
+            sentences: [
+              { en: "I want your phone number.", he: "אני רוצה את מספר הטלפון שלך." },
+              { en: "Write your name, phone number and address.", he: "כתבו את השם, מספר הטלפון והכתובת." },
+            ],
+            testQ: "Does Tali want your phone number?",
             testOpts: [
-              { v: "a", t: "True" },
-              { v: "b", t: "False" },
+              { v: "a", t: "Yes" },
+              { v: "b", t: "No" },
             ],
             testAns: "a",
           },
@@ -340,11 +436,13 @@
             id: "address",
             label: "Address",
             img: BASE + "address.png",
-            meaning: "Where you live (street, city, country).",
-            meaningHe: "המקום שבו אתה גר (רחוב, עיר, מדינה)",
-            example: "I want your name, phone number and address.",
-            exampleHe: "אני רוצה את השם, מספר הטלפון והכתובת שלך",
+            meaning: "Where you live.",
+            meaningHe: "המקום שבו אתה גר",
             labelHe: "כתובת",
+            sentences: [
+              { en: "I want your address.", he: "אני רוצה את הכתובת שלך." },
+              { en: "Please write your name, phone number and address.", he: "כתבו את השם, מספר הטלפון והכתובת." },
+            ],
             testQ: "Which word means where you live?",
             testOpts: [
               { v: "a", t: "Address" },
@@ -359,10 +457,12 @@
             img: BASE + "pencil.png",
             meaning: "Something you write with.",
             meaningHe: "משהו שכותבים איתו",
-            example: "You need a book, a notebook and a pencil.",
-            exampleHe: "אתם צריכים ספר, מחברת ועפרון",
             labelHe: "עפרון",
-            testQ: "What do students need to bring to class?",
+            sentences: [
+              { en: "You need a pencil.", he: "אתם צריכים עפרון." },
+              { en: "Bring a book, a notebook and a pencil.", he: "הביאו ספר, מחברת ועפרון." },
+            ],
+            testQ: "What should students bring to class?",
             testOpts: [
               { v: "a", t: "A book, a notebook and a pencil" },
               { v: "b", t: "Only food" },
@@ -376,10 +476,12 @@
             img: BASE + "food.png",
             meaning: "Things you eat.",
             meaningHe: "דברים שאוכלים",
-            example: "No food, please.",
-            exampleHe: "בלי אוכל, בבקשה",
             labelHe: "אוכל",
-            testQ: "Can students bring food to English class?",
+            sentences: [
+              { en: "No food, please.", he: "בלי אוכל, בבקשה." },
+              { en: "Do not bring food to English class.", he: "אל תביאו אוכל לשיעור אנגלית." },
+            ],
+            testQ: "Can students bring food to class?",
             testOpts: [
               { v: "a", t: "Yes" },
               { v: "b", t: "No" },
@@ -388,9 +490,12 @@
           },
         ];
 
-        var panelsRoot = document.getElementById("panels");
         var activeWord = "meet";
         var activeMode = "learn";
+        var testQueue = [];
+        var testIndex = 0;
+        var testChecked = false;
+        var sectionShuffle = {};
 
         function esc(s) {
           return String(s)
@@ -400,111 +505,163 @@
             .replace(/"/g, "&quot;");
         }
 
-        function buildPanel(w) {
-          var testHtml = w.testOpts
-            .map(function (o) {
+        function shuffle(arr) {
+          var a = arr.slice();
+          for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = a[i];
+            a[i] = a[j];
+            a[j] = t;
+          }
+          return a;
+        }
+
+        function wordById(id) {
+          for (var i = 0; i < WORDS.length; i++) {
+            if (WORDS[i].id === id) return WORDS[i];
+          }
+          return null;
+        }
+
+        function shuffleKey(wordId, mode) {
+          return wordId + "-" + mode;
+        }
+
+        function getShuffledSentences(w, mode) {
+          var key = shuffleKey(w.id, mode);
+          if (!sectionShuffle[key]) {
+            sectionShuffle[key] = shuffle([0, 1]);
+          }
+          return sectionShuffle[key].map(function (i) {
+            return w.sentences[i];
+          });
+        }
+
+        function resetShuffle(wordId, mode) {
+          delete sectionShuffle[shuffleKey(wordId, mode)];
+        }
+
+        function sentencesHtml(sents) {
+          return sents
+            .map(function (s) {
               return (
-                '<label><input type="radio" name="test-' +
-                w.id +
-                '" value="' +
-                o.v +
-                '" /> ' +
-                esc(o.t) +
-                "</label>"
+                '<div class="sentence-pair">' +
+                "<p><strong>English:</strong> &ldquo;" +
+                esc(s.en) +
+                "&rdquo;</p>" +
+                '<p class="he-rtl"><strong>עברית:</strong> &ldquo;' +
+                esc(s.he) +
+                "&rdquo;</p>" +
+                "</div>"
               );
             })
             .join("");
+        }
 
+        function buildLearnContent(w) {
+          var sents = getShuffledSentences(w, "learn");
           return (
-            '<section class="panel' +
-            (w.id === activeWord ? " is-active" : "") +
-            '" id="panel-' +
-            w.id +
-            '" role="tabpanel" data-word="' +
-            w.id +
-            '">' +
-            '<div class="panel-head">' +
-            "<h2>" +
-            esc(w.label) +
-            "</h2>" +
-            '<img class="panel-img" src="' +
-            esc(w.img) +
-            '" alt="' +
-            esc(w.label) +
-            '" loading="lazy" />' +
-            "</div>" +
-            '<div class="mode-btns" role="group" aria-label="Study mode for ' +
-            esc(w.label) +
-            '">' +
-            '<button type="button" class="mode-btn is-active" data-mode="learn">Learn</button>' +
-            '<button type="button" class="mode-btn" data-mode="flashcards">Flashcards</button>' +
-            '<button type="button" class="mode-btn" data-mode="test">Test</button>' +
-            "</div>" +
-            '<div class="mode-view is-active" data-mode-view="learn">' +
-            "<h3>Learn</h3>" +
+            '<div class="meaning-block">' +
             "<p><strong>Meaning:</strong> " +
             esc(w.meaning) +
             "</p>" +
-            '<p class="he-rtl"><strong>משמעות בעברית:</strong> ' +
-            esc(w.meaningHe || "") +
+            '<p class="he-rtl"><strong>משמעות:</strong> ' +
+            esc(w.meaningHe) +
             "</p>" +
-            '<p class="example"><strong>From Tali&apos;s message:</strong> &ldquo;' +
-            esc(w.example) +
-            "&rdquo;</p>" +
-            '<p class="he-rtl example"><strong>בעברית:</strong> &ldquo;' +
-            esc(w.exampleHe || "") +
-            "&rdquo;</p>" +
             "</div>" +
-            '<div class="mode-view" data-mode-view="flashcards">' +
-            "<h3>Flashcards</h3>" +
-            '<p class="flashcard-hint" style="text-align:center;margin-bottom:8px">Click the card to flip</p>' +
+            "<p><strong>Two sentences we use this word in:</strong></p>" +
+            sentencesHtml(sents) +
+            '<button type="button" class="restart-btn" data-restart="learn">Restart</button>'
+          );
+        }
+
+        function buildFlashContent(w) {
+          var sents = getShuffledSentences(w, "flash");
+          return (
+            '<p class="flashcard-hint">Click the card to flip</p>' +
             '<div class="flashcard" tabindex="0" role="button" aria-label="Flip flashcard">' +
             '<div class="flashcard-inner">' +
             '<div class="flashcard-face flashcard-front">' +
             '<span class="flashcard-word">' +
             esc(w.label) +
-            "</span>" +
-            "</div>" +
+            "</span></div>" +
             '<div class="flashcard-face flashcard-back">' +
             "<p>" +
             esc(w.meaning) +
             "</p>" +
-            '<p class="example">&ldquo;' +
-            esc(w.example) +
-            "&rdquo;</p>" +
-            '<div class="he-block" lang="he" dir="rtl">' +
-            '<span class="he-label">תרגום לעברית</span>' +
+            '<div class="he-block" lang="he">' +
             '<p class="he-word">' +
-            esc(w.labelHe || "") +
+            esc(w.labelHe) +
             "</p>" +
             "<p>" +
-            esc(w.meaningHe || "") +
-            "</p>" +
-            '<p class="example">&ldquo;' +
-            esc(w.exampleHe || "") +
-            "&rdquo;</p>" +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            '<div class="mode-view" data-mode-view="test">' +
-            "<h3>Test</h3>" +
-            "<p>" +
-            esc(w.testQ) +
-            "</p>" +
-            '<div class="test-options">' +
-            testHtml +
-            "</div>" +
-            '<button type="button" class="test-check" data-answer="' +
-            w.testAns +
-            '">Check answer</button>' +
-            '<p class="test-feedback" aria-live="polite"></p>' +
-            "</div>" +
-            "</section>"
+            esc(w.meaningHe) +
+            "</p></div>" +
+            '<p style="margin-top:10px;width:100%"><strong>Sentences:</strong></p>' +
+            sentencesHtml(sents) +
+            "</div></div></div>" +
+            '<button type="button" class="restart-btn" data-restart="flashcards">Restart</button>'
           );
         }
 
+        function buildTestShell() {
+          return (
+            '<div class="test-runner">' +
+            '<p class="test-progress" data-test-progress></p>' +
+            '<span class="test-word-tag" data-test-tag></span>' +
+            '<p data-test-question></p>' +
+            '<div class="test-options" data-test-options></div>' +
+            '<p class="test-feedback" aria-live="polite" data-test-feedback></p>' +
+            '<button type="button" class="test-nav-btn" data-test-check>Check answer</button>' +
+            '<button type="button" class="test-nav-btn" data-test-next hidden>Next word</button>' +
+            '<button type="button" class="restart-btn" data-restart="test">Restart test</button>' +
+            '<div class="test-done" data-test-done hidden></div>' +
+            "</div>"
+          );
+        }
+
+        function buildPanel(w) {
+          return (
+            '<section class="panel' +
+            (w.id === activeWord ? " is-active" : "") +
+            '" data-word="' +
+            w.id +
+            '">' +
+            '<div class="panel-head"><h2>' +
+            esc(w.label) +
+            '</h2><img class="panel-img" src="' +
+            esc(w.img) +
+            '" alt="' +
+            esc(w.label) +
+            '" loading="lazy" /></div>' +
+            '<div class="mode-btns">' +
+            '<button type="button" class="mode-btn is-active" data-mode="learn">Learn</button>' +
+            '<button type="button" class="mode-btn" data-mode="flashcards">Flashcards</button>' +
+            '<button type="button" class="mode-btn" data-mode="test">Test</button>' +
+            "</div>" +
+            '<div class="mode-panel is-active" data-mode-panel="learn">' +
+            '<div class="section-block section-learn">' +
+            '<p class="instr-en">Read the meaning and two English sentences. Then read the Hebrew.</p>' +
+            '<p class="instr-he">קראו את המשמעות ואת שתי המשפטים באנגלית. אחר כך קראו את העברית. לחצו Start כדי להתחיל.</p>' +
+            '<button type="button" class="start-btn start-btn--learn" data-start="learn">Start</button>' +
+            '<div class="section-content" data-content="learn"></div></div></div>' +
+            '<div class="mode-panel" data-mode-panel="flashcards">' +
+            '<div class="section-block section-flashcards">' +
+            '<p class="instr-en">Press Start, then click the card to see the meaning and sentences in Hebrew.</p>' +
+            '<p class="instr-he">לחצו Start, ואז לחצו על הכרטיס כדי לראות את המשמעות והמשפטים בעברית.</p>' +
+            '<button type="button" class="start-btn start-btn--flash" data-start="flashcards">Start</button>' +
+            '<div class="section-content" data-content="flashcards"></div></div></div>' +
+            '<div class="mode-panel" data-mode-panel="test">' +
+            '<div class="section-block section-test">' +
+            '<p class="instr-en">Press Start for a test on all six words (shuffled). Check each answer, then go to the next word.</p>' +
+            '<p class="instr-he">לחצו Start לבחינה על כל שש המילים (בסדר אקראי). בדקו כל תשובה ואז עברו למילה הבאה.</p>' +
+            '<button type="button" class="start-btn start-btn--test" data-start="test">Start</button>' +
+            '<div class="section-content" data-content="test">' +
+            buildTestShell() +
+            "</div></div></div></section>"
+          );
+        }
+
+        var panelsRoot = document.getElementById("panels");
         panelsRoot.innerHTML = WORDS.map(buildPanel).join("");
 
         function setWord(id) {
@@ -520,20 +677,98 @@
         }
 
         function setMode(panel, mode) {
+          activeMode = mode;
           panel.querySelectorAll(".mode-btn").forEach(function (b) {
             b.classList.toggle("is-active", b.dataset.mode === mode);
           });
-          panel.querySelectorAll(".mode-view").forEach(function (v) {
-            v.classList.toggle("is-active", v.dataset.modeView === mode);
+          panel.querySelectorAll(".mode-panel").forEach(function (p) {
+            p.classList.toggle("is-active", p.dataset.modePanel === mode);
           });
-          var card = panel.querySelector(".flashcard");
-          if (card) card.classList.remove("is-flipped");
+        }
+
+        function openSection(panel, mode) {
+          var content = panel.querySelector('[data-content="' + mode + '"]');
+          if (!content) return;
+          content.classList.add("is-open");
+          var w = wordById(panel.dataset.word);
+          if (mode === "learn") content.innerHTML = buildLearnContent(w);
+          if (mode === "flashcards") content.innerHTML = buildFlashContent(w);
+          if (mode === "test") startTest(panel);
+          var startBtn = panel.querySelector('[data-start="' + mode + '"]');
+          if (startBtn) startBtn.hidden = true;
+        }
+
+        function closeSection(panel, mode) {
+          var content = panel.querySelector('[data-content="' + mode + '"]');
+          if (content) {
+            content.classList.remove("is-open");
+            if (mode !== "test") content.innerHTML = "";
+          }
+          var startBtn = panel.querySelector('[data-start="' + mode + '"]');
+          if (startBtn) startBtn.hidden = false;
+        }
+
+        function startTest(panel) {
+          testQueue = shuffle(WORDS.map(function (w) {
+            return w.id;
+          }));
+          testIndex = 0;
+          testChecked = false;
+          renderTestQuestion(panel);
+        }
+
+        function renderTestQuestion(panel) {
+          var runner = panel.querySelector(".test-runner");
+          if (!runner) return;
+          var progress = runner.querySelector("[data-test-progress]");
+          var tag = runner.querySelector("[data-test-tag]");
+          var qEl = runner.querySelector("[data-test-question]");
+          var opts = runner.querySelector("[data-test-options]");
+          var fb = runner.querySelector("[data-test-feedback]");
+          var checkBtn = runner.querySelector("[data-test-check]");
+          var nextBtn = runner.querySelector("[data-test-next]");
+          var done = runner.querySelector("[data-test-done]");
+
+          done.hidden = true;
+          fb.textContent = "";
+          fb.className = "test-feedback";
+          testChecked = false;
+          checkBtn.hidden = false;
+          nextBtn.hidden = true;
+
+          if (testIndex >= testQueue.length) {
+            progress.textContent = "Test complete!";
+            tag.textContent = "";
+            qEl.textContent = "";
+            opts.innerHTML = "";
+            checkBtn.hidden = true;
+            done.hidden = false;
+            done.textContent =
+              "Well done! You finished all " + testQueue.length + " words. Press Restart test to try again in a new order.";
+            return;
+          }
+
+          var w = wordById(testQueue[testIndex]);
+          progress.textContent = "Question " + (testIndex + 1) + " of " + testQueue.length;
+          tag.textContent = w.label;
+          qEl.textContent = w.testQ;
+          opts.innerHTML = w.testOpts
+            .map(function (o) {
+              return (
+                '<label><input type="radio" name="test-run" value="' +
+                o.v +
+                '" /> ' +
+                esc(o.t) +
+                "</label>"
+              );
+            })
+            .join("");
+          checkBtn.dataset.answer = w.testAns;
         }
 
         document.querySelector(".word-tabs").addEventListener("click", function (e) {
           var tab = e.target.closest(".word-tab");
-          if (!tab) return;
-          setWord(tab.dataset.word);
+          if (tab) setWord(tab.dataset.word);
         });
 
         panelsRoot.addEventListener("click", function (e) {
@@ -546,28 +781,59 @@
             return;
           }
 
+          var startBtn = e.target.closest("[data-start]");
+          if (startBtn) {
+            openSection(panel, startBtn.dataset.start);
+            return;
+          }
+
+          var restartBtn = e.target.closest("[data-restart]");
+          if (restartBtn) {
+            var mode = restartBtn.dataset.restart;
+            var wid = panel.dataset.word;
+            resetShuffle(wid, mode === "flashcards" ? "flash" : mode);
+            if (mode === "test") {
+              startTest(panel);
+              return;
+            }
+            closeSection(panel, mode);
+            openSection(panel, mode);
+            return;
+          }
+
           var flash = e.target.closest(".flashcard");
           if (flash) {
             flash.classList.toggle("is-flipped");
             return;
           }
 
-          var check = e.target.closest(".test-check");
-          if (check) {
-            var fb = panel.querySelector(".test-feedback");
-            var picked = panel.querySelector('input[name="test-' + panel.dataset.word + '"]:checked');
+          var checkBtn = e.target.closest("[data-test-check]");
+          if (checkBtn && !checkBtn.hidden) {
+            var fb = panel.querySelector("[data-test-feedback]");
+            var picked = panel.querySelector('input[name="test-run"]:checked');
             if (!picked) {
               fb.textContent = "Choose an answer first.";
               fb.className = "test-feedback is-bad";
               return;
             }
-            if (picked.value === check.dataset.answer) {
-              fb.textContent = "Correct! Well done.";
+            if (picked.value === checkBtn.dataset.answer) {
+              fb.textContent = "Correct!";
               fb.className = "test-feedback is-ok";
             } else {
               fb.textContent = "Not quite — try again.";
               fb.className = "test-feedback is-bad";
+              return;
             }
+            testChecked = true;
+            checkBtn.hidden = true;
+            panel.querySelector("[data-test-next]").hidden = false;
+            return;
+          }
+
+          var nextBtn = e.target.closest("[data-test-next]");
+          if (nextBtn && testChecked) {
+            testIndex++;
+            renderTestQuestion(panel);
           }
         });
 
