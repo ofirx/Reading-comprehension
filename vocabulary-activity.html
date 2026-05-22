@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Activity 1 — Vocabulary</title>
+    <style>
+      :root {
+        --bg: #f4f6fb;
+        --card: #fff;
+        --text: #1e1b24;
+        --muted: #5c5668;
+        --orange: #f28c28;
+        --orange-dark: #d96d00;
+        --green: #2e9b5a;
+        --purple: #6b4c9a;
+        --border: rgba(30, 27, 36, 0.12);
+        --radius: 14px;
+        --shadow: 0 10px 28px rgba(30, 27, 36, 0.08);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 16px 14px 24px;
+      }
+      .intro {
+        background: #e8eaef;
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        margin-bottom: 16px;
+        font-size: 15px;
+      }
+      .intro u {
+        font-weight: 800;
+      }
+      .word-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .word-tab {
+        flex: 1 1 calc(33.333% - 8px);
+        min-width: 96px;
+        padding: 10px 8px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--card);
+        font: inherit;
+        font-weight: 700;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s, color 0.15s;
+      }
+      .word-tab:hover {
+        border-color: var(--orange);
+      }
+      .word-tab.is-active {
+        background: var(--orange);
+        border-color: var(--orange-dark);
+        color: #fff;
+      }
+      .panel {
+        display: none;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 16px;
+      }
+      .panel.is-active {
+        display: block;
+      }
+      .panel-head {
+        text-align: center;
+        margin-bottom: 12px;
+      }
+      .panel-head h2 {
+        margin: 0 0 10px;
+        font-size: 1.35rem;
+        color: var(--purple);
+      }
+      .panel-img {
+        width: 100%;
+        max-height: 220px;
+        object-fit: contain;
+        border-radius: 10px;
+        background: #f0f2f6;
+      }
+      .mode-btns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin: 14px 0 12px;
+      }
+      .mode-btn {
+        padding: 10px 18px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: #fff;
+        font: inherit;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .mode-btn:hover {
+        border-color: var(--orange);
+      }
+      .mode-btn.is-active {
+        background: var(--green);
+        border-color: var(--green);
+        color: #fff;
+      }
+      .mode-view {
+        display: none;
+        padding: 14px;
+        border-radius: 10px;
+        background: rgba(107, 76, 154, 0.06);
+        min-height: 120px;
+      }
+      .mode-view.is-active {
+        display: block;
+      }
+      .mode-view h3 {
+        margin: 0 0 8px;
+        font-size: 1rem;
+        color: var(--purple);
+      }
+      .mode-view p {
+        margin: 0 0 8px;
+      }
+      .example {
+        font-style: italic;
+        color: var(--muted);
+      }
+      /* Flashcard */
+      .flashcard {
+        perspective: 900px;
+        max-width: 360px;
+        margin: 0 auto;
+        min-height: 200px;
+      }
+      .flashcard-inner {
+        position: relative;
+        width: 100%;
+        min-height: 200px;
+        transition: transform 0.45s;
+        transform-style: preserve-3d;
+        cursor: pointer;
+      }
+      .flashcard.is-flipped .flashcard-inner {
+        transform: rotateY(180deg);
+      }
+      .flashcard-face {
+        position: absolute;
+        inset: 0;
+        backface-visibility: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        border-radius: 12px;
+        border: 2px solid var(--orange);
+        background: #fff;
+        text-align: center;
+      }
+      .flashcard-back {
+        transform: rotateY(180deg);
+      }
+      .flashcard-word {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--purple);
+      }
+      .flashcard-hint {
+        margin-top: 10px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      /* Test */
+      .test-options {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .test-options label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #fff;
+        cursor: pointer;
+      }
+      .test-options label:has(input:checked) {
+        border-color: var(--green);
+        background: rgba(46, 155, 90, 0.08);
+      }
+      .test-check {
+        margin-top: 12px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 999px;
+        background: var(--orange);
+        color: #fff;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .test-feedback {
+        margin-top: 10px;
+        font-weight: 700;
+        min-height: 1.4em;
+      }
+      .test-feedback.is-ok {
+        color: var(--green);
+      }
+      .test-feedback.is-bad {
+        color: #c62828;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <p class="intro" lang="en">
+        <u>Activity 1</u>: Practice the new vocabulary from Tali&apos;s message. Choose a word, then click
+        <strong>Learn</strong> to study it, <strong>Flashcards</strong> to practice, and <strong>Test</strong> to check
+        your knowledge. Good luck! 🙂
+      </p>
+
+      <div class="word-tabs" role="tablist" aria-label="Vocabulary words">
+        <button type="button" class="word-tab is-active" role="tab" aria-selected="true" data-word="meet">Meet</button>
+        <button type="button" class="word-tab" role="tab" aria-selected="false" data-word="name">Name</button>
+        <button type="button" class="word-tab" role="tab" aria-selected="false" data-word="phone">Phone- number</button>
+        <button type="button" class="word-tab" role="tab" aria-selected="false" data-word="address">Address</button>
+        <button type="button" class="word-tab" role="tab" aria-selected="false" data-word="pencil">Pencil</button>
+        <button type="button" class="word-tab" role="tab" aria-selected="false" data-word="food">Food</button>
+      </div>
+
+      <div id="panels"></div>
+    </div>
+
+    <script>
+      (function () {
+        var BASE = "assets/vocabulary/";
+        var WORDS = [
+          {
+            id: "meet",
+            label: "Meet",
+            img: BASE + "meet.png",
+            meaning: "To see someone for the first time and say hello.",
+            example: "It's nice to meet you.",
+            testQ: "What does Tali say when she greets the class?",
+            testOpts: [
+              { v: "a", t: "It's nice to meet you." },
+              { v: "b", t: "No food, please." },
+              { v: "c", t: "See you on Monday." },
+            ],
+            testAns: "a",
+          },
+          {
+            id: "name",
+            label: "Name",
+            img: BASE + "name.png",
+            meaning: "The word people call you.",
+            example: "I want your name.",
+            testQ: "What does Tali ask students to write?",
+            testOpts: [
+              { v: "a", t: "Your name" },
+              { v: "b", t: "Your food" },
+              { v: "c", t: "Your pencil only" },
+            ],
+            testAns: "a",
+          },
+          {
+            id: "phone",
+            label: "Phone- number",
+            img: BASE + "phone-number.png",
+            meaning: "Numbers you use to call someone on the phone.",
+            example: "I want your name, phone number and address.",
+            testQ: "Tali wants students to give their phone number. True or false?",
+            testOpts: [
+              { v: "a", t: "True" },
+              { v: "b", t: "False" },
+            ],
+            testAns: "a",
+          },
+          {
+            id: "address",
+            label: "Address",
+            img: BASE + "address.png",
+            meaning: "Where you live (street, city, country).",
+            example: "I want your name, phone number and address.",
+            testQ: "Which word means where you live?",
+            testOpts: [
+              { v: "a", t: "Address" },
+              { v: "b", t: "Pencil" },
+              { v: "c", t: "Food" },
+            ],
+            testAns: "a",
+          },
+          {
+            id: "pencil",
+            label: "Pencil",
+            img: BASE + "pencil.png",
+            meaning: "Something you write with.",
+            example: "You need a book, a notebook and a pencil.",
+            testQ: "What do students need to bring to class?",
+            testOpts: [
+              { v: "a", t: "A book, a notebook and a pencil" },
+              { v: "b", t: "Only food" },
+              { v: "c", t: "Only games" },
+            ],
+            testAns: "a",
+          },
+          {
+            id: "food",
+            label: "Food",
+            img: BASE + "food.png",
+            meaning: "Things you eat.",
+            example: "No food, please.",
+            testQ: "Can students bring food to English class?",
+            testOpts: [
+              { v: "a", t: "Yes" },
+              { v: "b", t: "No" },
+            ],
+            testAns: "b",
+          },
+        ];
+
+        var panelsRoot = document.getElementById("panels");
+        var activeWord = "meet";
+        var activeMode = "learn";
+
+        function esc(s) {
+          return String(s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+        }
+
+        function buildPanel(w) {
+          var testHtml = w.testOpts
+            .map(function (o) {
+              return (
+                '<label><input type="radio" name="test-' +
+                w.id +
+                '" value="' +
+                o.v +
+                '" /> ' +
+                esc(o.t) +
+                "</label>"
+              );
+            })
+            .join("");
+
+          return (
+            '<section class="panel' +
+            (w.id === activeWord ? " is-active" : "") +
+            '" id="panel-' +
+            w.id +
+            '" role="tabpanel" data-word="' +
+            w.id +
+            '">' +
+            '<div class="panel-head">' +
+            "<h2>" +
+            esc(w.label) +
+            "</h2>" +
+            '<img class="panel-img" src="' +
+            esc(w.img) +
+            '" alt="' +
+            esc(w.label) +
+            '" loading="lazy" />' +
+            "</div>" +
+            '<div class="mode-btns" role="group" aria-label="Study mode for ' +
+            esc(w.label) +
+            '">' +
+            '<button type="button" class="mode-btn is-active" data-mode="learn">Learn</button>' +
+            '<button type="button" class="mode-btn" data-mode="flashcards">Flashcards</button>' +
+            '<button type="button" class="mode-btn" data-mode="test">Test</button>' +
+            "</div>" +
+            '<div class="mode-view is-active" data-mode-view="learn">' +
+            "<h3>Learn</h3>" +
+            "<p><strong>Meaning:</strong> " +
+            esc(w.meaning) +
+            "</p>" +
+            '<p class="example"><strong>From Tali&apos;s message:</strong> &ldquo;' +
+            esc(w.example) +
+            "&rdquo;</p>" +
+            "</div>" +
+            '<div class="mode-view" data-mode-view="flashcards">' +
+            "<h3>Flashcards</h3>" +
+            '<p class="flashcard-hint" style="text-align:center;margin-bottom:8px">Click the card to flip</p>' +
+            '<div class="flashcard" tabindex="0" role="button" aria-label="Flip flashcard">' +
+            '<div class="flashcard-inner">' +
+            '<div class="flashcard-face flashcard-front">' +
+            '<span class="flashcard-word">' +
+            esc(w.label) +
+            "</span>" +
+            "</div>" +
+            '<div class="flashcard-face flashcard-back">' +
+            "<p>" +
+            esc(w.meaning) +
+            "</p>" +
+            '<p class="example">&ldquo;' +
+            esc(w.example) +
+            "&rdquo;</p>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            '<div class="mode-view" data-mode-view="test">' +
+            "<h3>Test</h3>" +
+            "<p>" +
+            esc(w.testQ) +
+            "</p>" +
+            '<div class="test-options">' +
+            testHtml +
+            "</div>" +
+            '<button type="button" class="test-check" data-answer="' +
+            w.testAns +
+            '">Check answer</button>' +
+            '<p class="test-feedback" aria-live="polite"></p>' +
+            "</div>" +
+            "</section>"
+          );
+        }
+
+        panelsRoot.innerHTML = WORDS.map(buildPanel).join("");
+
+        function setWord(id) {
+          activeWord = id;
+          document.querySelectorAll(".word-tab").forEach(function (btn) {
+            var on = btn.dataset.word === id;
+            btn.classList.toggle("is-active", on);
+            btn.setAttribute("aria-selected", on ? "true" : "false");
+          });
+          document.querySelectorAll(".panel").forEach(function (p) {
+            p.classList.toggle("is-active", p.dataset.word === id);
+          });
+        }
+
+        function setMode(panel, mode) {
+          panel.querySelectorAll(".mode-btn").forEach(function (b) {
+            b.classList.toggle("is-active", b.dataset.mode === mode);
+          });
+          panel.querySelectorAll(".mode-view").forEach(function (v) {
+            v.classList.toggle("is-active", v.dataset.modeView === mode);
+          });
+          var card = panel.querySelector(".flashcard");
+          if (card) card.classList.remove("is-flipped");
+        }
+
+        document.querySelector(".word-tabs").addEventListener("click", function (e) {
+          var tab = e.target.closest(".word-tab");
+          if (!tab) return;
+          setWord(tab.dataset.word);
+        });
+
+        panelsRoot.addEventListener("click", function (e) {
+          var panel = e.target.closest(".panel");
+          if (!panel) return;
+
+          var modeBtn = e.target.closest(".mode-btn");
+          if (modeBtn) {
+            setMode(panel, modeBtn.dataset.mode);
+            return;
+          }
+
+          var flash = e.target.closest(".flashcard");
+          if (flash) {
+            flash.classList.toggle("is-flipped");
+            return;
+          }
+
+          var check = e.target.closest(".test-check");
+          if (check) {
+            var fb = panel.querySelector(".test-feedback");
+            var picked = panel.querySelector('input[name="test-' + panel.dataset.word + '"]:checked');
+            if (!picked) {
+              fb.textContent = "Choose an answer first.";
+              fb.className = "test-feedback is-bad";
+              return;
+            }
+            if (picked.value === check.dataset.answer) {
+              fb.textContent = "Correct! Well done.";
+              fb.className = "test-feedback is-ok";
+            } else {
+              fb.textContent = "Not quite — try again.";
+              fb.className = "test-feedback is-bad";
+            }
+          }
+        });
+
+        panelsRoot.addEventListener("keydown", function (e) {
+          if (e.key !== "Enter" && e.key !== " ") return;
+          var flash = e.target.closest(".flashcard");
+          if (flash) {
+            e.preventDefault();
+            flash.classList.toggle("is-flipped");
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
