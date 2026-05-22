@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Worksheet — Tali&apos;s Message</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+      :root {
+        --bg: #f4f6fb;
+        --card: #fff;
+        --text: #1e1b24;
+        --muted: #5c5668;
+        --border: rgba(30, 27, 36, 0.12);
+        --radius: 14px;
+        --orange: #f28c28;
+        --green: #2e9b5a;
+        --purple: #6b4c9a;
+        --blue: #2563eb;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 780px;
+        margin: 0 auto;
+        padding: 16px 14px 28px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 1.45rem;
+        color: var(--purple);
+      }
+      .lede {
+        margin: 0 0 18px;
+        color: var(--muted);
+        font-size: 15px;
+      }
+      .section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 18px;
+        margin-bottom: 18px;
+        box-shadow: 0 8px 24px rgba(30, 27, 36, 0.06);
+      }
+      .section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--border);
+      }
+      .section-head h2 {
+        margin: 0;
+        font-size: 1.15rem;
+      }
+      .section-badge {
+        font-size: 12px;
+        font-weight: 800;
+        padding: 4px 10px;
+        border-radius: 999px;
+        color: #fff;
+      }
+      .badge-s1 {
+        background: var(--blue);
+      }
+      .badge-s2 {
+        background: var(--orange);
+      }
+      .badge-s3 {
+        background: var(--purple);
+      }
+      .instr-en {
+        margin: 0 0 6px;
+        font-size: 14px;
+      }
+      .instr-he {
+        margin: 0 0 14px;
+        font-size: 14px;
+        direction: rtl;
+        text-align: right;
+        color: var(--muted);
+      }
+      .pic-q {
+        margin-bottom: 18px;
+        padding-bottom: 18px;
+        border-bottom: 1px dashed var(--border);
+      }
+      .pic-q:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+      .pic-q img {
+        display: block;
+        max-width: 100%;
+        max-height: 200px;
+        margin: 0 auto 10px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: #f0f2f6;
+        object-fit: contain;
+      }
+      .pic-q label {
+        display: block;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .pic-q select {
+        width: 100%;
+        max-width: 280px;
+        padding: 10px 12px;
+        font: inherit;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+      .word-bank {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 14px;
+        padding: 12px;
+        border-radius: 10px;
+        background: rgba(242, 140, 40, 0.1);
+        border: 1px dashed rgba(242, 140, 40, 0.45);
+      }
+      .word-bank span {
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: #fff;
+        border: 1px solid var(--border);
+        font-weight: 700;
+        font-size: 13px;
+      }
+      .fill-row {
+        margin-bottom: 12px;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      .fill-row select {
+        margin: 0 4px;
+        padding: 6px 10px;
+        font: inherit;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        min-width: 130px;
+      }
+      .match-chart {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      .match-chart th,
+      .match-chart td {
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        vertical-align: middle;
+      }
+      .match-chart th {
+        background: rgba(107, 76, 154, 0.1);
+        text-align: left;
+      }
+      .match-chart th.he-col {
+        text-align: right;
+        direction: rtl;
+      }
+      .match-chart td.he-cell {
+        direction: rtl;
+        text-align: right;
+        font-weight: 650;
+        font-size: 1.05rem;
+      }
+      .match-chart select {
+        width: 100%;
+        min-width: 140px;
+        padding: 8px 10px;
+        font: inherit;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+      .submit-row {
+        text-align: center;
+        margin: 20px 0 10px;
+      }
+      .submit-btn {
+        padding: 14px 36px;
+        border: none;
+        border-radius: 999px;
+        background: var(--green);
+        color: #fff;
+        font: inherit;
+        font-size: 1.05rem;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 8px 22px rgba(46, 155, 90, 0.35);
+      }
+      .submit-btn:hover {
+        background: #1f7a45;
+      }
+      .results {
+        display: none;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        margin-top: 18px;
+      }
+      .results.is-open {
+        display: block;
+      }
+      .results h2 {
+        margin: 0 0 12px;
+        text-align: center;
+        color: var(--purple);
+      }
+      .total-score {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 16px;
+        color: var(--green);
+      }
+      .chart-wrap {
+        max-width: 320px;
+        margin: 0 auto 18px;
+      }
+      .grade-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+      }
+      .grade-card {
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        text-align: center;
+      }
+      .grade-card strong {
+        display: block;
+        font-size: 1.25rem;
+        margin-bottom: 4px;
+      }
+      .grade-card.s1 {
+        background: rgba(37, 99, 235, 0.08);
+      }
+      .grade-card.s2 {
+        background: rgba(242, 140, 40, 0.1);
+      }
+      .grade-card.s3 {
+        background: rgba(107, 76, 154, 0.08);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Live Worksheet — Words from Tali&apos;s Message</h1>
+      <p class="lede">Complete all three sections, then press <strong>Submit</strong> to see your grade (out of 100).</p>
+
+      <form id="worksheetForm">
+        <!-- Section 1 -->
+        <section class="section" id="section1">
+          <div class="section-head">
+            <h2>Section 1 — Pictures</h2>
+            <span class="section-badge badge-s1">30 points</span>
+          </div>
+          <p class="instr-en">Look at each picture. Choose the correct word.</p>
+          <p class="instr-he">הסתכלו על כל תמונה ובחרו את המילה הנכונה.</p>
+
+          <div class="pic-q">
+            <label>1. What word is this?</label>
+            <img src="assets/worksheet/phone-number.png" alt="Phone number" width="400" height="220" />
+            <select name="s1q1" required>
+              <option value="">Choose…</option>
+              <option value="Meet">Meet</option>
+              <option value="Name">Name</option>
+              <option value="Phone- number">Phone- number</option>
+              <option value="Address">Address</option>
+              <option value="Pencil">Pencil</option>
+              <option value="Food">Food</option>
+            </select>
+          </div>
+          <div class="pic-q">
+            <label>2. What word is this?</label>
+            <img src="assets/worksheet/pencil.png" alt="Pencil" width="400" height="220" />
+            <select name="s1q2" required>
+              <option value="">Choose…</option>
+              <option value="Meet">Meet</option>
+              <option value="Name">Name</option>
+              <option value="Phone- number">Phone- number</option>
+              <option value="Address">Address</option>
+              <option value="Pencil">Pencil</option>
+              <option value="Food">Food</option>
+            </select>
+          </div>
+          <div class="pic-q">
+            <label>3. What word is this?</label>
+            <img src="assets/worksheet/name.png" alt="Name" width="400" height="220" />
+            <select name="s1q3" required>
+              <option value="">Choose…</option>
+              <option value="Meet">Meet</option>
+              <option value="Name">Name</option>
+              <option value="Phone- number">Phone- number</option>
+              <option value="Address">Address</option>
+              <option value="Pencil">Pencil</option>
+              <option value="Food">Food</option>
+            </select>
+          </div>
+        </section>
+
+        <!-- Section 2 -->
+        <section class="section" id="section2">
+          <div class="section-head">
+            <h2>Section 2 — Words in sentences</h2>
+            <span class="section-badge badge-s2">40 points</span>
+          </div>
+          <p class="instr-en">
+            Use the word bank. Match each word to the correct blank in Tali&apos;s message. (6 main words + 2 from the
+            bank.)
+          </p>
+          <p class="instr-he">
+            השתמשו בבנק המילים. התאימו כל מילה למקום הנכון במשפט. (6 מילים עיקריות + 2 מהבנק.)
+          </p>
+          <div class="word-bank" aria-label="Word bank">
+            <span>Meet</span>
+            <span>Name</span>
+            <span>Phone- number</span>
+            <span>Address</span>
+            <span>Pencil</span>
+            <span>Food</span>
+            <span>book</span>
+            <span>notebook</span>
+          </div>
+          <div class="fill-row">
+            1. It&apos;s nice to
+            <select name="s2q1" required>
+              <option value="">___</option>
+            </select>
+            you.
+          </div>
+          <div class="fill-row">
+            2. My
+            <select name="s2q2" required>
+              <option value="">___</option>
+            </select>
+            is Tali.
+          </div>
+          <div class="fill-row">
+            3. I want your name,
+            <select name="s2q3" required>
+              <option value="">___</option>
+            </select>
+            and address.
+          </div>
+          <div class="fill-row">
+            4. I want your name, phone number and
+            <select name="s2q4" required>
+              <option value="">___</option>
+            </select>
+            .
+          </div>
+          <div class="fill-row">
+            5. You need a
+            <select name="s2q5" required>
+              <option value="">___</option>
+            </select>
+            , a notebook and a pencil.
+          </div>
+          <div class="fill-row">
+            6. You need a book, a
+            <select name="s2q6" required>
+              <option value="">___</option>
+            </select>
+            and a pencil.
+          </div>
+          <div class="fill-row">
+            7. You need a book, a notebook and a
+            <select name="s2q7" required>
+              <option value="">___</option>
+            </select>
+            .
+          </div>
+          <div class="fill-row">
+            8. No
+            <select name="s2q8" required>
+              <option value="">___</option>
+            </select>
+            , please.
+          </div>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="section" id="section3">
+          <div class="section-head">
+            <h2>Section 3 — Hebrew ↔ English</h2>
+            <span class="section-badge badge-s3">30 points</span>
+          </div>
+          <p class="instr-en">
+            Match each Hebrew word to its English translation. Each row must line up (same row = same word). Includes all
+            6 words plus <strong>book</strong> and <strong>notebook</strong>.
+          </p>
+          <p class="instr-he">
+            התאימו כל מילה בעברית לתרגום באנגלית. אותה שורה = אותה מילה. כולל 6 מילים + ספר ומחברת.
+          </p>
+          <table class="match-chart">
+            <thead>
+              <tr>
+                <th class="he-col">עברית</th>
+                <th>English</th>
+              </tr>
+            </thead>
+            <tbody id="matchRows"></tbody>
+          </table>
+        </section>
+
+        <div class="submit-row">
+          <button type="submit" class="submit-btn">Submit — Check my work</button>
+        </div>
+      </form>
+
+      <div class="results" id="results" aria-live="polite">
+        <h2>Your results</h2>
+        <p class="total-score" id="totalScore"></p>
+        <div class="chart-wrap">
+          <canvas id="gradeChart" width="320" height="320" aria-label="Grades by section pie chart"></canvas>
+        </div>
+        <div class="grade-grid">
+          <div class="grade-card s1">
+            <span>Section 1 — Pictures</span>
+            <strong id="scoreS1"></strong>
+          </div>
+          <div class="grade-card s2">
+            <span>Section 2 — Sentences</span>
+            <strong id="scoreS2"></strong>
+          </div>
+          <div class="grade-card s3">
+            <span>Section 3 — Translation</span>
+            <strong id="scoreS3"></strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var BANK = [
+          "Meet",
+          "Name",
+          "Phone- number",
+          "Address",
+          "Pencil",
+          "Food",
+          "book",
+          "notebook",
+        ];
+
+        var S1_KEY = { s1q1: "Phone- number", s1q2: "Pencil", s1q3: "Name" };
+        var S1_POINTS = 10;
+
+        var S2_KEY = {
+          s2q1: "Meet",
+          s2q2: "Name",
+          s2q3: "Phone- number",
+          s2q4: "Address",
+          s2q5: "book",
+          s2q6: "notebook",
+          s2q7: "Pencil",
+          s2q8: "Food",
+        };
+        var S2_POINTS = 5;
+
+        var MATCH_ROWS = [
+          { he: "נעים להכיר", en: "Meet" },
+          { he: "שם", en: "Name" },
+          { he: "מספר טלפון", en: "Phone- number" },
+          { he: "כתובת", en: "Address" },
+          { he: "עפרון", en: "Pencil" },
+          { he: "אוכל", en: "Food" },
+          { he: "ספר", en: "book" },
+          { he: "מחברת", en: "notebook" },
+        ];
+        var S3_POINTS = 30 / MATCH_ROWS.length;
+
+        var chartInstance = null;
+
+        function shuffle(arr) {
+          var a = arr.slice();
+          for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = a[i];
+            a[i] = a[j];
+            a[j] = t;
+          }
+          return a;
+        }
+
+        function fillSelectOptions(select, includeEmpty) {
+          var opts = shuffle(BANK);
+          select.innerHTML = includeEmpty ? '<option value="">___</option>' : '<option value="">Choose…</option>';
+          opts.forEach(function (w) {
+            var o = document.createElement("option");
+            o.value = w;
+            o.textContent = w;
+            select.appendChild(o);
+          });
+        }
+
+        document.querySelectorAll("#section2 select").forEach(function (sel) {
+          fillSelectOptions(sel, true);
+        });
+
+        var tbody = document.getElementById("matchRows");
+        var shuffledEn = shuffle(BANK);
+        MATCH_ROWS.forEach(function (row, i) {
+          var tr = document.createElement("tr");
+          var tdHe = document.createElement("td");
+          tdHe.className = "he-cell";
+          tdHe.textContent = row.he;
+          var tdEn = document.createElement("td");
+          var sel = document.createElement("select");
+          sel.name = "s3q" + i;
+          sel.required = true;
+          sel.innerHTML = '<option value="">Choose English…</option>';
+          shuffledEn.forEach(function (w) {
+            var o = document.createElement("option");
+            o.value = w;
+            o.textContent = w;
+            sel.appendChild(o);
+          });
+          tdEn.appendChild(sel);
+          tr.appendChild(tdHe);
+          tr.appendChild(tdEn);
+          tbody.appendChild(tr);
+        });
+
+        function scoreSection1(fd) {
+          var score = 0;
+          Object.keys(S1_KEY).forEach(function (k) {
+            if ((fd.get(k) || "").trim() === S1_KEY[k]) score += S1_POINTS;
+          });
+          return score;
+        }
+
+        function scoreSection2(fd) {
+          var score = 0;
+          Object.keys(S2_KEY).forEach(function (k) {
+            if ((fd.get(k) || "").trim() === S2_KEY[k]) score += S2_POINTS;
+          });
+          return score;
+        }
+
+        function scoreSection3(fd) {
+          var score = 0;
+          MATCH_ROWS.forEach(function (row, i) {
+            if ((fd.get("s3q" + i) || "").trim() === row.en) score += S3_POINTS;
+          });
+          return Math.round(score);
+        }
+
+        document.getElementById("worksheetForm").addEventListener("submit", function (e) {
+          e.preventDefault();
+          var fd = new FormData(e.target);
+          var s1 = scoreSection1(fd);
+          var s2 = scoreSection2(fd);
+          var s3 = scoreSection3(fd);
+          var total = Math.round(s1 + s2 + s3);
+
+          document.getElementById("totalScore").textContent = total + " / 100";
+          document.getElementById("scoreS1").textContent = Math.round(s1) + " / 30";
+          document.getElementById("scoreS2").textContent = Math.round(s2) + " / 40";
+          document.getElementById("scoreS3").textContent = s3 + " / 30";
+
+          var results = document.getElementById("results");
+          results.classList.add("is-open");
+          results.scrollIntoView({ behavior: "smooth", block: "start" });
+
+          var ctx = document.getElementById("gradeChart");
+          if (chartInstance) chartInstance.destroy();
+          chartInstance = new Chart(ctx, {
+            type: "pie",
+            data: {
+              labels: [
+                "Section 1 (" + Math.round(s1) + "/30)",
+                "Section 2 (" + Math.round(s2) + "/40)",
+                "Section 3 (" + s3 + "/30)",
+              ],
+              datasets: [
+                {
+                  data: [s1, s2, s3],
+                  backgroundColor: ["#2563eb", "#f28c28", "#6b4c9a"],
+                  borderWidth: 2,
+                  borderColor: "#fff",
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: { position: "bottom" },
+                title: {
+                  display: true,
+                  text: "Points by section (total " + total + "/100)",
+                  font: { size: 14, weight: "bold" },
+                },
+              },
+            },
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
