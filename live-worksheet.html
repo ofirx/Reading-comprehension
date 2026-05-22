@@ -324,12 +324,6 @@
             <img src="assets/worksheet/phone-number.png" alt="Phone number" width="400" height="220" />
             <select name="s1q1" required>
               <option value="">Choose…</option>
-              <option value="Meet">Meet</option>
-              <option value="Name">Name</option>
-              <option value="Phone- number">Phone- number</option>
-              <option value="Address">Address</option>
-              <option value="Pencil">Pencil</option>
-              <option value="Food">Food</option>
             </select>
           </div>
           <div class="pic-q">
@@ -337,12 +331,6 @@
             <img src="assets/worksheet/pencil.png" alt="Pencil" width="400" height="220" />
             <select name="s1q2" required>
               <option value="">Choose…</option>
-              <option value="Meet">Meet</option>
-              <option value="Name">Name</option>
-              <option value="Phone- number">Phone- number</option>
-              <option value="Address">Address</option>
-              <option value="Pencil">Pencil</option>
-              <option value="Food">Food</option>
             </select>
           </div>
           <div class="pic-q">
@@ -350,12 +338,6 @@
             <img src="assets/worksheet/name.png" alt="Name" width="400" height="220" />
             <select name="s1q3" required>
               <option value="">Choose…</option>
-              <option value="Meet">Meet</option>
-              <option value="Name">Name</option>
-              <option value="Phone- number">Phone- number</option>
-              <option value="Address">Address</option>
-              <option value="Pencil">Pencil</option>
-              <option value="Food">Food</option>
             </select>
           </div>
         </section>
@@ -503,8 +485,12 @@
         };
         var S2_POINTS_EACH = 40 / 6;
 
-        /* English choices in Section 3 = word bank + 2 words not in the bank */
-        var S3_EXTRA_EN = ["teacher", "Monday"];
+        /* Not in word bank */
+        var S1_EXTRA = ["teacher", "Monday", "Thursday"];
+        var S1_OPTIONS = BANK.concat(S1_EXTRA);
+
+        /* Not in word bank (Section 2 uses only BANK) */
+        var S3_EXTRA_EN = ["teacher", "Monday", "Thursday", "Welcome"];
         var S3_EN_OPTIONS = BANK.concat(S3_EXTRA_EN);
 
         var MATCH_ROWS = [
@@ -530,8 +516,8 @@
           return a;
         }
 
-        function fillSelectOptions(select, includeEmpty) {
-          var opts = shuffle(BANK);
+        function fillSelectOptions(select, includeEmpty, optionList) {
+          var opts = shuffle(optionList || BANK);
           select.innerHTML = includeEmpty ? '<option value="">___</option>' : '<option value="">Choose…</option>';
           opts.forEach(function (w) {
             var o = document.createElement("option");
@@ -541,8 +527,12 @@
           });
         }
 
+        document.querySelectorAll("#section1 select").forEach(function (sel) {
+          fillSelectOptions(sel, false, S1_OPTIONS);
+        });
+
         document.querySelectorAll("#section2 select").forEach(function (sel) {
-          fillSelectOptions(sel, true);
+          fillSelectOptions(sel, true, BANK);
         });
 
         var tbody = document.getElementById("matchRows");
