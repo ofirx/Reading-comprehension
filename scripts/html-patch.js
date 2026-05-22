@@ -47,22 +47,75 @@
   }
 
   function downloadServicesHtml(html) {
+    downloadHtmlFile(SERVICES_FILE, html);
+  }
+
+  var ABOUT_FILE = "about.html";
+
+  function patchAboutGalleryImg(html, index, src) {
+    var id = "galleryImg" + index;
+    var srcSafe = String(src).replace(/"/g, "");
+    var re = new RegExp("(<img[^>]*id=[\"']" + id + "[\"'][^>]*)>", "i");
+    return html.replace(re, function (match, attrs) {
+      var cleaned = attrs
+        .replace(/\s+src=["'][^"']*["']/gi, "")
+        .replace(/\s+data-original-src=["'][^"']*["']/gi, "");
+      return (
+        "<img" +
+        cleaned +
+        ' src="' +
+        srcSafe +
+        '" data-original-src="' +
+        srcSafe +
+        '">'
+      );
+    });
+  }
+
+  function patchAboutHtml(html, patch) {
+    var out = html;
+    if (patch.galleryIndex !== undefined && patch.gallerySrc) {
+      out = patchAboutGalleryImg(out, patch.galleryIndex, patch.gallerySrc);
+    }
+    return out;
+  }
+
+  function readGallerySrcFromHtml(html, index) {
+    var id = "galleryImg" + index;
+    var re = new RegExp(
+      '<img[^>]*id=["\']' + id + '["\'][^>]*\\ssrc=["\']([^"\']+)["\']',
+      "i"
+    );
+    var m = html.match(re);
+    return m ? m[1] : "";
+  }
+
+  function downloadHtmlFile(filename, html) {
     var blob = new Blob([html], { type: "text/html;charset=utf-8" });
     var a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = SERVICES_FILE;
+    a.download = filename;
     a.click();
     setTimeout(function () {
       URL.revokeObjectURL(a.href);
     }, 500);
   }
 
+  function downloadAboutHtml(html) {
+    downloadHtmlFile(ABOUT_FILE, html);
+  }
+
   global.ReadingHtmlPatch = {
     SERVICES_FILE: SERVICES_FILE,
+    ABOUT_FILE: ABOUT_FILE,
     DEFAULT_TEXT_START: DEFAULT_TEXT_START,
     patchServicesHtml: patchServicesHtml,
+    patchAboutHtml: patchAboutHtml,
+    patchAboutGalleryImg: patchAboutGalleryImg,
     readAudioSrcFromHtml: readAudioSrcFromHtml,
     readTextFromHtml: readTextFromHtml,
+    readGallerySrcFromHtml: readGallerySrcFromHtml,
     downloadServicesHtml: downloadServicesHtml,
+    downloadAboutHtml: downloadAboutHtml,
   };
 })(typeof window !== "undefined" ? window : globalThis);

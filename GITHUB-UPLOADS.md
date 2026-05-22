@@ -12,6 +12,15 @@ GitHub Pages cannot receive files by itself. This site can **write uploads into 
 
 The token is stored only in **session storage** for this tab (not in the public site code).
 
+## When you upload on Pre reading (gallery pictures)
+
+1. Connect **GitHub save** (bottom-left) with a `repo` token.
+2. On [about.html](https://ofirx.github.io/Reading-comprehension/about.html), upload each picture.
+3. Each file is saved under `assets/uploads/gallery-0.jpg` (etc.) and **`about.html`** is updated with the image path.
+4. The live site updates in about 1–2 minutes (no extra deploy needed if the API push succeeds).
+
+**Or use the script:** copy images into `assets/uploads-staging/` as `gallery-0.jpg` … `gallery-5.jpg`, then run `Auto save to GitHub.bat`.
+
 ## When you upload on While reading (text or audio)
 
 - It is saved in this browser immediately (works after refresh on the same computer).

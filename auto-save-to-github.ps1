@@ -25,7 +25,9 @@ $RxIgnore = [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
 $StagingDir = Join-Path $RepoRoot "assets\uploads-staging"
 $UploadsDir = Join-Path $RepoRoot "assets\uploads"
 $ServicesHtml = Join-Path $RepoRoot "services.html"
+$AboutHtml = Join-Path $RepoRoot "about.html"
 $ManifestPath = Join-Path $UploadsDir "manifest.json"
+$GalleryCount = 6
 
 function Escape-Html([string]$text) {
   if ($null -eq $text) { return "" }
@@ -79,6 +81,41 @@ function Read-TextFromHtml([string]$Html) {
   return $raw
 }
 
+function Patch-AboutGalleryImg {
+  param(
+    [string]$Html,
+    [int]$Index,
+    [string]$Src
+  )
+  if (-not $Src) { return $Html }
+  $id = "galleryImg$Index"
+  $safe = $Src.Replace('"', "")
+  return [regex]::Replace(
+    $Html,
+    "(<img[^>]*id=[`"']$id[`"'][^>]*)>",
+    {
+      param($m)
+      $attrs = $m.Groups[1].Value -replace '(?i)\s+src=["''][^"'']*["'']', '' -replace '(?i)\s+data-original-src=["''][^"'']*["'']', ''
+      return "<img$attrs src=`"$safe`" data-original-src=`"$safe`">"
+    },
+    1,
+    $RxIgnore
+  )
+}
+
+function Find-GalleryStagingFiles {
+  $found = @()
+  if (-not (Test-Path $StagingDir)) { return $found }
+  for ($i = 0; $i -lt $GalleryCount; $i++) {
+    $matches = Get-ChildItem -Path $StagingDir -File -ErrorAction SilentlyContinue |
+      Where-Object { $_.BaseName -eq "gallery-$i" -and $_.Extension -match '^\.(jpg|jpeg|png|gif|webp)$' }
+    if ($matches.Count -gt 0) {
+      $found += @{ Index = $i; Path = $matches[0].FullName }
+    }
+  }
+  return $found
+}
+
 # Resolve audio path
 if (-not $AudioPath) {
   $audioCandidates = @(
@@ -99,13 +136,19 @@ if (-not $TextPath) {
 if (-not (Test-Path $ServicesHtml)) {
   Write-Error "services.html not found at $ServicesHtml"
 }
+if (-not (Test-Path $AboutHtml)) {
+  Write-Error "about.html not found at $AboutHtml"
+}
 
-if (-not $AudioPath -and -not $TextPath) {
+$galleryStaging = Find-GalleryStagingFiles
+
+if (-not $AudioPath -and -not $TextPath -and $galleryStaging.Count -eq 0) {
   Write-Host ""
   Write-Host "Nothing to save. Add files to:" -ForegroundColor Yellow
   Write-Host "  $StagingDir" -ForegroundColor Yellow
   Write-Host "    listening-text.txt" -ForegroundColor Yellow
   Write-Host "    listening-audio.mp3  (or .wav / .ogg / .webm)" -ForegroundColor Yellow
+  Write-Host "    gallery-0.jpg … gallery-5.jpg  (Pre reading pictures)" -ForegroundColor Yellow
   Write-Host ""
   Write-Host "Or run: .\auto-save-to-github.ps1 -AudioPath `"path\to\audio.mp3`" -TextPath `"path\to\text.txt`"" -ForegroundColor DarkGray
   exit 1
@@ -116,10 +159,12 @@ if (-not (Test-Path $UploadsDir)) {
 }
 
 $html = Get-Content -Path $ServicesHtml -Raw -Encoding UTF8
+$aboutHtml = Get-Content -Path $AboutHtml -Raw -Encoding UTF8
 $patch = @{
   audioSrc = Read-AudioSrcFromHtml $html
   text     = Read-TextFromHtml $html
 }
+$aboutPatched = $false
 
 $manifestFiles = @{}
 if (Test-Path $ManifestPath) {
@@ -174,8 +219,30 @@ if ($TextPath) {
   Write-Host "Text -> $rel (and inside services.html)" -ForegroundColor Green
 }
 
+foreach ($g in $galleryStaging) {
+  $ext = [System.IO.Path]::GetExtension($g.Path).TrimStart('.').ToLower()
+  if (-not $ext) { $ext = "jpg" }
+  $destName = "gallery-$($g.Index).$ext"
+  $destPath = Join-Path $UploadsDir $destName
+  Copy-Item -Path $g.Path -Destination $destPath -Force
+  $rel = "assets/uploads/$destName" -replace '\\', '/'
+  $aboutHtml = Patch-AboutGalleryImg -Html $aboutHtml -Index $g.Index -Src $rel
+  $aboutPatched = $true
+  $manifestFiles["gallery-$($g.Index)"] = @{
+    path      = $rel
+    kind      = "blob"
+    mimeType  = ""
+    updatedAt = (Get-Date).ToUniversalTime().ToString("o")
+  }
+  Write-Host "Gallery $($g.Index) -> $rel (and inside about.html)" -ForegroundColor Green
+}
+
 $patchedHtml = Patch-ServicesHtml -Html $html -AudioSrc $patch.audioSrc -Text $patch.text
 [System.IO.File]::WriteAllText($ServicesHtml, $patchedHtml, [System.Text.UTF8Encoding]::new($false))
+if ($aboutPatched) {
+  [System.IO.File]::WriteAllText($AboutHtml, $aboutHtml, [System.Text.UTF8Encoding]::new($false))
+  Write-Host "Updated about.html with gallery image paths." -ForegroundColor Green
+}
 
 $manifestOut = [ordered]@{
   version = 1
@@ -209,3 +276,4 @@ if (-not $NoWait) {
 Write-Host ""
 Write-Host "Done. Live site updates in 1-2 minutes:" -ForegroundColor Cyan
 Write-Host "  https://ofirx.github.io/Reading-comprehension/services.html" -ForegroundColor Cyan
+Write-Host "  https://ofirx.github.io/Reading-comprehension/about.html" -ForegroundColor Cyan

@@ -247,6 +247,34 @@
     return putContent(path, encodeGitHubContent(htmlString), message, cfg, sha);
   }
 
+  /** Write gallery image src into about.html in the repository. */
+  function updateAboutHtml(patch, cfg) {
+    var patcher = global.ReadingHtmlPatch;
+    if (!patcher) return Promise.reject(new Error("HTML patch module missing"));
+    cfg = cfg || getConfig();
+    if (!cfg) return Promise.reject(new Error("GitHub not connected"));
+    if (patch.galleryIndex === undefined || !patch.gallerySrc) {
+      return Promise.resolve();
+    }
+
+    return getHtmlFromRepo("about.html", cfg).then(function (file) {
+      if (!file.html) throw new Error("about.html not found in repository");
+      var currentSrc = patcher.readGallerySrcFromHtml(file.html, patch.galleryIndex);
+      var mergedSrc = patch.gallerySrc || currentSrc;
+      var updated = patcher.patchAboutHtml(file.html, {
+        galleryIndex: patch.galleryIndex,
+        gallerySrc: mergedSrc,
+      });
+      return putHtmlFile(
+        "about.html",
+        updated,
+        "Update gallery image in about.html",
+        cfg,
+        file.sha
+      );
+    });
+  }
+
   /** Write audio src + text into services.html in the repository. */
   function updateServicesHtml(patch, cfg) {
     var patcher = global.ReadingHtmlPatch;
@@ -280,6 +308,13 @@
       if (id === "listening-text" && typeof data === "string") {
         return updateServicesHtml({ text: data }, cfg);
       }
+      if (id.indexOf("gallery-") === 0 && data instanceof Blob) {
+        var galleryPath = uploadPathForId(id, data.type, data.name || id);
+        var galleryIndex = parseInt(id.replace("gallery-", ""), 10);
+        if (!isNaN(galleryIndex)) {
+          return updateAboutHtml({ galleryIndex: galleryIndex, gallerySrc: galleryPath }, cfg);
+        }
+      }
     });
   }
 
@@ -299,6 +334,7 @@
     isConfigured: isConfigured,
     saveUpload: saveUpload,
     saveUploadAndHtml: saveUploadAndHtml,
+    updateAboutHtml: updateAboutHtml,
     updateServicesHtml: updateServicesHtml,
     removeUpload: removeUpload,
     fetchPublishedManifest: fetchPublishedManifest,

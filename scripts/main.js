@@ -27,19 +27,25 @@
   function saveToGitHub(id, data) {
     if (!ghSave || !ghSave.isConfigured()) return;
     var isListening = id === "listening-audio" || id === "listening-text";
-    var saveFn =
-      isListening && ghSave.saveUploadAndHtml
-        ? ghSave.saveUploadAndHtml.bind(ghSave)
-        : ghSave.saveUpload.bind(ghSave);
+    var isGallery = id.indexOf("gallery-") === 0;
+    var usesHtmlPatch =
+      (isListening || isGallery) && typeof ghSave.saveUploadAndHtml === "function";
+    var saveFn = usesHtmlPatch
+      ? ghSave.saveUploadAndHtml.bind(ghSave)
+      : ghSave.saveUpload.bind(ghSave);
     saveFn(id, data)
       .then(function () {
         publishedFilesCache = null;
-        window.showGitHubSaveStatus(
-          isListening
-            ? "Saved to GitHub (file + services.html). Deploy so the live site updates."
-            : "Saved to GitHub. Run Deploy to GitHub so the live site updates.",
-          false
-        );
+        var msg = "Saved to GitHub.";
+        if (isListening) {
+          msg = "Saved to GitHub (file + services.html). Live site updates in 1–2 minutes.";
+        } else if (isGallery) {
+          msg =
+            "Saved to GitHub (file + about.html). Live site updates in 1–2 minutes.";
+        } else {
+          msg = "Saved to GitHub. Live site updates in 1–2 minutes.";
+        }
+        window.showGitHubSaveStatus(msg, false);
       })
       .catch(function (err) {
         window.showGitHubSaveStatus(err.message || "GitHub save failed", true);
@@ -296,7 +302,11 @@
       if (!file || !file.type.startsWith("image/")) return;
       applyGalleryImage(URL.createObjectURL(file), file.name, true);
       saveBlob(storeKey, file).then(function () {
-        window.showGitHubSaveStatus("Picture saved — it will stay after you refresh this page.", false);
+        if (ghSave && ghSave.isConfigured()) return;
+        window.showGitHubSaveStatus(
+          "Picture saved in this browser only. Connect GitHub save to save to GitHub.",
+          false
+        );
       });
     });
     clearBtn?.addEventListener("click", () => {

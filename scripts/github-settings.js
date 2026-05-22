@@ -25,7 +25,7 @@
   dlg.innerHTML =
     '<div class="github-save-dialog-inner">' +
     "<h2>Save uploads to GitHub</h2>" +
-    '<p class="github-save-dialog-help">Connect once with a <strong>Personal Access Token</strong> (classic, <code>repo</code> scope). Uploads are written to <code>assets/uploads/</code> in your repository. Run <strong>Deploy to GitHub</strong> so everyone sees them on the live site. The token stays in this browser tab only.</p>" +
+    '<p class="github-save-dialog-help">Connect once with a <strong>Personal Access Token</strong> (classic, <code>repo</code> scope). Uploads go to <code>assets/uploads/</code> and update <code>about.html</code> or <code>services.html</code> in your repo. The live site updates in 1–2 minutes. The token stays in this browser tab only.</p>" +
     "<label for=\"ghOwner\">GitHub username</label>" +
     '<input id="ghOwner" type="text" autocomplete="username" placeholder="ofirx" />' +
     "<label for=\"ghRepo\">Repository name</label>" +
