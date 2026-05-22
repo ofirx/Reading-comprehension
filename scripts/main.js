@@ -294,8 +294,10 @@
     input.addEventListener("change", () => {
       const file = input.files && input.files[0];
       if (!file || !file.type.startsWith("image/")) return;
-      saveBlob(storeKey, file);
       applyGalleryImage(URL.createObjectURL(file), file.name, true);
+      saveBlob(storeKey, file).then(function () {
+        window.showGitHubSaveStatus("Picture saved — it will stay after you refresh this page.", false);
+      });
     });
     clearBtn?.addEventListener("click", () => {
       if (lastUrl && lastUrlIsObject) {
