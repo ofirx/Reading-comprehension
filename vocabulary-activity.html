@@ -270,6 +270,21 @@
         font-weight: 800;
         color: var(--flash);
       }
+      .flashcard-back .flashcard-word-en {
+        margin: 0 0 14px;
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--text);
+      }
+      .flashcard-back .flashcard-meaning-he {
+        margin: 0;
+        font-size: 1.35rem;
+        font-weight: 750;
+        color: var(--flash);
+        direction: rtl;
+        text-align: center;
+        line-height: 1.45;
+      }
       .flashcard-hint {
         font-size: 13px;
         color: var(--muted);
@@ -576,7 +591,6 @@
         }
 
         function buildFlashContent(w) {
-          var sents = getShuffledSentences(w, "flash");
           return (
             '<p class="flashcard-hint">Click the card to flip</p>' +
             '<div class="flashcard" tabindex="0" role="button" aria-label="Flip flashcard">' +
@@ -585,19 +599,13 @@
             '<span class="flashcard-word">' +
             esc(w.label) +
             "</span></div>" +
-            '<div class="flashcard-face flashcard-back">' +
-            "<p>" +
-            esc(w.meaning) +
+            '<div class="flashcard-face flashcard-back" lang="he">' +
+            '<p class="flashcard-word-en" lang="en" dir="ltr">' +
+            esc(w.label) +
             "</p>" +
-            '<div class="he-block" lang="he">' +
-            '<p class="he-word">' +
-            esc(w.labelHe) +
-            "</p>" +
-            "<p>" +
+            '<p class="flashcard-meaning-he" dir="rtl">' +
             esc(w.meaningHe) +
-            "</p></div>" +
-            '<p style="margin-top:10px;width:100%"><strong>Sentences:</strong></p>' +
-            sentencesHtml(sents) +
+            "</p>" +
             "</div></div></div>" +
             '<button type="button" class="restart-btn" data-restart="flashcards">Restart</button>'
           );
