@@ -311,20 +311,20 @@
       .flash-next-btn {
         flex: 0 0 auto;
         align-self: center;
-        padding: 12px 16px;
-        border: none;
+        padding: 14px 20px;
+        border: 1px solid rgba(217, 109, 0, 0.45);
         border-radius: 12px;
-        background: var(--flash);
+        background: #f28c28;
         color: #fff;
         font: inherit;
         font-weight: 800;
-        font-size: 14px;
+        font-size: 15px;
         cursor: pointer;
         white-space: nowrap;
-        box-shadow: 0 6px 18px rgba(107, 76, 154, 0.28);
+        box-shadow: 0 8px 22px rgba(242, 140, 40, 0.4);
       }
       .flash-next-btn:hover {
-        background: var(--flash-dark);
+        background: #d96d00;
       }
       .flash-next-btn:disabled {
         opacity: 0.45;
@@ -667,11 +667,11 @@
 
         function buildFlashDeckShell() {
           return (
-            '<p class="flashcard-hint">Click the card to flip. After you flip, use Next word on the right.</p>' +
+            '<p class="flashcard-hint">Click the card to flip. Use the orange Next button on the right to go through all words.</p>' +
             '<p class="flash-progress" data-flash-progress></p>' +
             '<div class="flash-deck-row">' +
             '<div class="flash-deck-card-wrap" data-flash-card-wrap></div>' +
-            '<button type="button" class="flash-next-btn" data-flash-next hidden>Next word →</button>' +
+            '<button type="button" class="flash-next-btn" data-flash-next>Next →</button>' +
             "</div>" +
             '<div class="flash-deck-footer">' +
             '<p class="flash-done-msg" data-flash-done hidden style="margin:0;font-weight:700;color:var(--flash)"></p>' +
@@ -700,7 +700,6 @@
           if (!wrap) return;
 
           doneMsg.hidden = true;
-          nextBtn.hidden = true;
 
           if (flashIndex >= flashQueue.length) {
             progress.textContent = "All words done!";
@@ -715,13 +714,10 @@
           progress.textContent = "Word " + (flashIndex + 1) + " of " + flashQueue.length + ": " + w.label;
           wrap.innerHTML = flashCardHtml(w);
           setWord(w.id);
-        }
-
-        function updateFlashNextButton(panel) {
-          var card = panel.querySelector(".flashcard");
-          var nextBtn = panel.querySelector("[data-flash-next]");
-          if (!card || !nextBtn || flashIndex >= flashQueue.length) return;
-          nextBtn.hidden = !card.classList.contains("is-flipped");
+          nextBtn.hidden = false;
+          nextBtn.disabled = false;
+          nextBtn.textContent =
+            flashIndex < flashQueue.length - 1 ? "Next →" : "Finish";
         }
 
         function buildTestShell() {
@@ -936,7 +932,6 @@
           var flash = e.target.closest(".flashcard");
           if (flash) {
             flash.classList.toggle("is-flipped");
-            updateFlashNextButton(panel);
             return;
           }
 
@@ -976,8 +971,6 @@
           if (flash) {
             e.preventDefault();
             flash.classList.toggle("is-flipped");
-            var panel = e.target.closest(".panel");
-            if (panel) updateFlashNextButton(panel);
           }
         });
       })();
