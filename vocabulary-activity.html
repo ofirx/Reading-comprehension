@@ -149,12 +149,12 @@
         perspective: 900px;
         max-width: 360px;
         margin: 0 auto;
-        min-height: 200px;
+        min-height: 260px;
       }
       .flashcard-inner {
         position: relative;
         width: 100%;
-        min-height: 200px;
+        min-height: 260px;
         transition: transform 0.45s;
         transform-style: preserve-3d;
         cursor: pointer;
@@ -232,6 +232,34 @@
       .test-feedback.is-bad {
         color: #c62828;
       }
+      .he-rtl {
+        direction: rtl;
+        text-align: right;
+        font-size: 1.05em;
+        line-height: 1.55;
+      }
+      .he-label {
+        display: block;
+        margin-top: 10px;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--purple);
+        text-align: right;
+        direction: rtl;
+      }
+      .flashcard-back .he-block {
+        width: 100%;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px dashed rgba(242, 140, 40, 0.55);
+      }
+      .flashcard-back .he-word {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: var(--purple);
+      }
     </style>
   </head>
   <body>
@@ -263,7 +291,10 @@
             label: "Meet",
             img: BASE + "meet.png",
             meaning: "To see someone for the first time and say hello.",
+            meaningHe: "להכיר מישהו ולהגיד שלום בפעם הראשונה",
             example: "It's nice to meet you.",
+            exampleHe: "נעים להכיר",
+            labelHe: "להכיר / נעים להכיר",
             testQ: "What does Tali say when she greets the class?",
             testOpts: [
               { v: "a", t: "It's nice to meet you." },
@@ -277,7 +308,10 @@
             label: "Name",
             img: BASE + "name.png",
             meaning: "The word people call you.",
+            meaningHe: "המילה שקוראים לך",
             example: "I want your name.",
+            exampleHe: "אני רוצה את השם שלך",
+            labelHe: "שם",
             testQ: "What does Tali ask students to write?",
             testOpts: [
               { v: "a", t: "Your name" },
@@ -291,7 +325,10 @@
             label: "Phone- number",
             img: BASE + "phone-number.png",
             meaning: "Numbers you use to call someone on the phone.",
+            meaningHe: "מספרים שמשתמשים בהם כדי להתקשר בטלפון",
             example: "I want your name, phone number and address.",
+            exampleHe: "אני רוצה את השם, מספר הטלפון והכתובת שלך",
+            labelHe: "מספר טלפון",
             testQ: "Tali wants students to give their phone number. True or false?",
             testOpts: [
               { v: "a", t: "True" },
@@ -304,7 +341,10 @@
             label: "Address",
             img: BASE + "address.png",
             meaning: "Where you live (street, city, country).",
+            meaningHe: "המקום שבו אתה גר (רחוב, עיר, מדינה)",
             example: "I want your name, phone number and address.",
+            exampleHe: "אני רוצה את השם, מספר הטלפון והכתובת שלך",
+            labelHe: "כתובת",
             testQ: "Which word means where you live?",
             testOpts: [
               { v: "a", t: "Address" },
@@ -318,7 +358,10 @@
             label: "Pencil",
             img: BASE + "pencil.png",
             meaning: "Something you write with.",
+            meaningHe: "משהו שכותבים איתו",
             example: "You need a book, a notebook and a pencil.",
+            exampleHe: "אתם צריכים ספר, מחברת ועפרון",
+            labelHe: "עפרון",
             testQ: "What do students need to bring to class?",
             testOpts: [
               { v: "a", t: "A book, a notebook and a pencil" },
@@ -332,7 +375,10 @@
             label: "Food",
             img: BASE + "food.png",
             meaning: "Things you eat.",
+            meaningHe: "דברים שאוכלים",
             example: "No food, please.",
+            exampleHe: "בלי אוכל, בבקשה",
+            labelHe: "אוכל",
             testQ: "Can students bring food to English class?",
             testOpts: [
               { v: "a", t: "Yes" },
@@ -399,8 +445,14 @@
             "<p><strong>Meaning:</strong> " +
             esc(w.meaning) +
             "</p>" +
+            '<p class="he-rtl"><strong>משמעות בעברית:</strong> ' +
+            esc(w.meaningHe || "") +
+            "</p>" +
             '<p class="example"><strong>From Tali&apos;s message:</strong> &ldquo;' +
             esc(w.example) +
+            "&rdquo;</p>" +
+            '<p class="he-rtl example"><strong>בעברית:</strong> &ldquo;' +
+            esc(w.exampleHe || "") +
             "&rdquo;</p>" +
             "</div>" +
             '<div class="mode-view" data-mode-view="flashcards">' +
@@ -420,6 +472,18 @@
             '<p class="example">&ldquo;' +
             esc(w.example) +
             "&rdquo;</p>" +
+            '<div class="he-block" lang="he" dir="rtl">' +
+            '<span class="he-label">תרגום לעברית</span>' +
+            '<p class="he-word">' +
+            esc(w.labelHe || "") +
+            "</p>" +
+            "<p>" +
+            esc(w.meaningHe || "") +
+            "</p>" +
+            '<p class="example">&ldquo;' +
+            esc(w.exampleHe || "") +
+            "&rdquo;</p>" +
+            "</div>" +
             "</div>" +
             "</div>" +
             "</div>" +
