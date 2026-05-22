@@ -291,6 +291,60 @@
         text-align: center;
         margin-bottom: 8px;
       }
+      .flash-progress {
+        text-align: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--flash);
+        margin: 0 0 10px;
+      }
+      .flash-deck-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .flash-deck-card-wrap {
+        flex: 1;
+        min-width: 0;
+      }
+      .flash-next-btn {
+        flex: 0 0 auto;
+        align-self: center;
+        padding: 12px 16px;
+        border: none;
+        border-radius: 12px;
+        background: var(--flash);
+        color: #fff;
+        font: inherit;
+        font-weight: 800;
+        font-size: 14px;
+        cursor: pointer;
+        white-space: nowrap;
+        box-shadow: 0 6px 18px rgba(107, 76, 154, 0.28);
+      }
+      .flash-next-btn:hover {
+        background: var(--flash-dark);
+      }
+      .flash-next-btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .flash-deck-footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      @media (max-width: 520px) {
+        .flash-deck-row {
+          flex-direction: column;
+        }
+        .flash-next-btn {
+          width: 100%;
+        }
+      }
       .he-block {
         width: 100%;
         margin-top: 10px;
@@ -511,6 +565,8 @@
         var testIndex = 0;
         var testChecked = false;
         var sectionShuffle = {};
+        var flashQueue = [];
+        var flashIndex = 0;
 
         function esc(s) {
           return String(s)
@@ -590,25 +646,82 @@
           );
         }
 
-        function buildFlashContent(w) {
+        function flashCardHtml(w) {
           return (
-            '<p class="flashcard-hint">Click the card to flip</p>' +
             '<div class="flashcard" tabindex="0" role="button" aria-label="Flip flashcard">' +
             '<div class="flashcard-inner">' +
             '<div class="flashcard-face flashcard-front">' +
             '<span class="flashcard-word">' +
             esc(w.label) +
             "</span></div>" +
-            '<div class="flashcard-face flashcard-back" lang="he">' +
+            '<div class="flashcard-face flashcard-back">' +
             '<p class="flashcard-word-en" lang="en" dir="ltr">' +
             esc(w.label) +
             "</p>" +
-            '<p class="flashcard-meaning-he" dir="rtl">' +
+            '<p class="flashcard-meaning-he" dir="rtl" lang="he">' +
             esc(w.meaningHe) +
             "</p>" +
-            "</div></div></div>" +
-            '<button type="button" class="restart-btn" data-restart="flashcards">Restart</button>'
+            "</div></div></div>"
           );
+        }
+
+        function buildFlashDeckShell() {
+          return (
+            '<p class="flashcard-hint">Click the card to flip. After you flip, use Next word on the right.</p>' +
+            '<p class="flash-progress" data-flash-progress></p>' +
+            '<div class="flash-deck-row">' +
+            '<div class="flash-deck-card-wrap" data-flash-card-wrap></div>' +
+            '<button type="button" class="flash-next-btn" data-flash-next hidden>Next word →</button>' +
+            "</div>" +
+            '<div class="flash-deck-footer">' +
+            '<p class="flash-done-msg" data-flash-done hidden style="margin:0;font-weight:700;color:var(--flash)"></p>' +
+            '<button type="button" class="restart-btn" data-restart="flashcards">Restart</button>' +
+            "</div>"
+          );
+        }
+
+        function startFlashDeck(panel) {
+          flashQueue = shuffle(
+            WORDS.map(function (w) {
+              return w.id;
+            })
+          );
+          flashIndex = 0;
+          var content = panel.querySelector('[data-content="flashcards"]');
+          content.innerHTML = buildFlashDeckShell();
+          renderFlashCard(panel);
+        }
+
+        function renderFlashCard(panel) {
+          var wrap = panel.querySelector("[data-flash-card-wrap]");
+          var progress = panel.querySelector("[data-flash-progress]");
+          var nextBtn = panel.querySelector("[data-flash-next]");
+          var doneMsg = panel.querySelector("[data-flash-done]");
+          if (!wrap) return;
+
+          doneMsg.hidden = true;
+          nextBtn.hidden = true;
+
+          if (flashIndex >= flashQueue.length) {
+            progress.textContent = "All words done!";
+            wrap.innerHTML = "";
+            doneMsg.hidden = false;
+            doneMsg.textContent = "You finished all " + flashQueue.length + " words. Press Restart for a new order.";
+            nextBtn.hidden = true;
+            return;
+          }
+
+          var w = wordById(flashQueue[flashIndex]);
+          progress.textContent = "Word " + (flashIndex + 1) + " of " + flashQueue.length + ": " + w.label;
+          wrap.innerHTML = flashCardHtml(w);
+          setWord(w.id);
+        }
+
+        function updateFlashNextButton(panel) {
+          var card = panel.querySelector(".flashcard");
+          var nextBtn = panel.querySelector("[data-flash-next]");
+          if (!card || !nextBtn || flashIndex >= flashQueue.length) return;
+          nextBtn.hidden = !card.classList.contains("is-flipped");
         }
 
         function buildTestShell() {
@@ -654,8 +767,8 @@
             '<div class="section-content" data-content="learn"></div></div></div>' +
             '<div class="mode-panel" data-mode-panel="flashcards">' +
             '<div class="section-block section-flashcards">' +
-            '<p class="instr-en">Press Start, then click the card to see the meaning and sentences in Hebrew.</p>' +
-            '<p class="instr-he">לחצו Start, ואז לחצו על הכרטיס כדי לראות את המשמעות והמשפטים בעברית.</p>' +
+            '<p class="instr-en">Press Start, flip the card to see the Hebrew meaning, then press Next word on the right.</p>' +
+            '<p class="instr-he">לחצו Start, הפכו את הכרטיס לראות את המשמעות בעברית, ואז Next word מימין.</p>' +
             '<button type="button" class="start-btn start-btn--flash" data-start="flashcards">Start</button>' +
             '<div class="section-content" data-content="flashcards"></div></div></div>' +
             '<div class="mode-panel" data-mode-panel="test">' +
@@ -700,7 +813,7 @@
           content.classList.add("is-open");
           var w = wordById(panel.dataset.word);
           if (mode === "learn") content.innerHTML = buildLearnContent(w);
-          if (mode === "flashcards") content.innerHTML = buildFlashContent(w);
+          if (mode === "flashcards") startFlashDeck(panel);
           if (mode === "test") startTest(panel);
           var startBtn = panel.querySelector('[data-start="' + mode + '"]');
           if (startBtn) startBtn.hidden = true;
@@ -799,9 +912,13 @@
           if (restartBtn) {
             var mode = restartBtn.dataset.restart;
             var wid = panel.dataset.word;
-            resetShuffle(wid, mode === "flashcards" ? "flash" : mode);
+            resetShuffle(wid, mode);
             if (mode === "test") {
               startTest(panel);
+              return;
+            }
+            if (mode === "flashcards") {
+              startFlashDeck(panel);
               return;
             }
             closeSection(panel, mode);
@@ -809,9 +926,17 @@
             return;
           }
 
+          var flashNext = e.target.closest("[data-flash-next]");
+          if (flashNext) {
+            flashIndex++;
+            renderFlashCard(panel);
+            return;
+          }
+
           var flash = e.target.closest(".flashcard");
           if (flash) {
             flash.classList.toggle("is-flipped");
+            updateFlashNextButton(panel);
             return;
           }
 
@@ -851,6 +976,8 @@
           if (flash) {
             e.preventDefault();
             flash.classList.toggle("is-flipped");
+            var panel = e.target.closest(".panel");
+            if (panel) updateFlashNextButton(panel);
           }
         });
       })();
