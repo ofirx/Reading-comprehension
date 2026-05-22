@@ -39,9 +39,26 @@
         color: var(--purple);
       }
       .lede {
-        margin: 0 0 18px;
+        margin: 0 0 6px;
         color: var(--muted);
         font-size: 15px;
+      }
+      .page-he {
+        margin: 0 0 18px;
+        font-size: 15px;
+        direction: rtl;
+        text-align: right;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+      h1 + .page-he-title {
+        margin: 4px 0 10px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        direction: rtl;
+        text-align: right;
+        color: var(--purple);
+        line-height: 1.4;
       }
       .section {
         background: var(--card);
@@ -265,7 +282,11 @@
   <body>
     <div class="wrap">
       <h1>Live Worksheet — Words from Tali&apos;s Message</h1>
+      <p class="page-he page-he-title" lang="he" dir="rtl">דף עבודה חי — מילים מהודעה של טלי</p>
       <p class="lede">Complete all three sections, then press <strong>Submit</strong> to see your grade (out of 100).</p>
+      <p class="page-he" lang="he" dir="rtl">
+        השלימו את שלושת החלקים, ואז לחצו על <strong>Submit</strong> כדי לראות את הציון (מתוך 100).
+      </p>
 
       <form id="worksheetForm">
         <!-- Section 1 -->
