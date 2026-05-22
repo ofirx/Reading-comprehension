@@ -198,6 +198,9 @@
         font-weight: 650;
         font-size: 1.05rem;
       }
+      .match-chart td.he-cell--extra {
+        background: rgba(107, 76, 154, 0.06);
+      }
       .match-chart select {
         width: 100%;
         min-width: 140px;
@@ -407,8 +410,14 @@
             <h2>Section 3 — Hebrew ↔ English</h2>
             <span class="section-badge badge-s3">30 points</span>
           </div>
-          <p class="instr-en">Use the word bank. Match each Hebrew word to the best English word in the same row.</p>
-          <p class="instr-he">השתמשו בבנק המילים. התאימו כל מילה בעברית למילה המתאימה ביותר באנגלית באותה שורה.</p>
+          <p class="instr-en">
+            For the first 6 rows, use the word bank. For the last 2 rows, match Hebrew to the best English word — these
+            words are <strong>not</strong> in the bank (different from Section 2).
+          </p>
+          <p class="instr-he">
+            ב-6 השורות הראשונות השתמשו בבנק המילים. ב-2 השורות האחרונות התאימו מילה בעברית לאנגלית — מילים שלא במאגר,
+            שונות מהמילים בחלק 2.
+          </p>
           <table class="match-chart">
             <thead>
               <tr>
@@ -474,7 +483,7 @@
         };
         var S2_POINTS_EACH = 40 / 6;
 
-        var MATCH_ROWS = [
+        var MATCH_ROWS_BANK = [
           { he: "נעים להכיר", en: "Meet" },
           { he: "שם", en: "Name" },
           { he: "מספר טלפון", en: "Phone- number" },
@@ -482,6 +491,22 @@
           { he: "עפרון", en: "Pencil" },
           { he: "אוכל", en: "Food" },
         ];
+        /* Not in word bank — different from Section 2 */
+        var MATCH_ROWS_EXTRA = [
+          { he: "מורה", en: "teacher" },
+          { he: "יום שני", en: "Monday" },
+        ];
+        var EXTRA_EN_OPTIONS = [
+          "teacher",
+          "Monday",
+          "Thursday",
+          "Welcome",
+          "English",
+          "lesson",
+          "pupils",
+          "class",
+        ];
+        var MATCH_ROWS = MATCH_ROWS_BANK.concat(MATCH_ROWS_EXTRA);
         var S3_POINTS = 30 / MATCH_ROWS.length;
 
         var chartInstance = null;
@@ -513,18 +538,21 @@
         });
 
         var tbody = document.getElementById("matchRows");
-        var shuffledEn = shuffle(BANK);
         MATCH_ROWS.forEach(function (row, i) {
           var tr = document.createElement("tr");
           var tdHe = document.createElement("td");
           tdHe.className = "he-cell";
           tdHe.textContent = row.he;
+          if (i >= MATCH_ROWS_BANK.length) {
+            tdHe.classList.add("he-cell--extra");
+          }
           var tdEn = document.createElement("td");
           var sel = document.createElement("select");
           sel.name = "s3q" + i;
           sel.required = true;
           sel.innerHTML = '<option value="">Choose English…</option>';
-          shuffledEn.forEach(function (w) {
+          var optionList = i < MATCH_ROWS_BANK.length ? shuffle(BANK) : shuffle(EXTRA_EN_OPTIONS);
+          optionList.forEach(function (w) {
             var o = document.createElement("option");
             o.value = w;
             o.textContent = w;
