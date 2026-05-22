@@ -346,11 +346,12 @@
             <span class="section-badge badge-s2">40 points</span>
           </div>
           <p class="instr-en">
-            Use the word bank. Match each word to the correct blank in Tali&apos;s message. (6 main words + 2 from the
-            bank.)
+            Use the word bank (8 words). Fill in 6 sentences — one for each: Meet, Name, Phone- number, Address, Pencil,
+            Food. <em>book</em> and <em>notebook</em> are extra words in the bank.
           </p>
           <p class="instr-he">
-            השתמשו בבנק המילים. התאימו כל מילה למקום הנכון במשפט. (6 מילים עיקריות + 2 מהבנק.)
+            השתמשו בבנק (8 מילים). מלאו 6 משפטים — אחד לכל מילה: Meet, Name, Phone- number, Address, Pencil, Food.
+            book ו-notebook הן מילים נוספות בבנק בלבד.
           </p>
           <div class="word-bank" aria-label="Word bank">
             <span>Meet</span>
@@ -391,29 +392,15 @@
             .
           </div>
           <div class="fill-row">
-            5. You need a
+            5. You need a book, a notebook and a
             <select name="s2q5" required>
-              <option value="">___</option>
-            </select>
-            , a notebook and a pencil.
-          </div>
-          <div class="fill-row">
-            6. You need a book, a
-            <select name="s2q6" required>
-              <option value="">___</option>
-            </select>
-            and a pencil.
-          </div>
-          <div class="fill-row">
-            7. You need a book, a notebook and a
-            <select name="s2q7" required>
               <option value="">___</option>
             </select>
             .
           </div>
           <div class="fill-row">
-            8. No
-            <select name="s2q8" required>
+            6. No
+            <select name="s2q6" required>
               <option value="">___</option>
             </select>
             , please.
@@ -493,12 +480,10 @@
           s2q2: "Name",
           s2q3: "Phone- number",
           s2q4: "Address",
-          s2q5: "book",
-          s2q6: "notebook",
-          s2q7: "Pencil",
-          s2q8: "Food",
+          s2q5: "Pencil",
+          s2q6: "Food",
         };
-        var S2_POINTS = 5;
+        var S2_POINTS_EACH = 40 / 6;
 
         var MATCH_ROWS = [
           { he: "נעים להכיר", en: "Meet" },
@@ -575,9 +560,9 @@
         function scoreSection2(fd) {
           var score = 0;
           Object.keys(S2_KEY).forEach(function (k) {
-            if ((fd.get(k) || "").trim() === S2_KEY[k]) score += S2_POINTS;
+            if ((fd.get(k) || "").trim() === S2_KEY[k]) score += S2_POINTS_EACH;
           });
-          return score;
+          return Math.round(score);
         }
 
         function scoreSection3(fd) {
