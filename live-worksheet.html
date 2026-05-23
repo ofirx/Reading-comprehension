@@ -207,7 +207,11 @@
         border: 1px solid var(--border);
       }
       .submit-row {
-        text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
         margin: 20px 0 10px;
       }
       .submit-btn {
@@ -224,6 +228,24 @@
       }
       .submit-btn:hover {
         background: #1f7a45;
+      }
+      .btn-return-site {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 28px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #fff;
+        font: inherit;
+        font-size: 1.05rem;
+        font-weight: 800;
+        text-decoration: none;
+        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.4);
+      }
+      .btn-return-site:hover {
+        color: #fff;
+        filter: brightness(1.06);
       }
       .results {
         display: none;
@@ -284,19 +306,21 @@
         border-top: 1px dashed var(--border);
       }
       .return-site-btn {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         padding: 14px 28px;
         border-radius: 999px;
-        background: #6b4c9a;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
         color: #fff;
         font-weight: 800;
         font-size: 1rem;
         text-decoration: none;
-        box-shadow: 0 8px 22px rgba(107, 76, 154, 0.35);
+        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.4);
       }
       .return-site-btn:hover {
-        background: #553d7c;
         color: #fff;
+        filter: brightness(1.06);
       }
     </style>
   </head>
@@ -425,6 +449,12 @@
 
         <div class="submit-row">
           <button type="submit" class="submit-btn">Submit — Check my work</button>
+          <a
+            class="btn-return-site"
+            href="https://sites.google.com/view/ofir-reading-comprehension/while-reading-3?authuser=0"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Return to main site</a>
         </div>
       </form>
 
