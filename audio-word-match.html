@@ -102,6 +102,11 @@
         outline: 3px solid var(--orange);
         outline-offset: 2px;
       }
+      .word-chip.is-extra {
+        border-style: dashed;
+        border-color: var(--orange);
+        background: rgba(242, 140, 40, 0.08);
+      }
       .drop-slot .word-chip {
         display: inline-flex;
       }
@@ -474,6 +479,15 @@
           { id: "phone", label: "a phone number", audioId: "audio-phone" },
           { id: "address", label: "an address", audioId: "audio-address" },
         ];
+        /* In Tali's message but not in the six vocabulary sounds */
+        var EXTRA_BANK_WORDS = [
+          { id: "monday", label: "Monday", extra: true },
+          { id: "book", label: "a book", extra: true },
+        ];
+
+        function getBankWords() {
+          return WORDS.concat(EXTRA_BANK_WORDS);
+        }
 
         var wordBank = document.getElementById("wordBank");
         var matchList = document.getElementById("matchList");
@@ -548,7 +562,7 @@
 
         function createChip(word) {
           var chip = document.createElement("span");
-          chip.className = "word-chip";
+          chip.className = "word-chip" + (word.extra ? " is-extra" : "");
           chip.textContent = word.label;
           chip.draggable = true;
           chip.dataset.wordId = word.id;
@@ -632,13 +646,13 @@
         }
 
         function ensureChips() {
-          WORDS.forEach(function (word) {
+          getBankWords().forEach(function (word) {
             if (!chipsById[word.id]) createChip(word);
           });
         }
 
         function returnAllChipsToBank() {
-          WORDS.forEach(function (word) {
+          getBankWords().forEach(function (word) {
             var chip = chipsById[word.id];
             if (!chip) return;
             if (chip.parentElement && chip.parentElement.classList.contains("drop-slot")) {
@@ -793,7 +807,7 @@
           btnMix.disabled = true;
 
           var newSoundOrder = shuffle(WORDS.slice());
-          var newBankOrder = shuffle(WORDS.slice());
+          var newBankOrder = shuffle(getBankWords().slice());
 
           animateShuffleOut(function () {
             clearShuffleClasses();
@@ -814,7 +828,7 @@
         function build() {
           ensureChips();
           renderSoundRows(shuffle(WORDS.slice()), false);
-          renderWordBank(shuffle(WORDS.slice()), false);
+          renderWordBank(shuffle(getBankWords().slice()), false);
         }
 
         btnMix.addEventListener("click", mixExercises);
