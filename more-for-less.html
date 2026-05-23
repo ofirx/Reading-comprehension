@@ -393,9 +393,9 @@
       }
       .words-grid-layout {
         display: grid;
-        grid-template-columns: auto auto;
+        grid-template-columns: auto auto auto;
         grid-template-rows: auto auto auto auto;
-        column-gap: clamp(20px, 4vw, 48px);
+        column-gap: clamp(16px, 3vw, 36px);
         row-gap: 0;
         align-items: start;
         align-self: center;
@@ -427,20 +427,29 @@
         grid-column: 2;
         grid-row: 1;
       }
+      .word-he-restart {
+        grid-column: 3;
+        grid-row: 1;
+      }
       .word-replay {
         grid-column: 2;
         grid-row: 2;
       }
-      .word-pre {
-        grid-column: 1;
-        grid-row: 4;
+      .word-he-replay {
+        grid-column: 3;
+        grid-row: 2;
       }
       .word-prepay {
         grid-column: 2;
         grid-row: 4;
       }
-      .word-prepay .compound-word {
-        margin: 0;
+      .word-he-prepay {
+        grid-column: 3;
+        grid-row: 4;
+      }
+      .word-pre {
+        grid-column: 1;
+        grid-row: 4;
       }
       .words-grid-layout::after {
         content: "";
@@ -655,28 +664,22 @@
                 <span class="pre-word-top" lang="en">re</span>
                 <span class="word-he" lang="he" dir="rtl">שוב</span>
               </div>
-              <div class="word-pair word-restart">
-                <p class="compound-word compound-word--top" lang="en">
-                  <span class="neon-red-word">re</span><span class="neon-yellow-word">start</span>
-                </p>
-                <span class="word-he" lang="he" dir="rtl">מחדש</span>
-              </div>
-              <div class="word-pair word-replay">
-                <p class="compound-word" lang="en">
-                  <span class="neon-red-word">re</span><span class="neon-yellow-word">play</span>
-                </p>
-                <span class="word-he word-he--sm" lang="he" dir="rtl">שחק שוב</span>
-              </div>
+              <p class="compound-word compound-word--top word-restart" lang="en">
+                <span class="neon-red-word">re</span><span class="neon-yellow-word">start</span>
+              </p>
+              <span class="word-he word-he-restart" lang="he" dir="rtl">מחדש</span>
+              <p class="compound-word word-replay" lang="en">
+                <span class="neon-red-word">re</span><span class="neon-yellow-word">play</span>
+              </p>
+              <span class="word-he word-he--sm word-he-replay" lang="he" dir="rtl">שחק שוב</span>
               <div class="word-pair word-pre">
                 <span class="pre-word-bottom" lang="en">pre</span>
                 <span class="word-he" lang="he" dir="rtl">לפני</span>
               </div>
-              <div class="word-pair word-prepay">
-                <p class="compound-word" lang="en">
-                  <span class="neon-red-word">pre</span><span class="neon-yellow-word">pay</span>
-                </p>
-                <span class="word-he word-he--sm" lang="he" dir="rtl">מראש</span>
-              </div>
+              <p class="compound-word word-prepay" lang="en">
+                <span class="neon-red-word">pre</span><span class="neon-yellow-word">pay</span>
+              </p>
+              <span class="word-he word-he--sm word-he-prepay" lang="he" dir="rtl">תשלום מראש</span>
             </div>
             <div class="traffic-light" role="img" aria-label="Traffic light blinking red then yellow every one and a half seconds">
               <div class="traffic-housing">
