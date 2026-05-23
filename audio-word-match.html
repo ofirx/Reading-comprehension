@@ -222,6 +222,27 @@
       .results.is-open {
         display: block;
       }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .play-status {
+        margin: 12px 0 0;
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: rgba(201, 74, 74, 0.1);
+        border: 1px solid rgba(201, 74, 74, 0.35);
+        color: #8b2e2e;
+        font-size: 14px;
+        text-align: center;
+      }
       .results h2 {
         margin: 0 0 10px;
         text-align: center;
@@ -290,6 +311,8 @@
         <button type="button" class="submit-btn" id="btnSubmit">Submit</button>
       </div>
 
+      <div class="play-status" id="playStatus" role="status" aria-live="polite" hidden></div>
+
       <div class="results" id="results" aria-live="polite">
         <h2>Your results</h2>
         <p class="score-big" id="scoreText"></p>
@@ -297,16 +320,25 @@
       </div>
     </div>
 
+    <!-- Preloaded audio (same pattern as listening page on services.html) -->
+    <div class="sr-only" aria-hidden="true" id="audioPool">
+      <audio id="audio-food" preload="auto" playsinline src="assets/audio-words/food.mp3"></audio>
+      <audio id="audio-meeting" preload="auto" playsinline src="assets/audio-words/a-meeting.mp3"></audio>
+      <audio id="audio-name" preload="auto" playsinline src="assets/audio-words/a-name.mp3"></audio>
+      <audio id="audio-pencil" preload="auto" playsinline src="assets/audio-words/a-pencil.mp3"></audio>
+      <audio id="audio-phone" preload="auto" playsinline src="assets/audio-words/a-phone-number.mp3"></audio>
+      <audio id="audio-address" preload="auto" playsinline src="assets/audio-words/an-address.mp3"></audio>
+    </div>
+
     <script>
       (function () {
-        var AUDIO = "assets/audio-words/";
         var WORDS = [
-          { id: "food", label: "food", audio: AUDIO + "food.mp3" },
-          { id: "meeting", label: "a meeting", audio: AUDIO + "a-meeting.mp3" },
-          { id: "name", label: "a name", audio: AUDIO + "a-name.mp3" },
-          { id: "pencil", label: "a pencil", audio: AUDIO + "a-pencil.mp3" },
-          { id: "phone", label: "a phone number", audio: AUDIO + "a-phone-number.mp3" },
-          { id: "address", label: "an address", audio: AUDIO + "an-address.mp3" },
+          { id: "food", label: "food", audioId: "audio-food" },
+          { id: "meeting", label: "a meeting", audioId: "audio-meeting" },
+          { id: "name", label: "a name", audioId: "audio-name" },
+          { id: "pencil", label: "a pencil", audioId: "audio-pencil" },
+          { id: "phone", label: "a phone number", audioId: "audio-phone" },
+          { id: "address", label: "an address", audioId: "audio-address" },
         ];
 
         var wordBank = document.getElementById("wordBank");
@@ -315,11 +347,53 @@
         var results = document.getElementById("results");
         var scoreText = document.getElementById("scoreText");
         var resultDetails = document.getElementById("resultDetails");
+        var playStatus = document.getElementById("playStatus");
 
         var selectedChip = null;
         var slotsBySoundId = {};
         var chipsById = {};
         var soundRows = [];
+        var audioByWordId = {};
+
+        WORDS.forEach(function (word) {
+          var el = document.getElementById(word.audioId);
+          if (el) {
+            audioByWordId[word.id] = el;
+            el.load();
+          }
+        });
+
+        function showPlayError(msg) {
+          playStatus.textContent = msg;
+          playStatus.hidden = false;
+        }
+
+        function playWordSound(word) {
+          var audio = audioByWordId[word.id];
+          if (!audio) {
+            showPlayError("Audio file not found for “" + word.label + "”. Refresh the page.");
+            return;
+          }
+          playStatus.hidden = true;
+          audio.pause();
+          audio.currentTime = 0;
+          var tryPlay = function () {
+            var p = audio.play();
+            if (p && typeof p.then === "function") {
+              p.catch(function () {
+                showPlayError(
+                  "Could not play the sound. Check your device volume, then tap Play again."
+                );
+              });
+            }
+          };
+          if (audio.readyState >= 2) {
+            tryPlay();
+          } else {
+            audio.addEventListener("canplay", tryPlay, { once: true });
+            audio.load();
+          }
+        }
 
         function shuffle(arr) {
           var a = arr.slice();
@@ -435,7 +509,7 @@
             play.textContent = "Play";
             play.setAttribute("aria-label", "Play sound " + (index + 1));
             play.addEventListener("click", function () {
-              new Audio(word.audio).play();
+              playWordSound(word);
             });
 
             var label = document.createElement("p");
