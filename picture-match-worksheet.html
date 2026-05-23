@@ -100,11 +100,6 @@
         outline: 3px solid var(--orange);
         outline-offset: 2px;
       }
-      .word-chip.is-extra {
-        border-style: dashed;
-        border-color: var(--orange);
-        background: rgba(242, 140, 40, 0.08);
-      }
       .drop-slot .word-chip {
         display: inline-flex;
       }
@@ -451,8 +446,8 @@
           },
         ];
         var EXTRA_BANK_WORDS = [
-          { id: "monday", label: "Monday", extra: true },
-          { id: "book", label: "a book", extra: true },
+          { id: "monday", label: "Monday" },
+          { id: "book", label: "a book" },
         ];
 
         var wordBank = document.getElementById("wordBank");
@@ -486,7 +481,7 @@
 
         function createChip(word) {
           var chip = document.createElement("span");
-          chip.className = "word-chip" + (word.extra ? " is-extra" : "");
+          chip.className = "word-chip";
           chip.textContent = word.label;
           chip.draggable = true;
           chip.dataset.wordId = word.id;
