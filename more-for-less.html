@@ -419,6 +419,11 @@
         grid-column: 1;
         grid-row: 6;
       }
+      .word-pre-row {
+        display: flex;
+        align-items: baseline;
+        gap: clamp(16px, 3vw, 36px);
+      }
       .compound-word {
         margin: 0;
         font-size: clamp(3.5rem, 12vmin, 8rem);
@@ -570,6 +575,7 @@
         }
         .word-re,
         .word-pre,
+        .word-pre-row,
         .word-restart,
         .word-replay {
           justify-self: center;
@@ -620,7 +626,12 @@
                 <p class="compound-word word-replay" lang="en">
                   <span class="neon-red-word">re</span><span class="neon-yellow-word">play</span>
                 </p>
-                <span class="pre-word-bottom word-pre" lang="en">pre</span>
+                <div class="word-pre-row word-pre">
+                  <span class="pre-word-bottom" lang="en">pre</span>
+                  <p class="compound-word word-prepay" lang="en">
+                    <span class="neon-red-word">pre</span><span class="neon-yellow-word">pay</span>
+                  </p>
+                </div>
               </div>
             </div>
             <div class="traffic-light" role="img" aria-label="Traffic light blinking red then yellow every one and a half seconds">
