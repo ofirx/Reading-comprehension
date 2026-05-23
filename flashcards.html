@@ -206,13 +206,30 @@
         opacity: 0.45;
         cursor: not-allowed;
       }
+      .btn-return-site {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 22px;
+        border: none;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.4);
+        color: #fff;
+        font: inherit;
+        font-weight: 800;
+        text-decoration: none;
+      }
+      .btn-return-site:hover {
+        color: #fff;
+      }
     </style>
   </head>
   <body>
     <div class="wrap">
       <h1>Vocabulary flashcards</h1>
-      <p class="hint">Click the card to see the word. Click again for the next picture — with a new switch effect each time.</p>
-      <p class="hint-he" lang="he" dir="rtl">לחצו על הכרטיס כדי לראות את המילה. לחצו שוב למעבר לתמונה הבאה — עם אפקט מעבר שונה בכל פעם.</p>
+      <p class="hint">Click the card to see the word. Click again for the next picture.</p>
+      <p class="hint-he" lang="he" dir="rtl">לחצו על הכרטיס כדי לראות את המילה. לחצו שוב למעבר לתמונה הבאה.</p>
       <p class="counter" id="counter" aria-live="polite">Card 1 / 6</p>
 
       <div class="stage">
@@ -232,7 +249,13 @@
       <div class="nav-row">
         <button type="button" class="nav-btn secondary" id="btnPrev">Previous</button>
         <button type="button" class="nav-btn" id="btnRestart">Restart</button>
-      </div>
+        <a
+          class="btn-return-site"
+          href="https://sites.google.com/view/ofir-reading-comprehension/while-reading-3?authuser=0"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Return to main site</a>
+      </motion-div>
     </div>
 
     <script>
@@ -273,7 +296,6 @@
         ];
 
         var EFFECTS = ["flip", "slide", "zoom"];
-        var effectNames = { flip: "Flip", slide: "Slide", zoom: "Zoom" };
 
         var cardEl = document.getElementById("flashcard");
         var cardImg = document.getElementById("cardImg");
@@ -298,7 +320,7 @@
           counter.textContent = "Card " + (i + 1) + " / " + CARDS.length;
           isFlipped = !!flipped;
           cardEl.classList.toggle("is-flipped", isFlipped);
-          tapHint.textContent = isFlipped ? "Tap for next picture (" + effectNames[EFFECTS[effectIndex]] + ")" : "Tap to see the word";
+          tapHint.textContent = isFlipped ? "Tap for next picture" : "Tap to see the word";
           btnPrev.disabled = i === 0 && !isFlipped;
         }
 
@@ -340,7 +362,7 @@
           if (!isFlipped) {
             isFlipped = true;
             cardEl.classList.add("is-flipped");
-            tapHint.textContent = "Tap for next picture (" + effectNames[EFFECTS[effectIndex]] + ")";
+            tapHint.textContent = "Tap for next picture";
             btnPrev.disabled = false;
             return;
           }
