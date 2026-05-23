@@ -114,6 +114,10 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
+        position: relative;
+      }
+      .match-list.is-shuffling {
+        pointer-events: none;
       }
       .match-row {
         display: flex;
@@ -125,6 +129,114 @@
         border: 1px solid var(--border);
         border-radius: var(--radius);
         box-shadow: 0 6px 18px rgba(30, 27, 36, 0.05);
+        transform-origin: center center;
+      }
+      .match-row.shuffle-out {
+        animation: row-shuffle-out 0.45s ease-in forwards;
+      }
+      .match-row.shuffle-in {
+        animation: row-shuffle-in 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      .word-bank.is-shuffling {
+        pointer-events: none;
+        animation: bank-shuffle-wiggle 0.45s ease-in-out;
+      }
+      .word-bank .word-chip.shuffle-out {
+        animation: chip-shuffle-out 0.4s ease-in forwards;
+      }
+      .word-bank .word-chip.shuffle-in {
+        animation: chip-shuffle-in 0.5s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      @keyframes list-shuffle-wiggle {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        15% {
+          transform: translateX(-10px) rotate(-0.6deg);
+        }
+        30% {
+          transform: translateX(12px) rotate(0.5deg);
+        }
+        50% {
+          transform: translateX(-8px);
+        }
+        70% {
+          transform: translateX(6px) rotate(-0.3deg);
+        }
+      }
+      @keyframes row-shuffle-out {
+        0% {
+          opacity: 1;
+          transform: translateY(0) scale(1) rotate(0deg);
+          filter: blur(0);
+        }
+        40% {
+          opacity: 0.85;
+          transform: translateY(-6px) scale(1.02) rotate(-2deg);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(18px) scale(0.88) rotate(4deg);
+          filter: blur(2px);
+        }
+      }
+      @keyframes row-shuffle-in {
+        0% {
+          opacity: 0;
+          transform: translateY(-24px) scale(0.85) rotate(-5deg);
+        }
+        55% {
+          opacity: 1;
+          transform: translateY(6px) scale(1.03) rotate(1.5deg);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1) rotate(0deg);
+        }
+      }
+      @keyframes bank-shuffle-wiggle {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        25% {
+          transform: scale(0.98) rotate(-1deg);
+        }
+        75% {
+          transform: scale(1.02) rotate(1deg);
+        }
+      }
+      @keyframes chip-shuffle-out {
+        to {
+          opacity: 0;
+          transform: scale(0.6) rotate(12deg);
+        }
+      }
+      @keyframes chip-shuffle-in {
+        from {
+          opacity: 0;
+          transform: scale(0.5) rotate(-15deg);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) rotate(0deg);
+        }
+      }
+      @keyframes sound-num-roll {
+        0% {
+          transform: rotate(0deg) scale(1);
+          background: rgba(107, 76, 154, 0.15);
+        }
+        50% {
+          transform: rotate(180deg) scale(0.75);
+          background: rgba(242, 140, 40, 0.45);
+          color: #fff;
+        }
+        100% {
+          transform: rotate(360deg) scale(1);
+          background: rgba(107, 76, 154, 0.15);
+        }
       }
       .sound-num {
         flex-shrink: 0;
@@ -138,6 +250,10 @@
         color: var(--purple);
         font-weight: 800;
         font-size: 14px;
+        transition: background 0.2s ease, color 0.2s ease;
+      }
+      .sound-num.is-rolling {
+        animation: sound-num-roll 0.55s ease-in-out;
       }
       .play-btn {
         flex-shrink: 0;
@@ -543,7 +659,77 @@
           playStatus.hidden = true;
         }
 
-        function renderSoundRows(order) {
+        function clearShuffleClasses() {
+          matchList.classList.remove("is-shuffling");
+          wordBank.classList.remove("is-shuffling");
+          matchList.querySelectorAll(".match-row").forEach(function (row) {
+            row.classList.remove("shuffle-out", "shuffle-in");
+            row.style.animationDelay = "";
+          });
+          wordBank.querySelectorAll(".word-chip").forEach(function (chip) {
+            chip.classList.remove("shuffle-out", "shuffle-in");
+            chip.style.animationDelay = "";
+          });
+        }
+
+        function animateShuffleOut(done) {
+          var rows = matchList.querySelectorAll(".match-row");
+          var chips = wordBank.querySelectorAll(".word-chip");
+          if (!rows.length) {
+            done();
+            return;
+          }
+
+          matchList.classList.add("is-shuffling");
+          wordBank.classList.add("is-shuffling");
+          matchList.style.animation = "list-shuffle-wiggle 0.45s ease-in-out";
+
+          rows.forEach(function (row, i) {
+            row.style.animationDelay = i * 0.05 + "s";
+            row.classList.add("shuffle-out");
+            var num = row.querySelector(".sound-num");
+            if (num) {
+              num.textContent = "?";
+              num.classList.add("is-rolling");
+            }
+          });
+          chips.forEach(function (chip, i) {
+            chip.style.animationDelay = i * 0.04 + "s";
+            chip.classList.add("shuffle-out");
+          });
+
+          window.setTimeout(function () {
+            matchList.style.animation = "";
+            done();
+          }, 480);
+        }
+
+        function animateShuffleIn() {
+          var rows = matchList.querySelectorAll(".match-row");
+          rows.forEach(function (row, i) {
+            row.style.animationDelay = i * 0.07 + "s";
+            row.classList.add("shuffle-in");
+            var num = row.querySelector(".sound-num");
+            if (num) {
+              window.setTimeout(
+                function (n, value) {
+                  n.textContent = value;
+                  n.classList.remove("is-rolling");
+                },
+                120 + i * 70,
+                num,
+                String(i + 1)
+              );
+            }
+          });
+          wordBank.querySelectorAll(".word-chip").forEach(function (chip, i) {
+            chip.style.animationDelay = i * 0.05 + "s";
+            chip.classList.add("shuffle-in");
+          });
+          window.setTimeout(clearShuffleClasses, 650);
+        }
+
+        function renderSoundRows(order, forShuffleIn) {
           matchList.innerHTML = "";
           slotsBySoundId = {};
           soundRows = order.slice();
@@ -551,11 +737,15 @@
           soundRows.forEach(function (word, index) {
             var row = document.createElement("div");
             row.className = "match-row";
+            if (forShuffleIn) row.classList.add("shuffle-in");
 
             var num = document.createElement("span");
             num.className = "sound-num";
-            num.textContent = String(index + 1);
+            num.textContent = forShuffleIn ? "?" : String(index + 1);
             num.setAttribute("aria-hidden", "true");
+            if (forShuffleIn) {
+              row.style.animationDelay = index * 0.07 + "s";
+            }
 
             var play = document.createElement("button");
             play.type = "button";
@@ -584,10 +774,15 @@
           });
         }
 
-        function renderWordBank(order) {
+        function renderWordBank(order, forShuffleIn) {
           wordBank.innerHTML = "";
-          order.forEach(function (word) {
-            wordBank.appendChild(chipsById[word.id]);
+          order.forEach(function (word, i) {
+            var chip = chipsById[word.id];
+            if (forShuffleIn) {
+              chip.classList.add("shuffle-in");
+              chip.style.animationDelay = i * 0.05 + "s";
+            }
+            wordBank.appendChild(chip);
           });
           updateBankHint();
         }
@@ -595,8 +790,20 @@
         function mixExercises() {
           hideResults();
           returnAllChipsToBank();
-          renderSoundRows(shuffle(WORDS.slice()));
-          renderWordBank(shuffle(WORDS.slice()));
+          btnMix.disabled = true;
+
+          var newSoundOrder = shuffle(WORDS.slice());
+          var newBankOrder = shuffle(WORDS.slice());
+
+          animateShuffleOut(function () {
+            clearShuffleClasses();
+            renderSoundRows(newSoundOrder, true);
+            renderWordBank(newBankOrder, true);
+            animateShuffleIn();
+            window.setTimeout(function () {
+              btnMix.disabled = false;
+            }, 680);
+          });
         }
 
         function restartExercise() {
@@ -606,7 +813,8 @@
 
         function build() {
           ensureChips();
-          mixExercises();
+          renderSoundRows(shuffle(WORDS.slice()), false);
+          renderWordBank(shuffle(WORDS.slice()), false);
         }
 
         btnMix.addEventListener("click", mixExercises);
