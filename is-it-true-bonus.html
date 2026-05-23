@@ -14,6 +14,8 @@
         --radius: 14px;
         --purple: #6b4c9a;
         --purple-2: #4e3878;
+        --orange: #f28c28;
+        --orange-2: #d96d00;
         --green: #2e9b5a;
         --green-2: #1f7a45;
       }
@@ -67,6 +69,151 @@
         display: flex;
         flex-direction: column;
         gap: 14px;
+      }
+      .statement-list.is-shuffling {
+        pointer-events: none;
+      }
+      .statement-row.shuffle-out,
+      .statement-row.shuffle-in {
+        transform-origin: center center;
+      }
+      [data-shuffle-anim="slide-left"] .statement-row.shuffle-out {
+        animation: shuffle-out-slide-left 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="slide-left"] .statement-row.shuffle-in {
+        animation: shuffle-in-slide-left 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      [data-shuffle-anim="slide-right"] .statement-row.shuffle-out {
+        animation: shuffle-out-slide-right 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="slide-right"] .statement-row.shuffle-in {
+        animation: shuffle-in-slide-right 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      [data-shuffle-anim="flip"] .statement-row.shuffle-out {
+        animation: shuffle-out-flip 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="flip"] .statement-row.shuffle-in {
+        animation: shuffle-in-flip 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      [data-shuffle-anim="zoom"] .statement-row.shuffle-out {
+        animation: shuffle-out-zoom 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="zoom"] .statement-row.shuffle-in {
+        animation: shuffle-in-zoom 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      [data-shuffle-anim="rotate"] .statement-row.shuffle-out {
+        animation: shuffle-out-rotate 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="rotate"] .statement-row.shuffle-in {
+        animation: shuffle-in-rotate 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      [data-shuffle-anim="bounce"] .statement-row.shuffle-out {
+        animation: shuffle-out-bounce 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="bounce"] .statement-row.shuffle-in {
+        animation: shuffle-in-bounce 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      @keyframes shuffle-out-slide-left {
+        to {
+          opacity: 0;
+          transform: translateX(-40px);
+        }
+      }
+      @keyframes shuffle-in-slide-left {
+        from {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes shuffle-out-slide-right {
+        to {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+      }
+      @keyframes shuffle-in-slide-right {
+        from {
+          opacity: 0;
+          transform: translateX(-40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes shuffle-out-flip {
+        to {
+          opacity: 0;
+          transform: perspective(400px) rotateY(90deg) scale(0.85);
+        }
+      }
+      @keyframes shuffle-in-flip {
+        from {
+          opacity: 0;
+          transform: perspective(400px) rotateY(-90deg) scale(0.85);
+        }
+        to {
+          opacity: 1;
+          transform: perspective(400px) rotateY(0) scale(1);
+        }
+      }
+      @keyframes shuffle-out-zoom {
+        to {
+          opacity: 0;
+          transform: scale(0.35);
+        }
+      }
+      @keyframes shuffle-in-zoom {
+        from {
+          opacity: 0;
+          transform: scale(1.35);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      @keyframes shuffle-out-rotate {
+        to {
+          opacity: 0;
+          transform: rotate(180deg) scale(0.5);
+        }
+      }
+      @keyframes shuffle-in-rotate {
+        from {
+          opacity: 0;
+          transform: rotate(-180deg) scale(0.5);
+        }
+        to {
+          opacity: 1;
+          transform: rotate(0) scale(1);
+        }
+      }
+      @keyframes shuffle-out-bounce {
+        70% {
+          transform: translateY(-12px) scale(1.02);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(28px) scale(0.75);
+        }
+      }
+      @keyframes shuffle-in-bounce {
+        0% {
+          opacity: 0;
+          transform: translateY(-32px) scale(0.75);
+        }
+        60% {
+          transform: translateY(6px) scale(1.04);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
       }
       .statement-row {
         padding: 14px 16px;
@@ -129,6 +276,10 @@
       }
       .action-btn:hover {
         filter: brightness(1.06);
+      }
+      .btn-mix {
+        background: linear-gradient(135deg, var(--orange), var(--orange-2));
+        box-shadow: 0 8px 22px rgba(242, 140, 40, 0.4);
       }
       .btn-restart {
         background: linear-gradient(135deg, var(--green), var(--green-2));
@@ -201,6 +352,7 @@
         </div>
 
         <div class="submit-row">
+          <button type="button" class="action-btn btn-mix" id="btnMix">Mix</button>
           <button type="button" class="action-btn btn-restart" id="btnRestart">Restart</button>
           <button type="submit" class="action-btn submit-btn" id="btnSubmit">Submit</button>
           <a
@@ -233,38 +385,82 @@
           },
         ];
 
+        var SHUFFLE_ANIMS = ["slide-left", "slide-right", "flip", "zoom", "rotate", "bounce"];
+        var shuffleAnimIndex = 0;
+
         var answers = {};
+        var statementOrder = STATEMENTS.slice();
         var list = document.getElementById("statementList");
         var form = document.getElementById("trueFalseForm");
         var results = document.getElementById("results");
         var scoreText = document.getElementById("scoreText");
         var resultDetails = document.getElementById("resultDetails");
+        var btnMix = document.getElementById("btnMix");
         var btnRestart = document.getElementById("btnRestart");
 
-        function renderStatements() {
-          list.innerHTML = STATEMENTS.map(function (item, index) {
-            return (
-              '<div class="statement-row" data-id="' +
-              item.id +
-              '">' +
-              '<p class="statement-text">' +
-              (index + 1) +
-              ". " +
-              item.text +
-              "</p>" +
-              '<div class="tf-group" role="group" aria-label="True or false for statement ' +
-              (index + 1) +
-              '">' +
-              '<button type="button" class="tf-btn" data-id="' +
-              item.id +
-              '" data-value="true">True</button>' +
-              '<button type="button" class="tf-btn" data-id="' +
-              item.id +
-              '" data-value="false">False</button>' +
-              "</div></div>"
-            );
-          }).join("");
+        function shuffle(arr) {
+          var a = arr.slice();
+          for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = a[i];
+            a[i] = a[j];
+            a[j] = t;
+          }
+          return a;
+        }
 
+        function nextShuffleAnim() {
+          var name = SHUFFLE_ANIMS[shuffleAnimIndex % SHUFFLE_ANIMS.length];
+          shuffleAnimIndex += 1;
+          return name;
+        }
+
+        function clearShuffleClasses() {
+          list.classList.remove("is-shuffling");
+          list.removeAttribute("data-shuffle-anim");
+          list.querySelectorAll(".statement-row").forEach(function (row) {
+            row.classList.remove("shuffle-out", "shuffle-in");
+            row.style.animationDelay = "";
+          });
+        }
+
+        function animateShuffleOut(done) {
+          var rows = list.querySelectorAll(".statement-row");
+          if (!rows.length) {
+            done();
+            return;
+          }
+          list.classList.add("is-shuffling");
+          list.setAttribute("data-shuffle-anim", nextShuffleAnim());
+          rows.forEach(function (row, i) {
+            row.style.animationDelay = i * 0.06 + "s";
+            row.classList.add("shuffle-out");
+          });
+          window.setTimeout(done, 480);
+        }
+
+        function animateShuffleIn() {
+          list.querySelectorAll(".statement-row").forEach(function (row, i) {
+            row.style.animationDelay = i * 0.06 + "s";
+            row.classList.add("shuffle-in");
+            var textEl = row.querySelector(".statement-text");
+            var item = statementOrder[i];
+            if (textEl && item) {
+              window.setTimeout(
+                function (el, n, t) {
+                  el.textContent = n + ". " + t;
+                },
+                120 + i * 70,
+                textEl,
+                i + 1,
+                item.text
+              );
+            }
+          });
+          window.setTimeout(clearShuffleClasses, 650);
+        }
+
+        function bindTfButtons() {
           list.querySelectorAll(".tf-btn").forEach(function (btn) {
             btn.addEventListener("click", function () {
               var id = btn.getAttribute("data-id");
@@ -277,12 +473,65 @@
           });
         }
 
+        function renderStatements(forShuffleIn) {
+          list.innerHTML = statementOrder
+            .map(function (item, index) {
+              var num = forShuffleIn ? "?" : String(index + 1);
+              return (
+                '<div class="statement-row' +
+                (forShuffleIn ? " shuffle-in" : "") +
+                '" data-id="' +
+                item.id +
+                '"' +
+                (forShuffleIn ? ' style="animation-delay:' + index * 0.06 + 's"' : "") +
+                ">" +
+                '<p class="statement-text">' +
+                num +
+                ". " +
+                item.text +
+                "</p>" +
+                '<div class="tf-group" role="group" aria-label="True or false for statement ' +
+                (index + 1) +
+                '">' +
+                '<button type="button" class="tf-btn' +
+                (answers[item.id] === "true" ? " is-selected" : "") +
+                '" data-id="' +
+                item.id +
+                '" data-value="true">True</button>' +
+                '<button type="button" class="tf-btn' +
+                (answers[item.id] === "false" ? " is-selected" : "") +
+                '" data-id="' +
+                item.id +
+                '" data-value="false">False</button>' +
+                "</div></div>"
+              );
+            })
+            .join("");
+
+          bindTfButtons();
+        }
+
+        function mixStatements() {
+          results.classList.remove("is-open");
+          btnMix.disabled = true;
+          var newOrder = shuffle(statementOrder.slice());
+          animateShuffleOut(function () {
+            clearShuffleClasses();
+            statementOrder = newOrder;
+            renderStatements(true);
+            animateShuffleIn();
+            window.setTimeout(function () {
+              btnMix.disabled = false;
+            }, 680);
+          });
+        }
+
         form.addEventListener("submit", function (e) {
           e.preventDefault();
           var correct = 0;
           var rows = [];
 
-          STATEMENTS.forEach(function (item, index) {
+          statementOrder.forEach(function (item, index) {
             var chosen = answers[item.id];
             var ok = chosen === item.answer;
             if (ok) correct += 1;
@@ -312,23 +561,23 @@
             );
           });
 
-          scoreText.textContent = "Score: " + correct + " / " + STATEMENTS.length;
+          scoreText.textContent = "Score: " + correct + " / " + statementOrder.length;
           resultDetails.innerHTML = rows.join("");
           results.classList.add("is-open");
           results.scrollIntoView({ behavior: "smooth", block: "nearest" });
         });
 
+        btnMix.addEventListener("click", mixStatements);
         btnRestart.addEventListener("click", function () {
           answers = {};
-          list.querySelectorAll(".tf-btn").forEach(function (btn) {
-            btn.classList.remove("is-selected");
-          });
+          statementOrder = STATEMENTS.slice();
           results.classList.remove("is-open");
           resultDetails.innerHTML = "";
           scoreText.textContent = "";
+          renderStatements(false);
         });
 
-        renderStatements();
+        renderStatements(false);
       })();
     </script>
   </body>

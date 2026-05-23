@@ -14,6 +14,8 @@
         --radius: 14px;
         --purple: #6b4c9a;
         --purple-2: #4e3878;
+        --orange: #f28c28;
+        --orange-2: #d96d00;
         --green: #2e9b5a;
         --green-2: #1f7a45;
       }
@@ -85,6 +87,151 @@
         flex-direction: column;
         gap: 10px;
       }
+      .option-list.is-shuffling {
+        pointer-events: none;
+      }
+      .option-item.shuffle-out,
+      .option-item.shuffle-in {
+        transform-origin: center center;
+      }
+      [data-shuffle-anim="slide-left"] .option-item.shuffle-out {
+        animation: shuffle-out-slide-left 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="slide-left"] .option-item.shuffle-in {
+        animation: shuffle-in-slide-left 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      [data-shuffle-anim="slide-right"] .option-item.shuffle-out {
+        animation: shuffle-out-slide-right 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="slide-right"] .option-item.shuffle-in {
+        animation: shuffle-in-slide-right 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      [data-shuffle-anim="flip"] .option-item.shuffle-out {
+        animation: shuffle-out-flip 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="flip"] .option-item.shuffle-in {
+        animation: shuffle-in-flip 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      [data-shuffle-anim="zoom"] .option-item.shuffle-out {
+        animation: shuffle-out-zoom 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="zoom"] .option-item.shuffle-in {
+        animation: shuffle-in-zoom 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      [data-shuffle-anim="rotate"] .option-item.shuffle-out {
+        animation: shuffle-out-rotate 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="rotate"] .option-item.shuffle-in {
+        animation: shuffle-in-rotate 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      [data-shuffle-anim="bounce"] .option-item.shuffle-out {
+        animation: shuffle-out-bounce 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="bounce"] .option-item.shuffle-in {
+        animation: shuffle-in-bounce 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      @keyframes shuffle-out-slide-left {
+        to {
+          opacity: 0;
+          transform: translateX(-40px);
+        }
+      }
+      @keyframes shuffle-in-slide-left {
+        from {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes shuffle-out-slide-right {
+        to {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+      }
+      @keyframes shuffle-in-slide-right {
+        from {
+          opacity: 0;
+          transform: translateX(-40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes shuffle-out-flip {
+        to {
+          opacity: 0;
+          transform: perspective(400px) rotateY(90deg) scale(0.85);
+        }
+      }
+      @keyframes shuffle-in-flip {
+        from {
+          opacity: 0;
+          transform: perspective(400px) rotateY(-90deg) scale(0.85);
+        }
+        to {
+          opacity: 1;
+          transform: perspective(400px) rotateY(0) scale(1);
+        }
+      }
+      @keyframes shuffle-out-zoom {
+        to {
+          opacity: 0;
+          transform: scale(0.35);
+        }
+      }
+      @keyframes shuffle-in-zoom {
+        from {
+          opacity: 0;
+          transform: scale(1.35);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      @keyframes shuffle-out-rotate {
+        to {
+          opacity: 0;
+          transform: rotate(180deg) scale(0.5);
+        }
+      }
+      @keyframes shuffle-in-rotate {
+        from {
+          opacity: 0;
+          transform: rotate(-180deg) scale(0.5);
+        }
+        to {
+          opacity: 1;
+          transform: rotate(0) scale(1);
+        }
+      }
+      @keyframes shuffle-out-bounce {
+        70% {
+          transform: translateY(-12px) scale(1.02);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(28px) scale(0.75);
+        }
+      }
+      @keyframes shuffle-in-bounce {
+        0% {
+          opacity: 0;
+          transform: translateY(-32px) scale(0.75);
+        }
+        60% {
+          transform: translateY(6px) scale(1.04);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
       .option-item {
         display: flex;
         align-items: center;
@@ -155,6 +302,10 @@
       }
       .action-btn:hover {
         filter: brightness(1.06);
+      }
+      .btn-mix {
+        background: linear-gradient(135deg, var(--orange), var(--orange-2));
+        box-shadow: 0 8px 22px rgba(242, 140, 40, 0.4);
       }
       .btn-restart {
         background: linear-gradient(135deg, var(--green), var(--green-2));
@@ -276,6 +427,7 @@
         </div>
 
         <div class="submit-row">
+          <button type="button" class="action-btn btn-mix" id="btnMix">Mix</button>
           <button type="button" class="action-btn btn-restart" id="btnRestart">Restart</button>
           <button type="submit" class="action-btn submit-btn" id="btnSubmit">Submit</button>
           <a
@@ -305,12 +457,85 @@
           bicycle: "a bicycle",
         };
 
+        var SHUFFLE_ANIMS = ["slide-left", "slide-right", "flip", "zoom", "rotate", "bounce"];
+        var shuffleAnimIndex = 0;
+
         var form = document.getElementById("schoolBagForm");
+        var optionList = document.getElementById("optionList");
         var results = document.getElementById("results");
         var scoreText = document.getElementById("scoreText");
         var resultDetails = document.getElementById("resultDetails");
         var bagAnswer = document.getElementById("bagAnswer");
+        var btnMix = document.getElementById("btnMix");
         var btnRestart = document.getElementById("btnRestart");
+
+        function shuffle(arr) {
+          var a = arr.slice();
+          for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = a[i];
+            a[i] = a[j];
+            a[j] = t;
+          }
+          return a;
+        }
+
+        function nextShuffleAnim() {
+          var name = SHUFFLE_ANIMS[shuffleAnimIndex % SHUFFLE_ANIMS.length];
+          shuffleAnimIndex += 1;
+          return name;
+        }
+
+        function clearShuffleClasses() {
+          optionList.classList.remove("is-shuffling");
+          optionList.removeAttribute("data-shuffle-anim");
+          optionList.querySelectorAll(".option-item").forEach(function (item) {
+            item.classList.remove("shuffle-out", "shuffle-in");
+            item.style.animationDelay = "";
+          });
+        }
+
+        function animateShuffleOut(done) {
+          var items = optionList.querySelectorAll(".option-item");
+          if (!items.length) {
+            done();
+            return;
+          }
+          optionList.classList.add("is-shuffling");
+          optionList.setAttribute("data-shuffle-anim", nextShuffleAnim());
+          items.forEach(function (item, i) {
+            item.style.animationDelay = i * 0.05 + "s";
+            item.classList.add("shuffle-out");
+          });
+          window.setTimeout(done, 480);
+        }
+
+        function animateShuffleIn() {
+          optionList.querySelectorAll(".option-item").forEach(function (item, i) {
+            item.style.animationDelay = i * 0.05 + "s";
+            item.classList.add("shuffle-in");
+          });
+          window.setTimeout(clearShuffleClasses, 650);
+        }
+
+        function mixOptions() {
+          results.classList.remove("is-open");
+          btnMix.disabled = true;
+          var items = Array.prototype.slice.call(optionList.querySelectorAll(".option-item"));
+          var newOrder = shuffle(items);
+          animateShuffleOut(function () {
+            clearShuffleClasses();
+            newOrder.forEach(function (item, i) {
+              item.classList.add("shuffle-in");
+              item.style.animationDelay = i * 0.05 + "s";
+              optionList.appendChild(item);
+            });
+            animateShuffleIn();
+            window.setTimeout(function () {
+              btnMix.disabled = false;
+            }, 680);
+          });
+        }
 
         function getCheckboxes() {
           return Array.prototype.slice.call(form.querySelectorAll('input[name="item"]'));
@@ -365,6 +590,7 @@
           results.scrollIntoView({ behavior: "smooth", block: "nearest" });
         });
 
+        btnMix.addEventListener("click", mixOptions);
         btnRestart.addEventListener("click", function () {
           getCheckboxes().forEach(function (input) {
             input.checked = false;
