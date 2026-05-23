@@ -359,20 +359,78 @@
         }
       }
       .slide--pre {
-        flex-direction: row;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: clamp(32px, 8vw, 80px);
         padding: 48px clamp(20px, 5vw, 48px) 100px;
         background:
           radial-gradient(ellipse 40% 50% at 15% 50%, rgba(255, 42, 74, 0.12), transparent),
+          radial-gradient(ellipse 40% 50% at 85% 50%, rgba(255, 220, 80, 0.1), transparent),
           var(--bg);
+      }
+      .slide-pre-layout {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        max-width: min(1200px, 96vw);
+        gap: clamp(20px, 4vw, 48px);
       }
       .pre-text {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         text-align: left;
+        flex-shrink: 0;
+      }
+      .restart-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        text-align: right;
+        flex-shrink: 0;
+      }
+      .restart-word {
+        font-size: clamp(3.5rem, 12vmin, 8rem);
+        font-weight: 900;
+        line-height: 1;
+        white-space: nowrap;
+      }
+      .neon-red-word {
+        color: var(--neon-red);
+        animation: neon-throb-red 2.6s ease-in-out infinite;
+      }
+      .neon-yellow-word {
+        color: #ffe566;
+        animation: neon-throb-yellow 2.6s ease-in-out infinite;
+      }
+      @keyframes neon-throb-yellow {
+        0%,
+        100% {
+          text-shadow:
+            0 0 10px #ffd60a,
+            0 0 28px #ffd60a,
+            0 0 55px rgba(255, 214, 10, 0.85),
+            0 0 100px rgba(255, 229, 102, 0.45);
+        }
+        12% {
+          text-shadow:
+            0 0 16px #ffd60a,
+            0 0 42px #ffd60a,
+            0 0 80px rgba(255, 214, 10, 1),
+            0 0 140px rgba(255, 229, 102, 0.7);
+        }
+        36% {
+          text-shadow:
+            0 0 14px #ffd60a,
+            0 0 36px #ffd60a,
+            0 0 70px rgba(255, 214, 10, 0.95),
+            0 0 120px rgba(255, 229, 102, 0.55);
+        }
+      }
+      .slide-pre-layout .traffic-light {
+        flex-shrink: 0;
       }
       .pre-word-top {
         font-size: clamp(4rem, 14vmin, 9rem);
@@ -419,11 +477,15 @@
         }
       }
       @media (max-width: 640px) {
-        .slide--pre {
+        .slide-pre-layout {
           flex-direction: column;
-          gap: 36px;
+          gap: 28px;
         }
         .pre-text {
+          align-items: center;
+          text-align: center;
+        }
+        .restart-text {
           align-items: center;
           text-align: center;
         }
@@ -460,15 +522,22 @@
         </section>
 
         <section class="slide slide--content slide--pre" data-slide="2" aria-hidden="true">
-          <div class="pre-text">
-            <span class="pre-word-top" lang="en">re</span>
-            <span class="pre-word-bottom" lang="en">pre</span>
-          </div>
-          <div class="traffic-light" role="img" aria-label="Traffic light with blinking red neon light">
-            <div class="traffic-housing">
-              <span class="traffic-bulb traffic-bulb--blink-red" aria-hidden="true"></span>
-              <span class="traffic-bulb traffic-bulb--off" aria-hidden="true"></span>
-              <span class="traffic-bulb traffic-bulb--off" aria-hidden="true"></span>
+          <div class="slide-pre-layout">
+            <div class="pre-text">
+              <span class="pre-word-top" lang="en">re</span>
+              <span class="pre-word-bottom" lang="en">pre</span>
+            </div>
+            <div class="traffic-light" role="img" aria-label="Traffic light with blinking red neon light">
+              <div class="traffic-housing">
+                <span class="traffic-bulb traffic-bulb--blink-red" aria-hidden="true"></span>
+                <span class="traffic-bulb traffic-bulb--off" aria-hidden="true"></span>
+                <span class="traffic-bulb traffic-bulb--off" aria-hidden="true"></span>
+              </div>
+            </div>
+            <div class="restart-text">
+              <p class="restart-word" lang="en">
+                <span class="neon-red-word">re</span><span class="neon-yellow-word">start</span>
+              </p>
             </div>
           </div>
         </section>
