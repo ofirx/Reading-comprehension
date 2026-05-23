@@ -219,7 +219,7 @@
       .nav-btn {
         min-width: 120px;
         padding: 14px 28px;
-        border: 2px solid rgba(255, 255, 255, 0.25);
+        border: 2px solid var(--neon-ice);
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.06);
         color: #fff;
@@ -227,6 +227,10 @@
         font-size: 1rem;
         font-weight: 800;
         cursor: pointer;
+        box-shadow:
+          0 0 8px var(--neon-ice-glow),
+          0 0 20px rgba(0, 229, 255, 0.45),
+          0 0 40px rgba(92, 239, 255, 0.25);
         transition:
           background 0.2s,
           border-color 0.2s,
@@ -236,18 +240,27 @@
       .nav-btn:hover:not(:disabled) {
         background: rgba(255, 255, 255, 0.12);
         border-color: var(--neon-ice);
-        box-shadow: 0 0 20px rgba(0, 229, 255, 0.35);
+        box-shadow:
+          0 0 12px var(--neon-ice-glow),
+          0 0 28px rgba(0, 229, 255, 0.65),
+          0 0 50px rgba(92, 239, 255, 0.4);
       }
       .nav-btn:disabled {
         opacity: 0.35;
         cursor: not-allowed;
+        box-shadow:
+          0 0 6px rgba(0, 229, 255, 0.25),
+          0 0 14px rgba(92, 239, 255, 0.15);
       }
       .nav-btn--next {
-        border-color: rgba(255, 42, 74, 0.5);
+        border-color: var(--neon-ice);
       }
       .nav-btn--next:hover:not(:disabled) {
-        border-color: var(--neon-red);
-        box-shadow: 0 0 20px rgba(255, 42, 74, 0.4);
+        border-color: var(--neon-ice);
+        box-shadow:
+          0 0 12px var(--neon-ice-glow),
+          0 0 28px rgba(0, 229, 255, 0.65),
+          0 0 50px rgba(92, 239, 255, 0.4);
       }
       .slide--traffic {
         background:
@@ -267,10 +280,12 @@
         gap: clamp(20px, 4vmin, 36px);
         padding: clamp(24px, 5vmin, 44px) clamp(28px, 6vmin, 52px);
         background: linear-gradient(180deg, #1a1a24 0%, #0d0d14 100%);
-        border: 3px solid rgba(255, 255, 255, 0.15);
+        border: 3px solid var(--neon-ice);
         border-radius: clamp(28px, 6vmin, 48px);
         box-shadow:
-          0 0 30px rgba(0, 0, 0, 0.8),
+          0 0 12px var(--neon-ice-glow),
+          0 0 28px rgba(0, 229, 255, 0.55),
+          0 0 55px rgba(92, 239, 255, 0.35),
           inset 0 0 20px rgba(255, 255, 255, 0.04);
       }
       .traffic-bulb {
