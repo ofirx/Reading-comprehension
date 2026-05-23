@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Complete the Sentences — Live Worksheet</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+      :root {
+        --bg: #f4f6fb;
+        --card: #fff;
+        --text: #1e1b24;
+        --muted: #5c5668;
+        --border: rgba(30, 27, 36, 0.12);
+        --radius: 14px;
+        --purple: #6b4c9a;
+        --purple-2: #4e3878;
+        --orange: #f28c28;
+        --orange-2: #d96d00;
+        --green: #2e9b5a;
+        --green-2: #1f7a45;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 16px 14px 32px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 1.35rem;
+        color: var(--purple);
+      }
+      .lede {
+        margin: 0 0 8px;
+        font-size: 15px;
+        color: var(--muted);
+      }
+      .lede-he {
+        margin: 0 0 16px;
+        font-size: 15px;
+        direction: rtl;
+        text-align: right;
+        color: var(--muted);
+      }
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        margin-bottom: 18px;
+        box-shadow: 0 8px 24px rgba(30, 27, 36, 0.06);
+      }
+      .panel h2 {
+        margin: 0 0 10px;
+        font-size: 1rem;
+        color: var(--purple);
+      }
+      .word-bank {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 12px;
+        border-radius: 10px;
+        background: rgba(107, 76, 154, 0.06);
+        border: 2px dashed rgba(107, 76, 154, 0.35);
+        min-height: 52px;
+      }
+      .word-bank.is-empty-hint::after {
+        content: "All words placed — drag back here to change an answer.";
+        color: var(--muted);
+        font-size: 14px;
+        width: 100%;
+      }
+      .word-chip {
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: #fff;
+        border: 2px solid var(--purple);
+        font-weight: 700;
+        font-size: 14px;
+        cursor: grab;
+        user-select: none;
+      }
+      .word-chip.is-selected {
+        outline: 3px solid var(--orange);
+        outline-offset: 2px;
+      }
+      .drop-slot .word-chip {
+        display: inline-flex;
+        cursor: grab;
+      }
+      .sentence-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .sentence-row {
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: #fff;
+        font-size: 16px;
+        line-height: 1.65;
+      }
+      .sentence-num {
+        display: inline-block;
+        min-width: 1.5em;
+        font-weight: 800;
+        color: var(--purple);
+      }
+      .drop-slot {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 140px;
+        min-height: 40px;
+        margin: 0 4px;
+        padding: 2px 10px;
+        vertical-align: middle;
+        border-radius: 10px;
+        border: 2px dashed rgba(107, 76, 154, 0.45);
+        background: rgba(107, 76, 154, 0.06);
+      }
+      .drop-slot.is-over {
+        border-color: var(--orange);
+        background: rgba(242, 140, 40, 0.12);
+      }
+      .drop-slot.is-filled {
+        border-style: solid;
+        border-color: var(--purple);
+        background: #fff;
+      }
+      .drop-slot .placeholder {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 600;
+        pointer-events: none;
+      }
+      .submit-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 8px;
+      }
+      .action-btn {
+        padding: 14px 28px;
+        border: none;
+        border-radius: 999px;
+        color: #fff;
+        font: inherit;
+        font-size: 1.05rem;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .action-btn:hover {
+        filter: brightness(1.06);
+      }
+      .btn-mix {
+        background: linear-gradient(135deg, var(--orange), var(--orange-2));
+        box-shadow: 0 8px 22px rgba(242, 140, 40, 0.4);
+      }
+      .btn-restart {
+        background: linear-gradient(135deg, var(--green), var(--green-2));
+        box-shadow: 0 8px 22px rgba(46, 155, 90, 0.35);
+      }
+      .submit-btn {
+        background: linear-gradient(135deg, var(--purple), var(--purple-2));
+        box-shadow: 0 8px 22px rgba(107, 76, 154, 0.4);
+      }
+      .btn-return-site {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.4);
+      }
+      .btn-return-site:hover {
+        color: #fff;
+      }
+      .results {
+        display: none;
+        margin-top: 20px;
+        padding: 18px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+      }
+      .results.is-open {
+        display: block;
+      }
+      .results h2 {
+        margin: 0 0 10px;
+        text-align: center;
+        color: var(--purple);
+      }
+      .total-score {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 12px;
+      }
+      .chart-wrap {
+        max-width: 280px;
+        margin: 0 auto 16px;
+      }
+      .result-row {
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        border-radius: 10px;
+        font-size: 14px;
+        border: 1px solid var(--border);
+      }
+      .result-row.ok {
+        background: rgba(46, 155, 90, 0.1);
+      }
+      .result-row.bad {
+        background: rgba(201, 74, 74, 0.08);
+      }
+      .hint-extra {
+        margin: 0;
+        font-size: 14px;
+        color: var(--muted);
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Complete the Sentences with the Correct Word</h1>
+      <p class="lede">
+        <strong>Instructions:</strong> Read each sentence and drag the correct word from the word bank into each
+        blank. <strong>Three words do not belong.</strong> When you finish, press <strong>Submit</strong> to see your
+        grade.
+      </p>
+      <p class="lede-he" lang="he" dir="rtl">
+        <strong>הוראות:</strong> קראו כל משפט וגררו את המילה המתאימה ממאגר המילים לכל רווח. <strong>שלוש מילים אינן
+        מתאימות.</strong> בסיום לחצו על <strong>Submit</strong> כדי לראות את הציון.
+      </p>
+
+      <div class="panel">
+        <h2>Word bank</h2>
+        <p class="hint-extra">a pencil · a meeting · a name · food · an address · a phone number · a teacher · a classroom · a notebook</p>
+        <div class="word-bank" id="wordBank" aria-label="Word bank"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Sentences</h2>
+        <div class="sentence-list" id="sentenceList"></div>
+      </div>
+
+      <div class="submit-row">
+        <button type="button" class="action-btn btn-mix" id="btnMix">Mix exercises</button>
+        <button type="button" class="action-btn btn-restart" id="btnRestart">Restart</button>
+        <button type="button" class="action-btn submit-btn" id="btnSubmit">Submit</button>
+        <a
+          class="action-btn btn-return-site"
+          href="https://sites.google.com/view/ofir-reading-comprehension/while-reading-3?authuser=0"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Return to the main site</a>
+      </div>
+
+      <div class="results" id="results" aria-live="polite">
+        <h2>Your results</h2>
+        <p class="total-score" id="totalScore"></p>
+        <div class="chart-wrap">
+          <canvas id="gradeChart" width="280" height="280" aria-label="Correct and incorrect answers"></canvas>
+        </div>
+        <div id="resultDetails"></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var SENTENCES = [
+          {
+            id: "q1",
+            textBefore: "When I write a shopping list at home, I use ",
+            textAfter: ".",
+            answer: "a pencil",
+          },
+          {
+            id: "q2",
+            textBefore: "When I order a pizza, I give my home ",
+            textAfter: ".",
+            answer: "an address",
+          },
+          {
+            id: "q3",
+            textBefore: 'When someone asks, "What is your ',
+            textAfter: '?", I say "Daniel" or "Noa."',
+            answer: "a name",
+          },
+          {
+            id: "q4",
+            textBefore: "After football practice, I am hungry and want some ",
+            textAfter: ".",
+            answer: "food",
+          },
+          {
+            id: "q5",
+            textBefore: "My parents have a ",
+            textAfter: " at school to talk about my progress.",
+            answer: "a meeting",
+          },
+          {
+            id: "q6",
+            textBefore: "When I want to call my friend after school, I need his ",
+            textAfter: ".",
+            answer: "a phone number",
+          },
+        ];
+
+        var BANK = [
+          { id: "pencil", label: "a pencil", extra: false },
+          { id: "meeting", label: "a meeting", extra: false },
+          { id: "name", label: "a name", extra: false },
+          { id: "food", label: "food", extra: false },
+          { id: "address", label: "an address", extra: false },
+          { id: "phone", label: "a phone number", extra: false },
+          { id: "teacher", label: "a teacher", extra: true },
+          { id: "classroom", label: "a classroom", extra: true },
+          { id: "notebook", label: "a notebook", extra: true },
+        ];
+
+        var wordBank = document.getElementById("wordBank");
+        var sentenceList = document.getElementById("sentenceList");
+        var btnMix = document.getElementById("btnMix");
+        var btnRestart = document.getElementById("btnRestart");
+        var btnSubmit = document.getElementById("btnSubmit");
+        var results = document.getElementById("results");
+        var totalScore = document.getElementById("totalScore");
+        var resultDetails = document.getElementById("resultDetails");
+        var chartInstance = null;
+
+        var chipsById = {};
+        var slotsByQ = {};
+        var selectedChip = null;
+
+        function shuffle(arr) {
+          var a = arr.slice();
+          for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = a[i];
+            a[i] = a[j];
+            a[j] = t;
+          }
+          return a;
+        }
+
+        function norm(s) {
+          return (s || "").trim().toLowerCase();
+        }
+
+        function createChip(word) {
+          var chip = document.createElement("span");
+          chip.className = "word-chip";
+          chip.textContent = word.label;
+          chip.draggable = true;
+          chip.dataset.wordId = word.id;
+          chip.dataset.label = word.label;
+          chip.tabIndex = 0;
+          chip.addEventListener("dragstart", function (e) {
+            e.dataTransfer.setData("text/plain", word.id);
+          });
+          chip.addEventListener("click", function () {
+            if (selectedChip === chip) {
+              selectedChip.classList.remove("is-selected");
+              selectedChip = null;
+              return;
+            }
+            if (selectedChip) selectedChip.classList.remove("is-selected");
+            selectedChip = chip;
+            chip.classList.add("is-selected");
+          });
+          chipsById[word.id] = chip;
+          return chip;
+        }
+
+        function updateBankHint() {
+          wordBank.classList.toggle("is-empty-hint", wordBank.querySelectorAll(".word-chip").length === 0);
+        }
+
+        function returnChipToBank(chip) {
+          if (!chip) return;
+          if (chip.parentElement && chip.parentElement.classList.contains("drop-slot")) {
+            var slot = chip.parentElement;
+            slot.classList.remove("is-filled");
+            var ph = slot.querySelector(".placeholder");
+            if (ph) ph.hidden = false;
+          }
+          wordBank.appendChild(chip);
+          updateBankHint();
+        }
+
+        function placeChipInSlot(chip, slot) {
+          var existing = slot.querySelector(".word-chip");
+          if (existing && existing !== chip) returnChipToBank(existing);
+          if (chip.parentElement && chip.parentElement.classList.contains("drop-slot")) {
+            chip.parentElement.classList.remove("is-filled");
+            var ph2 = chip.parentElement.querySelector(".placeholder");
+            if (ph2) ph2.hidden = false;
+          }
+          slot.querySelector(".placeholder").hidden = true;
+          slot.appendChild(chip);
+          slot.classList.add("is-filled");
+          chip.classList.remove("is-selected");
+          if (selectedChip === chip) selectedChip = null;
+          updateBankHint();
+        }
+
+        function setupSlot(slot) {
+          var placeholder = document.createElement("span");
+          placeholder.className = "placeholder";
+          placeholder.textContent = "drop here";
+          slot.appendChild(placeholder);
+          slot.addEventListener("dragover", function (e) {
+            e.preventDefault();
+            slot.classList.add("is-over");
+          });
+          slot.addEventListener("dragleave", function () {
+            slot.classList.remove("is-over");
+          });
+          slot.addEventListener("drop", function (e) {
+            e.preventDefault();
+            slot.classList.remove("is-over");
+            var chip = chipsById[e.dataTransfer.getData("text/plain")];
+            if (chip) placeChipInSlot(chip, slot);
+          });
+          slot.addEventListener("click", function () {
+            if (selectedChip) placeChipInSlot(selectedChip, slot);
+          });
+        }
+
+        function renderSentences() {
+          sentenceList.innerHTML = "";
+          slotsByQ = {};
+          SENTENCES.forEach(function (item, index) {
+            var row = document.createElement("div");
+            row.className = "sentence-row";
+            var num = document.createElement("span");
+            num.className = "sentence-num";
+            num.textContent = index + 1 + ".";
+            var slot = document.createElement("span");
+            slot.className = "drop-slot";
+            slot.dataset.qid = item.id;
+            setupSlot(slot);
+            slotsByQ[item.id] = slot;
+            row.appendChild(num);
+            row.appendChild(document.createTextNode(" " + item.textBefore));
+            row.appendChild(slot);
+            row.appendChild(document.createTextNode(item.textAfter));
+            sentenceList.appendChild(row);
+          });
+        }
+
+        function renderBank(order) {
+          wordBank.innerHTML = "";
+          order.forEach(function (w) {
+            wordBank.appendChild(chipsById[w.id]);
+          });
+          updateBankHint();
+        }
+
+        function ensureChips() {
+          BANK.forEach(function (w) {
+            if (!chipsById[w.id]) createChip(w);
+          });
+        }
+
+        function returnAllToBank() {
+          BANK.forEach(function (w) {
+            returnChipToBank(chipsById[w.id]);
+          });
+          selectedChip = null;
+        }
+
+        function build() {
+          ensureChips();
+          renderSentences();
+          renderBank(shuffle(BANK));
+        }
+
+        function mixExercises() {
+          results.classList.remove("is-open");
+          returnAllToBank();
+          renderBank(shuffle(BANK));
+        }
+
+        function restart() {
+          results.classList.remove("is-open");
+          returnAllToBank();
+        }
+
+        btnMix.addEventListener("click", mixExercises);
+        btnRestart.addEventListener("click", restart);
+
+        btnSubmit.addEventListener("click", function () {
+          var correct = 0;
+          var html = "";
+          var pointsEach = 100 / SENTENCES.length;
+
+          SENTENCES.forEach(function (item, index) {
+            var slot = slotsByQ[item.id];
+            var chip = slot.querySelector(".word-chip");
+            var got = chip ? chip.dataset.label : "";
+            var ok = norm(got) === norm(item.answer);
+            if (ok) correct++;
+            var row = document.createElement("div");
+            row.className = "result-row " + (ok ? "ok" : "bad");
+            row.innerHTML =
+              (ok ? "✓ " : "✗ ") +
+              "<strong>" +
+              (index + 1) +
+              ".</strong> Correct: <em>" +
+              item.answer +
+              "</em>" +
+              (ok ? "" : " — You wrote: <em>" + (got || "(empty)") + "</em>");
+            html += row.outerHTML;
+          });
+
+          var grade = Math.round(correct * pointsEach);
+          totalScore.textContent = correct + " / " + SENTENCES.length + " correct · Grade: " + grade + " / 100";
+          totalScore.style.color = grade === 100 ? "var(--green)" : grade >= 50 ? "var(--orange)" : "#c94a4a";
+          resultDetails.innerHTML = html;
+
+          if (chartInstance) chartInstance.destroy();
+          chartInstance = new Chart(document.getElementById("gradeChart"), {
+            type: "pie",
+            data: {
+              labels: ["Correct", "Incorrect"],
+              datasets: [
+                {
+                  data: [correct, SENTENCES.length - correct],
+                  backgroundColor: ["#2e9b5a", "#c94a4a"],
+                },
+              ],
+            },
+            options: {
+              plugins: { legend: { position: "bottom" } },
+            },
+          });
+
+          results.classList.add("is-open");
+          results.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+
+        build();
+      })();
+    </script>
+  </body>
+</html>
