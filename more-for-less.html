@@ -391,24 +391,41 @@
         max-width: 100%;
         gap: clamp(12px, 2.5vw, 28px);
       }
-      .words-col-left {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        align-self: stretch;
-        min-height: clamp(260px, 48vmin, 400px);
+      .words-grid-layout {
+        display: grid;
+        grid-template-columns: auto auto;
+        grid-template-rows: auto auto auto auto;
+        column-gap: clamp(64px, 18vw, 240px);
+        row-gap: 0;
+        align-items: start;
+        align-self: center;
       }
-      .words-above-prepay {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: clamp(1.2rem, 3.5vmin, 2.4rem);
-        margin-top: auto;
+      .word-re {
+        grid-column: 1;
+        grid-row: 1;
       }
-      .word-pre-row {
-        display: flex;
-        align-items: baseline;
-        gap: clamp(16px, 3vw, 36px);
+      .word-restart {
+        grid-column: 2;
+        grid-row: 1;
+      }
+      .word-replay {
+        grid-column: 2;
+        grid-row: 2;
+      }
+      .word-pre {
+        grid-column: 1;
+        grid-row: 4;
+      }
+      .word-prepay {
+        grid-column: 2;
+        grid-row: 4;
+        margin: 0;
+      }
+      .words-grid-layout::after {
+        content: "";
+        grid-column: 1 / -1;
+        grid-row: 3;
+        min-height: clamp(1.8rem, 5vmin, 3.2rem);
       }
       .compound-word {
         margin: 0;
@@ -561,17 +578,16 @@
           justify-items: center;
           gap: 24px;
         }
-        .words-col-left {
-          min-height: auto;
-          align-items: center;
-          width: 100%;
+        .words-grid-layout {
+          column-gap: clamp(32px, 10vw, 64px);
+          justify-items: center;
         }
-        .words-above-prepay {
-          margin-top: 24px;
-          align-items: center;
-        }
-        .word-pre-row {
-          justify-content: center;
+        .word-re,
+        .word-pre,
+        .word-restart,
+        .word-replay,
+        .word-prepay {
+          justify-self: center;
         }
         .slide-pre-layout .traffic-light {
           justify-self: center;
@@ -610,22 +626,18 @@
 
         <section class="slide slide--content slide--pre" data-slide="2" aria-hidden="true">
           <div class="slide-pre-layout">
-            <div class="words-col-left">
+            <div class="words-grid-layout">
               <span class="pre-word-top word-re" lang="en">re</span>
-              <div class="words-above-prepay">
-                <p class="compound-word compound-word--top word-restart" lang="en">
-                  <span class="neon-red-word">re</span><span class="neon-yellow-word">start</span>
-                </p>
-                <p class="compound-word word-replay" lang="en">
-                  <span class="neon-red-word">re</span><span class="neon-yellow-word">play</span>
-                </p>
-                <div class="word-pre-row">
-                  <span class="pre-word-bottom" lang="en">pre</span>
-                  <p class="compound-word word-prepay" lang="en">
-                    <span class="neon-red-word">pre</span><span class="neon-yellow-word">pay</span>
-                  </p>
-                </div>
-              </div>
+              <p class="compound-word compound-word--top word-restart" lang="en">
+                <span class="neon-red-word">re</span><span class="neon-yellow-word">start</span>
+              </p>
+              <p class="compound-word word-replay" lang="en">
+                <span class="neon-red-word">re</span><span class="neon-yellow-word">play</span>
+              </p>
+              <span class="pre-word-bottom word-pre" lang="en">pre</span>
+              <p class="compound-word word-prepay" lang="en">
+                <span class="neon-red-word">pre</span><span class="neon-yellow-word">pay</span>
+              </p>
             </div>
             <div class="traffic-light" role="img" aria-label="Traffic light blinking red then yellow every one and a half seconds">
               <div class="traffic-housing">
