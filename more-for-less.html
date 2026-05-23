@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>More for Less — יותר בפחות</title>
+    <style>
+      :root {
+        --neon-red: #ff2a4a;
+        --neon-red-glow: #ff073a;
+        --neon-ice: #5cefff;
+        --neon-ice-glow: #00e5ff;
+        --bg: #0a0a12;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: #fff;
+      }
+      .deck {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 100dvh;
+      }
+      .slides-viewport {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+      }
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 24px 100px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(40px) scale(0.98);
+        transition:
+          opacity 0.45s ease,
+          transform 0.45s ease,
+          visibility 0.45s;
+      }
+      .slide.is-active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0) scale(1);
+        z-index: 1;
+      }
+      .slide.is-exit-left {
+        transform: translateX(-40px) scale(0.98);
+        opacity: 0;
+      }
+      .slide--title {
+        background:
+          radial-gradient(ellipse 80% 50% at 20% 40%, rgba(255, 42, 74, 0.18), transparent 55%),
+          radial-gradient(ellipse 70% 45% at 80% 60%, rgba(92, 239, 255, 0.2), transparent 55%),
+          var(--bg);
+      }
+      .slide--content {
+        background:
+          radial-gradient(ellipse 60% 40% at 50% 100%, rgba(92, 239, 255, 0.08), transparent),
+          var(--bg);
+      }
+      .neon-en {
+        font-size: clamp(2.8rem, 10vw, 5.5rem);
+        font-weight: 900;
+        line-height: 1.1;
+        text-align: center;
+        letter-spacing: 0.02em;
+        margin-bottom: 0.35em;
+      }
+      .neon-en .word-more,
+      .neon-en .word-less {
+        color: var(--neon-red);
+        text-shadow:
+          0 0 7px var(--neon-red-glow),
+          0 0 20px var(--neon-red-glow),
+          0 0 40px rgba(255, 7, 58, 0.85),
+          0 0 80px rgba(255, 42, 74, 0.5);
+      }
+      .neon-en .word-for {
+        color: var(--neon-ice);
+        text-shadow:
+          0 0 7px var(--neon-ice-glow),
+          0 0 20px var(--neon-ice-glow),
+          0 0 40px rgba(0, 229, 255, 0.85),
+          0 0 80px rgba(92, 239, 255, 0.45);
+      }
+      .neon-he {
+        font-size: clamp(2.4rem, 9vw, 4.8rem);
+        font-weight: 900;
+        line-height: 1.2;
+        text-align: center;
+        direction: rtl;
+        letter-spacing: 0.02em;
+      }
+      .neon-he .he-more {
+        color: var(--neon-red);
+        text-shadow:
+          0 0 7px var(--neon-red-glow),
+          0 0 20px var(--neon-red-glow),
+          0 0 40px rgba(255, 7, 58, 0.85),
+          0 0 80px rgba(255, 42, 74, 0.5);
+      }
+      .neon-he .he-less {
+        color: var(--neon-ice);
+        text-shadow:
+          0 0 7px var(--neon-ice-glow),
+          0 0 20px var(--neon-ice-glow),
+          0 0 40px rgba(0, 229, 255, 0.85),
+          0 0 80px rgba(92, 239, 255, 0.45);
+      }
+      .slide-body {
+        max-width: 720px;
+        text-align: center;
+        font-size: clamp(1.1rem, 3vw, 1.5rem);
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.6;
+      }
+      .slide-body h2 {
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        margin-bottom: 16px;
+        color: var(--neon-ice);
+        text-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+      }
+      .slide-counter {
+        position: absolute;
+        top: 20px;
+        right: 24px;
+        font-size: 14px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.45);
+        z-index: 2;
+      }
+      .nav-bar {
+        flex-shrink: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        padding: 20px 24px 28px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .nav-btn {
+        min-width: 120px;
+        padding: 14px 28px;
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+        font: inherit;
+        font-size: 1rem;
+        font-weight: 800;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          border-color 0.2s,
+          box-shadow 0.2s,
+          opacity 0.2s;
+      }
+      .nav-btn:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: var(--neon-ice);
+        box-shadow: 0 0 20px rgba(0, 229, 255, 0.35);
+      }
+      .nav-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+      .nav-btn--next {
+        border-color: rgba(255, 42, 74, 0.5);
+      }
+      .nav-btn--next:hover:not(:disabled) {
+        border-color: var(--neon-red);
+        box-shadow: 0 0 20px rgba(255, 42, 74, 0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="deck">
+      <div class="slides-viewport" id="viewport">
+        <p class="slide-counter" id="counter" aria-live="polite">1 / 1</p>
+
+        <section class="slide slide--title is-active" data-slide="0" aria-hidden="false">
+          <h1 class="neon-en" lang="en">
+            <span class="word-more">more</span>
+            <span class="word-for"> for </span>
+            <span class="word-less">less</span>
+          </h1>
+          <p class="neon-he" lang="he" dir="rtl">
+            <span class="he-more">יותר</span>
+            <span class="he-less"> בפחות</span>
+          </p>
+        </section>
+
+        <section class="slide slide--content" data-slide="1" aria-hidden="true">
+          <div class="slide-body">
+            <h2>Slide 2</h2>
+            <p>Add your content here.</p>
+          </div>
+        </section>
+
+        <section class="slide slide--content" data-slide="2" aria-hidden="true">
+          <div class="slide-body">
+            <h2>Slide 3</h2>
+            <p>Add your content here.</p>
+          </div>
+        </section>
+      </div>
+
+      <nav class="nav-bar" aria-label="Slide navigation">
+        <button type="button" class="nav-btn" id="btnBack" disabled>Back</button>
+        <button type="button" class="nav-btn nav-btn--next" id="btnNext" disabled>Next</button>
+      </nav>
+    </div>
+
+    <script>
+      (function () {
+        var slides = document.querySelectorAll(".slide");
+        var counter = document.getElementById("counter");
+        var btnBack = document.getElementById("btnBack");
+        var btnNext = document.getElementById("btnNext");
+        var index = 0;
+        var total = slides.length;
+
+        function updateUI() {
+          slides.forEach(function (slide, i) {
+            var active = i === index;
+            slide.classList.toggle("is-active", active);
+            slide.setAttribute("aria-hidden", active ? "false" : "true");
+          });
+          counter.textContent = index + 1 + " / " + total;
+          btnBack.disabled = index === 0;
+          btnNext.disabled = index >= total - 1;
+        }
+
+        function go(delta) {
+          var next = index + delta;
+          if (next < 0 || next >= total) return;
+          index = next;
+          updateUI();
+        }
+
+        btnBack.addEventListener("click", function () {
+          go(-1);
+        });
+        btnNext.addEventListener("click", function () {
+          go(1);
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "ArrowRight" || e.key === "PageDown") {
+            e.preventDefault();
+            go(1);
+          } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+            e.preventDefault();
+            go(-1);
+          }
+        });
+
+        updateUI();
+      })();
+    </script>
+  </body>
+</html>
