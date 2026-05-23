@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Picture Match — Live Worksheet</title>
+    <style>
+      :root {
+        --bg: #f4f6fb;
+        --card: #fff;
+        --text: #1e1b24;
+        --muted: #5c5668;
+        --border: rgba(30, 27, 36, 0.12);
+        --radius: 14px;
+        --purple: #6b4c9a;
+        --purple-2: #4e3878;
+        --orange: #f28c28;
+        --orange-2: #d96d00;
+        --green: #2e9b5a;
+        --green-2: #1f7a45;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 16px 14px 32px;
+      }
+      h1 {
+        margin: 0 0 6px;
+        font-size: 1.4rem;
+        color: var(--purple);
+      }
+      .lede {
+        margin: 0 0 6px;
+        font-size: 15px;
+        color: var(--muted);
+      }
+      .lede-he {
+        margin: 0 0 18px;
+        font-size: 15px;
+        direction: rtl;
+        text-align: right;
+        color: var(--muted);
+      }
+      .word-bank-wrap,
+      .pictures-wrap {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        margin-bottom: 18px;
+        box-shadow: 0 8px 24px rgba(30, 27, 36, 0.06);
+      }
+      .word-bank-wrap h2,
+      .pictures-wrap h2 {
+        margin: 0 0 10px;
+        font-size: 1rem;
+        color: var(--purple);
+      }
+      .word-bank {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        min-height: 52px;
+        padding: 12px;
+        border-radius: 10px;
+        background: rgba(107, 76, 154, 0.06);
+        border: 2px dashed rgba(107, 76, 154, 0.35);
+      }
+      .word-bank.is-empty-hint::after {
+        content: "All words placed — drag back here to change an answer.";
+        color: var(--muted);
+        font-size: 14px;
+        width: 100%;
+      }
+      .word-chip {
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: #fff;
+        border: 2px solid var(--purple);
+        font-weight: 700;
+        font-size: 14px;
+        cursor: grab;
+        user-select: none;
+        touch-action: none;
+      }
+      .word-chip.is-selected {
+        outline: 3px solid var(--orange);
+        outline-offset: 2px;
+      }
+      .word-chip.is-extra {
+        border-style: dashed;
+        border-color: var(--orange);
+        background: rgba(242, 140, 40, 0.08);
+      }
+      .drop-slot .word-chip {
+        display: inline-flex;
+      }
+      .match-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .match-list.is-shuffling {
+        pointer-events: none;
+      }
+      .match-row {
+        display: grid;
+        grid-template-columns: 28px 120px 1fr;
+        gap: 12px;
+        align-items: center;
+        padding: 12px 14px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: 0 6px 18px rgba(30, 27, 36, 0.05);
+      }
+      .match-row.shuffle-out {
+        animation: row-shuffle-out 0.45s ease-in forwards;
+      }
+      .match-row.shuffle-in {
+        animation: row-shuffle-in 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      .word-bank.is-shuffling {
+        pointer-events: none;
+        animation: bank-shuffle-wiggle 0.45s ease-in-out;
+      }
+      .word-bank .word-chip.shuffle-out {
+        animation: chip-shuffle-out 0.4s ease-in forwards;
+      }
+      .word-bank .word-chip.shuffle-in {
+        animation: chip-shuffle-in 0.5s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      @keyframes list-shuffle-wiggle {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        50% {
+          transform: translateX(8px);
+        }
+      }
+      @keyframes row-shuffle-out {
+        to {
+          opacity: 0;
+          transform: translateY(16px) scale(0.9);
+        }
+      }
+      @keyframes row-shuffle-in {
+        from {
+          opacity: 0;
+          transform: translateY(-20px) scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      @keyframes bank-shuffle-wiggle {
+        50% {
+          transform: scale(0.98);
+        }
+      }
+      @keyframes chip-shuffle-out {
+        to {
+          opacity: 0;
+          transform: scale(0.6);
+        }
+      }
+      @keyframes chip-shuffle-in {
+        from {
+          opacity: 0;
+          transform: scale(0.5);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      @keyframes pic-num-roll {
+        50% {
+          transform: rotate(180deg) scale(0.8);
+          background: rgba(242, 140, 40, 0.45);
+          color: #fff;
+        }
+      }
+      .pic-num {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(107, 76, 154, 0.15);
+        color: var(--purple);
+        font-weight: 800;
+        font-size: 14px;
+      }
+      .pic-num.is-rolling {
+        animation: pic-num-roll 0.55s ease-in-out;
+      }
+      .pic-frame {
+        width: 120px;
+        height: 90px;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: #eef0f4;
+      }
+      .pic-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .match-side {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+      }
+      .match-label {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 650;
+        color: var(--muted);
+      }
+      .drop-slot {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 130px;
+        min-height: 44px;
+        padding: 4px 12px;
+        border-radius: 10px;
+        border: 2px dashed rgba(107, 76, 154, 0.45);
+        background: rgba(107, 76, 154, 0.06);
+      }
+      .drop-slot.is-over {
+        border-color: var(--orange);
+        background: rgba(242, 140, 40, 0.15);
+      }
+      .drop-slot.is-filled {
+        border-style: solid;
+        border-color: var(--purple);
+        background: #fff;
+      }
+      .drop-slot .placeholder {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 600;
+        pointer-events: none;
+      }
+      .submit-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 22px;
+      }
+      .action-btn {
+        padding: 14px 28px;
+        border: none;
+        border-radius: 999px;
+        color: #fff;
+        font: inherit;
+        font-size: 1.05rem;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .action-btn:hover {
+        filter: brightness(1.06);
+      }
+      .btn-mix {
+        background: linear-gradient(135deg, var(--orange), var(--orange-2));
+        box-shadow: 0 8px 22px rgba(242, 140, 40, 0.4);
+      }
+      .btn-restart {
+        background: linear-gradient(135deg, var(--green), var(--green-2));
+        box-shadow: 0 8px 22px rgba(46, 155, 90, 0.35);
+      }
+      .submit-btn {
+        background: linear-gradient(135deg, var(--purple), var(--purple-2));
+        box-shadow: 0 8px 22px rgba(107, 76, 154, 0.4);
+      }
+      .btn-return-site {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.4);
+      }
+      .btn-return-site:hover {
+        color: #fff;
+      }
+      .results {
+        display: none;
+        margin-top: 20px;
+        padding: 18px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+      }
+      .results.is-open {
+        display: block;
+      }
+      .results h2 {
+        margin: 0 0 10px;
+        text-align: center;
+        color: var(--purple);
+      }
+      .score-big {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+      }
+      .result-row {
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        border-radius: 10px;
+        font-size: 14px;
+        border: 1px solid var(--border);
+      }
+      .result-row.ok {
+        background: rgba(46, 155, 90, 0.1);
+      }
+      .result-row.bad {
+        background: rgba(201, 74, 74, 0.08);
+      }
+      @media (max-width: 520px) {
+        .match-row {
+          grid-template-columns: 1fr;
+          justify-items: stretch;
+        }
+        .pic-frame {
+          width: 100%;
+          height: 140px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Match the picture to the word</h1>
+      <p class="lede">
+        Look at each picture. Drag the correct <strong>English word</strong> from the word bank and drop it next to the
+        picture. You have <strong>6 pictures</strong>. When you finish, press <strong>Submit</strong>.
+      </p>
+      <p class="lede-he" lang="he" dir="rtl">
+        התבוננו בכל תמונה. גררו את המילה הנכונה <strong>באנגלית</strong> מבנק המילים והניחו אותה ליד התמונה. יש
+        <strong>6 תמונות</strong>. בסיום לחצו על <strong>Submit</strong>.
+      </p>
+
+      <div class="word-bank-wrap">
+        <h2>Word bank</h2>
+        <div class="word-bank" id="wordBank" aria-label="Word bank"></div>
+      </div>
+
+      <div class="pictures-wrap">
+        <h2>Pictures — match each to a word</h2>
+        <div class="match-list" id="matchList" aria-label="Six pictures"></div>
+      </div>
+
+      <div class="submit-row">
+        <button type="button" class="action-btn btn-mix" id="btnMix">Mix exercises</button>
+        <button type="button" class="action-btn btn-restart" id="btnRestart">Restart</button>
+        <button type="button" class="action-btn submit-btn" id="btnSubmit">Submit</button>
+        <a
+          class="action-btn btn-return-site"
+          href="https://sites.google.com/view/ofir-reading-comprehension/pre-reading-2?authuser=0"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Return to the main site</a>
+      </div>
+
+      <div class="results" id="results" aria-live="polite">
+        <h2>Your results</h2>
+        <p class="score-big" id="scoreText"></p>
+        <div id="resultDetails"></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var IMG = "assets/picture-match/";
+        var ITEMS = [
+          {
+            id: "food",
+            label: "Food",
+            labelHe: "אוכל",
+            image: IMG + "food.png",
+            alt: "Many dishes of food on a table",
+          },
+          {
+            id: "meet",
+            label: "Meet",
+            labelHe: "להכיר",
+            image: IMG + "meet.png",
+            alt: "Students meeting and working together",
+          },
+          {
+            id: "name",
+            label: "Name",
+            labelHe: "שם",
+            image: IMG + "name.png",
+            alt: "Student ID card with a name",
+          },
+          {
+            id: "phone",
+            label: "Phone number",
+            labelHe: "מספר טלפון",
+            image: IMG + "phone-number.png",
+            alt: "Smartphone with a phone number",
+          },
+          {
+            id: "address",
+            label: "Address",
+            labelHe: "כתובת",
+            image: IMG + "address.png",
+            alt: "Delivery box with an address",
+          },
+          {
+            id: "pencil",
+            label: "Pencil",
+            labelHe: "עפרון",
+            image: IMG + "pencil.png",
+            alt: "An orange pencil",
+          },
+        ];
+        var EXTRA_BANK_WORDS = [
+          { id: "monday", label: "Monday", extra: true },
+          { id: "book", label: "a book", extra: true },
+        ];
+
+        var wordBank = document.getElementById("wordBank");
+        var matchList = document.getElementById("matchList");
+        var btnMix = document.getElementById("btnMix");
+        var btnRestart = document.getElementById("btnRestart");
+        var btnSubmit = document.getElementById("btnSubmit");
+        var results = document.getElementById("results");
+        var scoreText = document.getElementById("scoreText");
+        var resultDetails = document.getElementById("resultDetails");
+
+        var selectedChip = null;
+        var slotsByItemId = {};
+        var chipsById = {};
+        var pictureRows = [];
+
+        function getBankWords() {
+          return ITEMS.concat(EXTRA_BANK_WORDS);
+        }
+
+        function shuffle(arr) {
+          var a = arr.slice();
+          for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = a[i];
+            a[i] = a[j];
+            a[j] = t;
+          }
+          return a;
+        }
+
+        function createChip(word) {
+          var chip = document.createElement("span");
+          chip.className = "word-chip" + (word.extra ? " is-extra" : "");
+          chip.textContent = word.label;
+          chip.draggable = true;
+          chip.dataset.wordId = word.id;
+          chip.setAttribute("role", "button");
+          chip.tabIndex = 0;
+          chip.addEventListener("dragstart", function (e) {
+            e.dataTransfer.setData("text/plain", word.id);
+            chip.classList.add("is-dragging");
+          });
+          chip.addEventListener("dragend", function () {
+            chip.classList.remove("is-dragging");
+          });
+          chip.addEventListener("click", function () {
+            if (selectedChip === chip) {
+              selectedChip.classList.remove("is-selected");
+              selectedChip = null;
+              return;
+            }
+            if (selectedChip) selectedChip.classList.remove("is-selected");
+            selectedChip = chip;
+            chip.classList.add("is-selected");
+          });
+          chipsById[word.id] = chip;
+          return chip;
+        }
+
+        function returnChipToBank(chip) {
+          if (!chip) return;
+          wordBank.appendChild(chip);
+          updateBankHint();
+        }
+
+        function placeChipInSlot(chip, slot) {
+          var existing = slot.querySelector(".word-chip");
+          if (existing && existing !== chip) returnChipToBank(existing);
+          if (chip.parentElement && chip.parentElement.classList.contains("drop-slot")) {
+            chip.parentElement.classList.remove("is-filled");
+            var ph = chip.parentElement.querySelector(".placeholder");
+            if (ph) ph.hidden = false;
+          }
+          slot.querySelector(".placeholder").hidden = true;
+          slot.appendChild(chip);
+          slot.classList.add("is-filled");
+          chip.classList.remove("is-selected");
+          if (selectedChip === chip) selectedChip = null;
+          updateBankHint();
+        }
+
+        function setupSlot(slot) {
+          var placeholder = document.createElement("span");
+          placeholder.className = "placeholder";
+          placeholder.textContent = "drop word here";
+          slot.appendChild(placeholder);
+          slot.addEventListener("dragover", function (e) {
+            e.preventDefault();
+            slot.classList.add("is-over");
+          });
+          slot.addEventListener("dragleave", function () {
+            slot.classList.remove("is-over");
+          });
+          slot.addEventListener("drop", function (e) {
+            e.preventDefault();
+            slot.classList.remove("is-over");
+            var chip = chipsById[e.dataTransfer.getData("text/plain")];
+            if (chip) placeChipInSlot(chip, slot);
+          });
+          slot.addEventListener("click", function () {
+            if (selectedChip) placeChipInSlot(selectedChip, slot);
+          });
+        }
+
+        function updateBankHint() {
+          var visible = wordBank.querySelectorAll(".word-chip").length;
+          wordBank.classList.toggle("is-empty-hint", visible === 0);
+        }
+
+        function ensureChips() {
+          getBankWords().forEach(function (word) {
+            if (!chipsById[word.id]) createChip(word);
+          });
+        }
+
+        function returnAllChipsToBank() {
+          getBankWords().forEach(function (word) {
+            var chip = chipsById[word.id];
+            if (!chip) return;
+            if (chip.parentElement && chip.parentElement.classList.contains("drop-slot")) {
+              var slot = chip.parentElement;
+              slot.classList.remove("is-filled");
+              var ph = slot.querySelector(".placeholder");
+              if (ph) ph.hidden = false;
+            }
+            chip.classList.remove("is-selected");
+            wordBank.appendChild(chip);
+          });
+          selectedChip = null;
+          updateBankHint();
+        }
+
+        function hideResults() {
+          results.classList.remove("is-open");
+        }
+
+        function clearShuffleClasses() {
+          matchList.classList.remove("is-shuffling");
+          wordBank.classList.remove("is-shuffling");
+          matchList.querySelectorAll(".match-row").forEach(function (row) {
+            row.classList.remove("shuffle-out", "shuffle-in");
+            row.style.animationDelay = "";
+          });
+          wordBank.querySelectorAll(".word-chip").forEach(function (chip) {
+            chip.classList.remove("shuffle-out", "shuffle-in");
+            chip.style.animationDelay = "";
+          });
+        }
+
+        function animateShuffleOut(done) {
+          var rows = matchList.querySelectorAll(".match-row");
+          var chips = wordBank.querySelectorAll(".word-chip");
+          if (!rows.length) {
+            done();
+            return;
+          }
+          matchList.classList.add("is-shuffling");
+          wordBank.classList.add("is-shuffling");
+          matchList.style.animation = "list-shuffle-wiggle 0.45s ease-in-out";
+          rows.forEach(function (row, i) {
+            row.style.animationDelay = i * 0.05 + "s";
+            row.classList.add("shuffle-out");
+            var num = row.querySelector(".pic-num");
+            if (num) {
+              num.textContent = "?";
+              num.classList.add("is-rolling");
+            }
+          });
+          chips.forEach(function (chip, i) {
+            chip.style.animationDelay = i * 0.04 + "s";
+            chip.classList.add("shuffle-out");
+          });
+          window.setTimeout(function () {
+            matchList.style.animation = "";
+            done();
+          }, 480);
+        }
+
+        function animateShuffleIn() {
+          matchList.querySelectorAll(".match-row").forEach(function (row, i) {
+            row.style.animationDelay = i * 0.07 + "s";
+            row.classList.add("shuffle-in");
+            var num = row.querySelector(".pic-num");
+            if (num) {
+              window.setTimeout(
+                function (n, v) {
+                  n.textContent = v;
+                  n.classList.remove("is-rolling");
+                },
+                120 + i * 70,
+                num,
+                String(i + 1)
+              );
+            }
+          });
+          wordBank.querySelectorAll(".word-chip").forEach(function (chip, i) {
+            chip.style.animationDelay = i * 0.05 + "s";
+            chip.classList.add("shuffle-in");
+          });
+          window.setTimeout(clearShuffleClasses, 650);
+        }
+
+        function renderPictureRows(order, forShuffleIn) {
+          matchList.innerHTML = "";
+          slotsByItemId = {};
+          pictureRows = order.slice();
+
+          pictureRows.forEach(function (item, index) {
+            var row = document.createElement("div");
+            row.className = "match-row";
+            if (forShuffleIn) {
+              row.classList.add("shuffle-in");
+              row.style.animationDelay = index * 0.07 + "s";
+            }
+
+            var num = document.createElement("span");
+            num.className = "pic-num";
+            num.textContent = forShuffleIn ? "?" : String(index + 1);
+
+            var frame = document.createElement("div");
+            frame.className = "pic-frame";
+            var img = document.createElement("img");
+            img.src = item.image;
+            img.alt = item.alt;
+            img.loading = "lazy";
+            img.decoding = "async";
+            frame.appendChild(img);
+
+            var side = document.createElement("div");
+            side.className = "match-side";
+            var label = document.createElement("p");
+            label.className = "match-label";
+            label.textContent = "Match:";
+            var slot = document.createElement("span");
+            slot.className = "drop-slot";
+            slot.dataset.correctId = item.id;
+            setupSlot(slot);
+            slotsByItemId[item.id] = slot;
+            side.appendChild(label);
+            side.appendChild(slot);
+
+            row.appendChild(num);
+            row.appendChild(frame);
+            row.appendChild(side);
+            matchList.appendChild(row);
+          });
+        }
+
+        function renderWordBank(order, forShuffleIn) {
+          wordBank.innerHTML = "";
+          order.forEach(function (word, i) {
+            var chip = chipsById[word.id];
+            if (forShuffleIn) {
+              chip.classList.add("shuffle-in");
+              chip.style.animationDelay = i * 0.05 + "s";
+            }
+            wordBank.appendChild(chip);
+          });
+          updateBankHint();
+        }
+
+        function mixExercises() {
+          hideResults();
+          returnAllChipsToBank();
+          btnMix.disabled = true;
+          var newPicOrder = shuffle(ITEMS.slice());
+          var newBankOrder = shuffle(getBankWords().slice());
+          animateShuffleOut(function () {
+            clearShuffleClasses();
+            renderPictureRows(newPicOrder, true);
+            renderWordBank(newBankOrder, true);
+            animateShuffleIn();
+            window.setTimeout(function () {
+              btnMix.disabled = false;
+            }, 680);
+          });
+        }
+
+        function restartExercise() {
+          hideResults();
+          returnAllChipsToBank();
+        }
+
+        function build() {
+          ensureChips();
+          renderPictureRows(shuffle(ITEMS.slice()), false);
+          renderWordBank(shuffle(getBankWords().slice()), false);
+        }
+
+        btnMix.addEventListener("click", mixExercises);
+        btnRestart.addEventListener("click", restartExercise);
+        btnSubmit.addEventListener("click", function () {
+          var correct = 0;
+          var html = "";
+          pictureRows.forEach(function (item, index) {
+            var slot = slotsByItemId[item.id];
+            var chip = slot.querySelector(".word-chip");
+            var placedId = chip ? chip.dataset.wordId : null;
+            var ok = placedId === item.id;
+            if (ok) correct++;
+            var got = chip ? chip.textContent : "(empty)";
+            var row = document.createElement("div");
+            row.className = "result-row " + (ok ? "ok" : "bad");
+            row.innerHTML =
+              (ok ? "✓ " : "✗ ") +
+              "Picture <strong>" +
+              (index + 1) +
+              "</strong> — <em>" +
+              item.label +
+              "</em> (" +
+              item.labelHe +
+              ")" +
+              (ok ? "" : " — You matched: <em>" + got + "</em>");
+            html += row.outerHTML;
+          });
+          scoreText.textContent = correct + " / " + ITEMS.length;
+          scoreText.style.color = correct === ITEMS.length ? "var(--green)" : "var(--orange)";
+          resultDetails.innerHTML = html;
+          results.classList.add("is-open");
+          results.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+
+        build();
+      })();
+    </script>
+  </body>
+</html>
