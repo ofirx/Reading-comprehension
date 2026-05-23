@@ -89,7 +89,6 @@
         cursor: grab;
         user-select: none;
         touch-action: none;
-        transition: transform 0.12s ease, box-shadow 0.12s ease;
       }
       .word-chip:active {
         cursor: grabbing;
@@ -104,6 +103,11 @@
       .word-chip.is-placed {
         display: none;
       }
+      .sounds-wrap h2 {
+        margin: 0 0 12px;
+        font-size: 1rem;
+        color: var(--purple);
+      }
       .match-list {
         display: flex;
         flex-direction: column;
@@ -113,16 +117,29 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 10px 12px;
+        gap: 10px 14px;
         padding: 14px 16px;
         background: var(--card);
         border: 1px solid var(--border);
         border-radius: var(--radius);
         box-shadow: 0 6px 18px rgba(30, 27, 36, 0.05);
       }
+      .sound-num {
+        flex-shrink: 0;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(107, 76, 154, 0.15);
+        color: var(--purple);
+        font-weight: 800;
+        font-size: 14px;
+      }
       .play-btn {
         flex-shrink: 0;
-        padding: 10px 16px;
+        padding: 10px 18px;
         border: none;
         border-radius: 999px;
         background: var(--red);
@@ -136,21 +153,21 @@
       .play-btn:hover {
         filter: brightness(1.05);
       }
-      .sentence-line {
-        flex: 1 1 200px;
+      .match-label {
         margin: 0;
-        font-size: 16px;
-        line-height: 1.55;
+        font-size: 15px;
+        font-weight: 650;
+        color: var(--muted);
+        flex: 0 0 auto;
       }
       .drop-slot {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-width: 120px;
-        min-height: 40px;
-        padding: 4px 10px;
-        margin: 0 4px;
-        vertical-align: middle;
+        flex: 1 1 140px;
+        min-width: 140px;
+        min-height: 44px;
+        padding: 4px 12px;
         border-radius: 10px;
         border: 2px dashed rgba(107, 76, 154, 0.45);
         background: rgba(107, 76, 154, 0.06);
@@ -240,6 +257,9 @@
         .play-btn {
           width: 100%;
         }
+        .drop-slot {
+          width: 100%;
+        }
       }
     </style>
   </head>
@@ -247,12 +267,13 @@
     <div class="wrap">
       <h1>Listen and match the words</h1>
       <p class="lede">
-        Press <strong>Play</strong> to hear each word. Drag a word from the bank into the correct sentence. When you
-        finish all six, press <strong>Submit</strong>.
+        There are <strong>6 Play buttons</strong> — each one plays a <strong>different</strong> word sound. Listen, then
+        drag the correct word from the bank next to that Play button. When all six are matched, press
+        <strong>Submit</strong>.
       </p>
       <p class="lede-he" lang="he" dir="rtl">
-        לחצו על <strong>Play</strong> כדי לשמוע כל מילה. גררו מילה מהבנק למשפט הנכון. בסיום לחצו על
-        <strong>Submit</strong>.
+        יש <strong>6 כפתורי Play</strong> — כל אחד משמיע מילה אחרת. האזינו וגררו את המילה הנכונה מהבנק ליד אותו כפתור.
+        בסיום לחצו על <strong>Submit</strong>.
       </p>
 
       <div class="word-bank-wrap">
@@ -260,7 +281,10 @@
         <div class="word-bank" id="wordBank" aria-label="Word bank"></div>
       </div>
 
-      <div class="match-list" id="matchList" aria-label="Sentences"></div>
+      <div class="sounds-wrap">
+        <h2>Sounds — match each to a word</h2>
+        <div class="match-list" id="matchList" aria-label="Six sounds"></div>
+      </div>
 
       <div class="submit-row">
         <button type="button" class="submit-btn" id="btnSubmit">Submit</button>
@@ -276,43 +300,13 @@
     <script>
       (function () {
         var AUDIO = "assets/audio-words/";
-        var ITEMS = [
-          {
-            id: "food",
-            label: "food",
-            audio: AUDIO + "food.mp3",
-            sentence: "No _____ , please.",
-          },
-          {
-            id: "meeting",
-            label: "a meeting",
-            audio: AUDIO + "a-meeting.mp3",
-            sentence: "It's nice to _____ you.",
-          },
-          {
-            id: "name",
-            label: "a name",
-            audio: AUDIO + "a-name.mp3",
-            sentence: "I want your _____ .",
-          },
-          {
-            id: "pencil",
-            label: "a pencil",
-            audio: AUDIO + "a-pencil.mp3",
-            sentence: "You need a book, a notebook and _____ .",
-          },
-          {
-            id: "phone",
-            label: "a phone number",
-            audio: AUDIO + "a-phone-number.mp3",
-            sentence: "I want your name, _____ and address.",
-          },
-          {
-            id: "address",
-            label: "an address",
-            audio: AUDIO + "an-address.mp3",
-            sentence: "I want your name, phone number and _____ .",
-          },
+        var WORDS = [
+          { id: "food", label: "food", audio: AUDIO + "food.mp3" },
+          { id: "meeting", label: "a meeting", audio: AUDIO + "a-meeting.mp3" },
+          { id: "name", label: "a name", audio: AUDIO + "a-name.mp3" },
+          { id: "pencil", label: "a pencil", audio: AUDIO + "a-pencil.mp3" },
+          { id: "phone", label: "a phone number", audio: AUDIO + "a-phone-number.mp3" },
+          { id: "address", label: "an address", audio: AUDIO + "an-address.mp3" },
         ];
 
         var wordBank = document.getElementById("wordBank");
@@ -323,8 +317,9 @@
         var resultDetails = document.getElementById("resultDetails");
 
         var selectedChip = null;
-        var slotsByRow = {};
+        var slotsBySoundId = {};
         var chipsById = {};
+        var soundRows = [];
 
         function shuffle(arr) {
           var a = arr.slice();
@@ -337,26 +332,17 @@
           return a;
         }
 
-        function renderSentence(template, slotEl) {
-          var parts = template.split("_____");
-          var frag = document.createDocumentFragment();
-          if (parts[0]) frag.appendChild(document.createTextNode(parts[0]));
-          frag.appendChild(slotEl);
-          if (parts[1]) frag.appendChild(document.createTextNode(parts[1]));
-          return frag;
-        }
-
-        function createChip(label, wordId) {
+        function createChip(word) {
           var chip = document.createElement("span");
           chip.className = "word-chip";
-          chip.textContent = label;
+          chip.textContent = word.label;
           chip.draggable = true;
-          chip.dataset.wordId = wordId;
+          chip.dataset.wordId = word.id;
           chip.setAttribute("role", "button");
           chip.tabIndex = 0;
 
           chip.addEventListener("dragstart", function (e) {
-            e.dataTransfer.setData("text/plain", wordId);
+            e.dataTransfer.setData("text/plain", word.id);
             e.dataTransfer.effectAllowed = "move";
             chip.classList.add("is-dragging");
           });
@@ -373,7 +359,7 @@
             selectedChip = chip;
             chip.classList.add("is-selected");
           });
-          chipsById[wordId] = chip;
+          chipsById[word.id] = chip;
           return chip;
         }
 
@@ -404,7 +390,7 @@
         function setupSlot(slot) {
           var placeholder = document.createElement("span");
           placeholder.className = "placeholder";
-          placeholder.textContent = "drop here";
+          placeholder.textContent = "drop word here";
           slot.appendChild(placeholder);
 
           slot.addEventListener("dragover", function (e) {
@@ -422,9 +408,7 @@
             if (chip) placeChipInSlot(chip, slot);
           });
           slot.addEventListener("click", function () {
-            if (selectedChip) {
-              placeChipInSlot(selectedChip, slot);
-            }
+            if (selectedChip) placeChipInSlot(selectedChip, slot);
           });
         }
 
@@ -434,37 +418,45 @@
         }
 
         function build() {
-          shuffle(ITEMS).forEach(function (item) {
+          soundRows = shuffle(WORDS.slice());
+
+          soundRows.forEach(function (word, index) {
             var row = document.createElement("div");
             row.className = "match-row";
-            row.dataset.rowId = item.id;
+
+            var num = document.createElement("span");
+            num.className = "sound-num";
+            num.textContent = String(index + 1);
+            num.setAttribute("aria-hidden", "true");
 
             var play = document.createElement("button");
             play.type = "button";
             play.className = "play-btn";
             play.textContent = "Play";
-            play.setAttribute("aria-label", "Play sound for sentence " + item.id);
+            play.setAttribute("aria-label", "Play sound " + (index + 1));
             play.addEventListener("click", function () {
-              var a = new Audio(item.audio);
-              a.play();
+              new Audio(word.audio).play();
             });
 
-            var p = document.createElement("p");
-            p.className = "sentence-line";
+            var label = document.createElement("p");
+            label.className = "match-label";
+            label.textContent = "Match:";
+
             var slot = document.createElement("span");
             slot.className = "drop-slot";
-            slot.dataset.correctId = item.id;
+            slot.dataset.correctId = word.id;
             setupSlot(slot);
-            slotsByRow[item.id] = slot;
-            p.appendChild(renderSentence(item.sentence, slot));
+            slotsBySoundId[word.id] = slot;
 
+            row.appendChild(num);
             row.appendChild(play);
-            row.appendChild(p);
+            row.appendChild(label);
+            row.appendChild(slot);
             matchList.appendChild(row);
           });
 
-          shuffle(ITEMS).forEach(function (item) {
-            wordBank.appendChild(createChip(item.label, item.id));
+          shuffle(WORDS).forEach(function (word) {
+            wordBank.appendChild(createChip(word));
           });
           updateBankHint();
         }
@@ -472,29 +464,27 @@
         btnSubmit.addEventListener("click", function () {
           var correct = 0;
           var html = "";
-          ITEMS.forEach(function (item) {
-            var slot = slotsByRow[item.id];
+          soundRows.forEach(function (word, index) {
+            var slot = slotsBySoundId[word.id];
             var chip = slot.querySelector(".word-chip");
             var placedId = chip ? chip.dataset.wordId : null;
-            var ok = placedId === item.id;
+            var ok = placedId === word.id;
             if (ok) correct++;
             var row = document.createElement("div");
             row.className = "result-row " + (ok ? "ok" : "bad");
-            var heard = item.label;
             var got = chip ? chip.textContent : "(empty)";
             row.innerHTML =
               (ok ? "✓ " : "✗ ") +
-              "<strong>" +
-              item.sentence.replace("_____", "______") +
-              "</strong><br>" +
-              "Correct word: <em>" +
-              heard +
+              "Sound <strong>" +
+              (index + 1) +
+              "</strong> — correct word: <em>" +
+              word.label +
               "</em>" +
-              (ok ? "" : " — You placed: <em>" + got + "</em>");
+              (ok ? "" : " — You matched: <em>" + got + "</em>");
             html += row.outerHTML;
           });
-          scoreText.textContent = correct + " / " + ITEMS.length;
-          scoreText.style.color = correct === ITEMS.length ? "var(--green)" : "var(--orange)";
+          scoreText.textContent = correct + " / " + WORDS.length;
+          scoreText.style.color = correct === WORDS.length ? "var(--green)" : "var(--orange)";
           resultDetails.innerHTML = html;
           results.classList.add("is-open");
           results.scrollIntoView({ behavior: "smooth", block: "nearest" });
