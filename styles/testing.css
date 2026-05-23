@@ -141,6 +141,27 @@
   color: var(--muted);
 }
 
+.btn-return-site {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.4);
+  cursor: pointer;
+}
+.btn-return-site:hover {
+  color: #fff;
+  filter: brightness(1.06);
+}
+
 /* Blue backdrop + centered card (Justinmind-style — strong contrast vs page grey) */
 .quiz-form-section {
   padding: 32px 0 40px;
