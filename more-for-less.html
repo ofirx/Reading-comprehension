@@ -78,18 +78,6 @@
         transform-origin: center center;
         animation: heartbeat 2.6s ease-in-out infinite;
       }
-      .heart-icon {
-        display: block;
-        font-size: clamp(1.5rem, 4.5vmin, 2.8rem);
-        line-height: 1;
-        margin-bottom: 0.15em;
-        color: var(--neon-red);
-        text-shadow:
-          0 0 10px var(--neon-red-glow),
-          0 0 30px var(--neon-red-glow),
-          0 0 60px rgba(255, 7, 58, 0.9);
-        animation: heart-glow 2.6s ease-in-out infinite;
-      }
       @keyframes heartbeat {
         0%,
         100% {
@@ -106,21 +94,6 @@
         }
         48% {
           transform: scale(1);
-        }
-      }
-      @keyframes heart-glow {
-        0%,
-        100% {
-          filter: brightness(1);
-          opacity: 0.9;
-        }
-        12% {
-          filter: brightness(1.35);
-          opacity: 1;
-        }
-        36% {
-          filter: brightness(1.2);
-          opacity: 1;
         }
       }
       @keyframes neon-throb-red {
@@ -285,7 +258,6 @@
 
         <section class="slide slide--title is-active" data-slide="0" aria-hidden="false">
           <div class="title-pulse">
-            <span class="heart-icon" aria-hidden="true">♥</span>
             <h1 class="neon-en" lang="en">
               <span class="word-more">more</span>
               <span class="word-for"> for </span>
