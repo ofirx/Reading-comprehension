@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Is It True? — Flashcards</title>
+    <style>
+      :root {
+        --bg: #f4f6fb;
+        --card: #fff;
+        --text: #1e1b24;
+        --muted: #5c5668;
+        --border: rgba(30, 27, 36, 0.12);
+        --radius: 18px;
+        --purple: #6b4c9a;
+        --orange: #f28c28;
+        --orange-2: #d96d00;
+        --green: #2e9b5a;
+        --red: #c94a4a;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 520px;
+        margin: 0 auto;
+        padding: 20px 16px 32px;
+        text-align: center;
+      }
+      h1 {
+        margin: 0 0 6px;
+        font-size: 1.4rem;
+        color: var(--purple);
+      }
+      .hint {
+        margin: 0 0 6px;
+        font-size: 15px;
+        color: var(--muted);
+      }
+      .hint-he {
+        margin: 0 0 18px;
+        font-size: 15px;
+        color: var(--muted);
+        direction: rtl;
+      }
+      .counter {
+        margin: 0 0 12px;
+        font-weight: 800;
+        color: var(--purple);
+      }
+      .stage {
+        perspective: 1200px;
+        min-height: 380px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+      }
+      .flashcard {
+        width: min(100%, 400px);
+        height: 340px;
+        position: relative;
+        cursor: pointer;
+        transform-style: preserve-3d;
+        transition: transform 0.55s cubic-bezier(0.4, 0.2, 0.2, 1);
+      }
+      .flashcard.is-flipped {
+        transform: rotateY(180deg);
+      }
+      .flashcard.is-exit-flip {
+        animation: exit-flip 0.5s ease-in forwards;
+      }
+      .flashcard.is-exit-slide {
+        animation: exit-slide 0.5s ease-in forwards;
+      }
+      .flashcard.is-exit-zoom {
+        animation: exit-zoom 0.5s ease-in forwards;
+      }
+      .flashcard.is-enter-flip {
+        animation: enter-flip 0.55s ease-out forwards;
+      }
+      .flashcard.is-enter-slide {
+        animation: enter-slide 0.55s ease-out forwards;
+      }
+      .flashcard.is-enter-zoom {
+        animation: enter-zoom 0.55s ease-out forwards;
+      }
+      @keyframes exit-flip {
+        to {
+          transform: rotateY(90deg) scale(0.92);
+          opacity: 0;
+        }
+      }
+      @keyframes enter-flip {
+        from {
+          transform: rotateY(-90deg) scale(0.92);
+          opacity: 0;
+        }
+        to {
+          transform: rotateY(0deg) scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes exit-slide {
+        to {
+          transform: translateX(-120%) rotate(-8deg);
+          opacity: 0;
+        }
+      }
+      @keyframes enter-slide {
+        from {
+          transform: translateX(120%) rotate(8deg);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0) rotate(0);
+          opacity: 1;
+        }
+      }
+      @keyframes exit-zoom {
+        to {
+          transform: scale(0.4) rotate(6deg);
+          opacity: 0;
+        }
+      }
+      @keyframes enter-zoom {
+        from {
+          transform: scale(0.4) rotate(-6deg);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1) rotate(0);
+          opacity: 1;
+        }
+      }
+      .face {
+        position: absolute;
+        inset: 0;
+        backface-visibility: hidden;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        background: var(--card);
+        box-shadow: 0 14px 36px rgba(30, 27, 36, 0.12);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 20px;
+      }
+      .face-back {
+        transform: rotateY(180deg);
+      }
+      .statement-text {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.35;
+      }
+      .tf-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        margin-bottom: 14px;
+      }
+      .tf-btn {
+        padding: 12px 24px;
+        border: 2px solid var(--border);
+        border-radius: 999px;
+        background: #fff;
+        font: inherit;
+        font-size: 1rem;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .tf-btn:hover {
+        border-color: var(--purple);
+      }
+      .tf-btn.is-selected {
+        border-color: var(--purple);
+        background: rgba(107, 76, 154, 0.12);
+        color: var(--purple);
+      }
+      .tf-btn[data-value="true"].is-selected {
+        border-color: var(--green);
+        background: rgba(46, 155, 90, 0.12);
+        color: var(--green);
+      }
+      .tf-btn[data-value="false"].is-selected {
+        border-color: var(--red);
+        background: rgba(201, 74, 74, 0.1);
+        color: var(--red);
+      }
+      .tf-btn.is-correct-highlight {
+        border-color: var(--green);
+        background: rgba(46, 155, 90, 0.18);
+        color: var(--green);
+      }
+      .feedback {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 800;
+        min-height: 1.4em;
+      }
+      .feedback.ok {
+        color: var(--green);
+      }
+      .feedback.bad {
+        color: var(--red);
+      }
+      .tap-hint {
+        margin-top: 8px;
+        font-size: 13px;
+        color: var(--orange);
+        font-weight: 700;
+      }
+      .nav-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+      }
+      .nav-btn {
+        padding: 12px 22px;
+        border: none;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--purple), #4e3878);
+        color: #fff;
+        font: inherit;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .nav-btn.secondary {
+        background: #fff;
+        color: var(--purple);
+        border: 2px solid var(--purple);
+      }
+      .nav-btn.mix {
+        background: linear-gradient(135deg, var(--orange), var(--orange-2));
+        box-shadow: 0 8px 22px rgba(242, 140, 40, 0.4);
+      }
+      .nav-btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .btn-return-site {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 22px;
+        border: none;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.4);
+        color: #fff;
+        font: inherit;
+        font-weight: 800;
+        text-decoration: none;
+      }
+      .btn-return-site:hover {
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Is It True? ✔️❌</h1>
+      <p class="hint">Click the card to read the sentence, then choose True or False. Click again for the next card.</p>
+      <p class="hint-he" lang="he" dir="rtl">לחצו על הכרטיס כדי לקרוא את המשפט, בחרו נכון או לא נכון, ולחצו שוב למעבר לכרטיס הבא.</p>
+      <p class="hint">To return to the main site, click the blue <strong>Return to main site</strong> button.</p>
+      <p class="hint-he" lang="he" dir="rtl">כדי לחזור לאתר הראשי, לחצו על הכפתור הכחול <strong>Return to main site</strong>.</p>
+      <p class="counter" id="counter" aria-live="polite">Card 1 / 5</p>
+
+      <div class="stage">
+        <article class="flashcard" id="flashcard" tabindex="0" role="button" aria-label="Flashcard — click to flip or go to next">
+          <div class="face face-front" id="faceFront">
+            <p class="statement-text" id="statementFront"></p>
+          </div>
+          <div class="face face-back" id="faceBack">
+            <div class="tf-group" id="tfGroup" role="group" aria-label="True or false">
+              <button type="button" class="tf-btn" data-value="true" id="btnTrue">True ✔️</button>
+              <button type="button" class="tf-btn" data-value="false" id="btnFalse">False ❌</button>
+            </div>
+            <p class="feedback" id="feedback" aria-live="polite"></p>
+          </div>
+        </article>
+      </div>
+
+      <p class="tap-hint" id="tapHint">Tap to see True or False</p>
+
+      <div class="nav-row">
+        <button type="button" class="nav-btn secondary" id="btnPrev">Previous</button>
+        <button type="button" class="nav-btn" id="btnRestart">Restart</button>
+        <button type="button" class="nav-btn mix" id="btnMix">Mix</button>
+        <a
+          class="btn-return-site"
+          href="https://sites.google.com/view/ofir-reading-comprehension/home-1?authuser=0"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Return to main site</a>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var STATEMENTS = [
+          { id: "s1", text: "Tali is the new English teacher.", answer: "true" },
+          { id: "s2", text: "English lessons are on Tuesday and Friday.", answer: "false" },
+          { id: "s3", text: "Pupils need a notebook and a pencil.", answer: "true" },
+          { id: "s4", text: "Pupils can eat food during the lesson.", answer: "false" },
+          {
+            id: "s5",
+            text: "Tali wants the pupils' name, phone number, and address.",
+            answer: "true",
+          },
+        ];
+
+        var EFFECTS = ["flip", "slide", "zoom"];
+
+        var cards = STATEMENTS.slice();
+        var cardEl = document.getElementById("flashcard");
+        var statementFront = document.getElementById("statementFront");
+        var btnTrue = document.getElementById("btnTrue");
+        var btnFalse = document.getElementById("btnFalse");
+        var feedback = document.getElementById("feedback");
+        var counter = document.getElementById("counter");
+        var tapHint = document.getElementById("tapHint");
+        var btnPrev = document.getElementById("btnPrev");
+        var btnRestart = document.getElementById("btnRestart");
+        var btnMix = document.getElementById("btnMix");
+
+        var index = 0;
+        var isFlipped = false;
+        var answered = false;
+        var userAnswer = null;
+        var effectIndex = 0;
+        var busy = false;
+
+        function shuffle(arr) {
+          var a = arr.slice();
+          for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = a[i];
+            a[i] = a[j];
+            a[j] = t;
+          }
+          return a;
+        }
+
+        function clearAnswerUi() {
+          answered = false;
+          userAnswer = null;
+          feedback.textContent = "";
+          feedback.className = "feedback";
+          btnTrue.classList.remove("is-selected", "is-correct-highlight");
+          btnFalse.classList.remove("is-selected", "is-correct-highlight");
+          btnTrue.disabled = false;
+          btnFalse.disabled = false;
+        }
+
+        function renderCard(i, flipped) {
+          var c = cards[i];
+          statementFront.textContent = c.text;
+          counter.textContent = "Card " + (i + 1) + " / " + cards.length;
+          isFlipped = !!flipped;
+          cardEl.classList.toggle("is-flipped", isFlipped);
+          clearAnswerUi();
+          if (!isFlipped) {
+            tapHint.textContent = "Tap to see True or False";
+          } else if (!answered) {
+            tapHint.textContent = "Choose True or False";
+          } else {
+            tapHint.textContent = "Tap for next card";
+          }
+          btnPrev.disabled = i === 0 && !isFlipped;
+        }
+
+        function showFeedback(chosen) {
+          var c = cards[index];
+          var ok = chosen === c.answer;
+          answered = true;
+          userAnswer = chosen;
+
+          btnTrue.disabled = true;
+          btnFalse.disabled = true;
+          btnTrue.classList.toggle("is-selected", chosen === "true");
+          btnFalse.classList.toggle("is-selected", chosen === "false");
+
+          if (c.answer === "true") {
+            btnTrue.classList.add("is-correct-highlight");
+          } else {
+            btnFalse.classList.add("is-correct-highlight");
+          }
+
+          var correctLabel = c.answer === "true" ? "True ✔️" : "False ❌";
+          if (ok) {
+            feedback.textContent = "✓ Correct — " + correctLabel;
+            feedback.className = "feedback ok";
+          } else {
+            feedback.textContent =
+              "✗ Incorrect — the answer is " + correctLabel;
+            feedback.className = "feedback bad";
+          }
+          tapHint.textContent = "Tap for next card";
+        }
+
+        function clearAnimClasses() {
+          cardEl.classList.remove(
+            "is-exit-flip",
+            "is-exit-slide",
+            "is-exit-zoom",
+            "is-enter-flip",
+            "is-enter-slide",
+            "is-enter-zoom"
+          );
+        }
+
+        function goNext() {
+          if (busy) return;
+          var effect = EFFECTS[effectIndex];
+          effectIndex = (effectIndex + 1) % EFFECTS.length;
+          var next = (index + 1) % cards.length;
+          busy = true;
+          clearAnimClasses();
+          cardEl.classList.remove("is-flipped");
+          cardEl.classList.add("is-exit-" + effect);
+
+          window.setTimeout(function () {
+            index = next;
+            renderCard(index, false);
+            clearAnimClasses();
+            cardEl.classList.add("is-enter-" + effect);
+            window.setTimeout(function () {
+              clearAnimClasses();
+              busy = false;
+            }, 560);
+          }, 480);
+        }
+
+        function onCardClick(e) {
+          if (busy) return;
+          if (e.target.closest(".tf-btn")) return;
+          if (!isFlipped) {
+            isFlipped = true;
+            cardEl.classList.add("is-flipped");
+            tapHint.textContent = "Choose True or False";
+            btnPrev.disabled = false;
+            return;
+          }
+          if (answered) {
+            goNext();
+          }
+        }
+
+        cardEl.addEventListener("click", onCardClick);
+        cardEl.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            if (e.target.closest(".tf-btn")) return;
+            e.preventDefault();
+            onCardClick(e);
+          }
+        });
+
+        function onTfClick(value) {
+          if (busy || !isFlipped || answered) return;
+          showFeedback(value);
+        }
+
+        btnTrue.addEventListener("click", function (e) {
+          e.stopPropagation();
+          onTfClick("true");
+        });
+        btnFalse.addEventListener("click", function (e) {
+          e.stopPropagation();
+          onTfClick("false");
+        });
+
+        btnPrev.addEventListener("click", function () {
+          if (busy) return;
+          if (isFlipped) {
+            isFlipped = false;
+            cardEl.classList.remove("is-flipped");
+            clearAnswerUi();
+            tapHint.textContent = "Tap to see True or False";
+            btnPrev.disabled = index === 0;
+            return;
+          }
+          if (index > 0) {
+            effectIndex = (effectIndex + EFFECTS.length - 1) % EFFECTS.length;
+            index--;
+            renderCard(index, false);
+          }
+        });
+
+        btnRestart.addEventListener("click", function () {
+          if (busy) return;
+          cards = STATEMENTS.slice();
+          index = 0;
+          effectIndex = 0;
+          clearAnimClasses();
+          renderCard(0, false);
+        });
+
+        btnMix.addEventListener("click", function () {
+          if (busy) return;
+          busy = true;
+          btnMix.disabled = true;
+          cards = shuffle(STATEMENTS.slice());
+          index = 0;
+          effectIndex = 0;
+          clearAnimClasses();
+          cardEl.classList.remove("is-flipped");
+          renderCard(0, false);
+          window.setTimeout(function () {
+            busy = false;
+            btnMix.disabled = false;
+          }, 100);
+        });
+
+        renderCard(0, false);
+      })();
+    </script>
+  </body>
+</html>
