@@ -243,7 +243,7 @@
       <form id="schoolBagForm" novalidate>
         <div class="panel">
           <h2>What do you need for English class?</h2>
-          <motion-div class="option-list" id="optionList">
+          <div class="option-list" id="optionList">
             <label class="option-item"><input type="checkbox" name="item" value="book" data-correct="1" /> a book</label>
             <label class="option-item"><input type="checkbox" name="item" value="notebook" data-correct="1" /> a notebook</label>
             <label class="option-item"><input type="checkbox" name="item" value="pencil" data-correct="1" /> a pencil</label>
@@ -290,7 +290,7 @@
       <div class="results" id="results" aria-live="polite">
         <h2>Your results</h2>
         <p class="score-big" id="scoreText"></p>
-        <div id="resultDetails"></motion-div>
+        <div id="resultDetails"></div>
       </div>
     </div>
 
@@ -350,7 +350,7 @@
           var personal = (bagAnswer.value || "").trim();
           if (personal) {
             rows.push(
-              '<motion-div class="personal-note"><strong>Your answer:</strong> I have a ' +
+              '<div class="personal-note"><strong>Your answer:</strong> I have a ' +
                 personal.replace(/</g, "&lt;") +
                 ".</div>"
             );

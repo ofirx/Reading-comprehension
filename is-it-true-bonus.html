@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Is It True? — Bonus Activity</title>
+    <title>Bonus — Is It True?</title>
     <style>
       :root {
         --bg: #f4f6fb;
@@ -14,11 +14,9 @@
         --radius: 14px;
         --purple: #6b4c9a;
         --purple-2: #4e3878;
-        --orange: #f28c28;
-        --orange-2: #d96d00;
         --green: #2e9b5a;
         --green-2: #1f7a45;
-        --red: #c94a4a;
+        --gold: #d97706;
       }
       * {
         box-sizing: border-box;
@@ -31,87 +29,76 @@
         line-height: 1.5;
       }
       .wrap {
-        max-width: 820px;
+        max-width: 760px;
         margin: 0 auto;
         padding: 16px 14px 32px;
+      }
+      .badge {
+        display: inline-block;
+        margin: 0 0 8px;
+        padding: 4px 12px;
+        border-radius: 999px;
+        background: rgba(217, 119, 6, 0.15);
+        color: var(--gold);
+        font-size: 13px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
       }
       h1 {
         margin: 0 0 6px;
         font-size: 1.4rem;
         color: var(--purple);
       }
-      .meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin: 0 0 12px;
-      }
-      .meta span {
-        font-size: 12px;
+      .skill {
+        margin: 0 0 10px;
+        font-size: 14px;
+        color: var(--muted);
         font-weight: 700;
-        padding: 4px 10px;
-        border-radius: 999px;
-        background: rgba(107, 76, 154, 0.1);
-        color: var(--purple);
       }
       .lede {
-        margin: 0 0 6px;
+        margin: 0 0 8px;
         font-size: 15px;
         color: var(--muted);
       }
       .lede-he {
-        margin: 0 0 6px;
+        margin: 0 0 8px;
         font-size: 15px;
         direction: rtl;
         text-align: right;
         color: var(--muted);
       }
-      .lede-he:last-of-type {
-        margin-bottom: 18px;
-      }
-      .statements {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        margin-bottom: 20px;
-      }
-      .stmt {
-        padding: 14px 16px;
+      .panel {
         background: var(--card);
         border: 1px solid var(--border);
         border-radius: var(--radius);
-        box-shadow: 0 6px 18px rgba(30, 27, 36, 0.05);
+        padding: 16px 18px;
+        margin-bottom: 18px;
+        box-shadow: 0 8px 24px rgba(30, 27, 36, 0.06);
       }
-      .stmt.is-answered.ok {
-        border-color: rgba(46, 155, 90, 0.45);
-        background: rgba(46, 155, 90, 0.06);
+      .statement-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
       }
-      .stmt.is-answered.bad {
-        border-color: rgba(201, 74, 74, 0.35);
-        background: rgba(201, 74, 74, 0.05);
+      .statement-row {
+        padding: 14px 16px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: #fff;
       }
-      .stmt-num {
-        display: inline-block;
-        margin-bottom: 6px;
-        font-size: 12px;
-        font-weight: 800;
-        color: var(--purple);
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-      }
-      .stmt-text {
+      .statement-text {
         margin: 0 0 12px;
-        font-size: 15px;
+        font-size: 16px;
         font-weight: 650;
       }
-      .tf-btns {
+      .tf-group {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
       }
       .tf-btn {
-        flex: 1 1 120px;
-        padding: 12px 18px;
+        padding: 10px 20px;
         border: 2px solid var(--border);
         border-radius: 999px;
         background: #fff;
@@ -119,10 +106,6 @@
         font-size: 15px;
         font-weight: 800;
         cursor: pointer;
-        transition: background 0.15s, border-color 0.15s, color 0.15s;
-      }
-      .tf-btn:hover {
-        border-color: var(--purple);
       }
       .tf-btn.is-selected {
         border-color: var(--purple);
@@ -132,12 +115,18 @@
       .tf-btn[data-value="true"].is-selected {
         border-color: var(--green);
         background: rgba(46, 155, 90, 0.12);
-        color: var(--green-2);
+        color: var(--green);
       }
       .tf-btn[data-value="false"].is-selected {
-        border-color: var(--orange);
-        background: rgba(242, 140, 40, 0.12);
-        color: var(--orange-2);
+        border-color: #c94a4a;
+        background: rgba(201, 74, 74, 0.1);
+        color: #c94a4a;
+      }
+      .curriculum {
+        margin: 0;
+        padding-left: 18px;
+        font-size: 13px;
+        color: var(--muted);
       }
       .submit-row {
         display: flex;
@@ -145,7 +134,7 @@
         gap: 12px;
         justify-content: center;
         align-items: center;
-        margin-top: 8px;
+        margin-top: 22px;
       }
       .action-btn {
         padding: 14px 28px;
@@ -156,23 +145,23 @@
         font-size: 1.05rem;
         font-weight: 800;
         cursor: pointer;
-        text-decoration: none;
       }
       .action-btn:hover {
         filter: brightness(1.06);
-      }
-      .submit-btn {
-        background: linear-gradient(135deg, var(--purple), var(--purple-2));
-        box-shadow: 0 8px 22px rgba(107, 76, 154, 0.4);
       }
       .btn-restart {
         background: linear-gradient(135deg, var(--green), var(--green-2));
         box-shadow: 0 8px 22px rgba(46, 155, 90, 0.35);
       }
+      .submit-btn {
+        background: linear-gradient(135deg, var(--purple), var(--purple-2));
+        box-shadow: 0 8px 22px rgba(107, 76, 154, 0.4);
+      }
       .btn-return-site {
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        text-decoration: none;
         background: linear-gradient(135deg, #2563eb, #1d4ed8);
         box-shadow: 0 8px 22px rgba(37, 99, 235, 0.4);
       }
@@ -197,7 +186,7 @@
       }
       .score-big {
         text-align: center;
-        font-size: 2rem;
+        font-size: 1.35rem;
         font-weight: 800;
         margin-bottom: 14px;
       }
@@ -218,38 +207,38 @@
   </head>
   <body>
     <div class="wrap">
+      <p class="badge">Bonus assignment · Activity 2</p>
       <h1>Is It True? ✔️❌</h1>
-      <div class="meta" aria-label="Curriculum alignment">
-        <span>Curriculum 2020</span>
-        <span>Reading Comprehension — Bonus</span>
-      </div>
-      <p class="lede">
-        Read each statement about Tali&apos;s message. Choose <strong>True</strong> or <strong>False</strong> for every
-        question, then press <strong>Submit</strong> to see your score.
-      </p>
-      <p class="lede">
-        If you wish to return, click the blue <strong>Return to the main site</strong> button.
-      </p>
-      <p class="lede-he" lang="he" dir="rtl">
-        קראו כל משפט על הודעתה של טלי. בחרו <strong>נכון (True)</strong> או <strong>לא נכון (False)</strong> לכל שאלה,
-        ואז לחצו <strong>Submit</strong> כדי לראות את הציון.
-      </p>
-      <p class="lede-he" lang="he" dir="rtl">
-        אם ברצונכם לחזור, לחצו על הכפתור הכחול <strong>Return to the main site</strong>.
-      </p>
+      <p class="skill">Skill: Written Reception</p>
+      <p class="lede">Read the sentence and click True or False.</p>
+      <p class="lede-he" lang="he" dir="rtl">הוראות: קראו את המשפט ולחצו נכון או לא נכון.</p>
+      <p class="lede">To return to the main site, click the blue <strong>Return to main site</strong> button.</p>
+      <p class="lede-he" lang="he" dir="rtl">כדי לחזור לאתר הראשי, לחצו על הכפתור הכחול <strong>Return to main site</strong>.</p>
 
-      <form id="tfForm" class="statements" aria-label="True or false statements"></form>
+      <form id="trueFalseForm" novalidate>
+        <div class="panel">
+          <div class="statement-list" id="statementList"></div>
+        </div>
 
-      <div class="submit-row">
-        <button type="submit" class="action-btn submit-btn" form="tfForm">Submit</button>
-        <button type="button" class="action-btn btn-restart" id="btnRestart">Restart</button>
-        <a
-          class="action-btn btn-return-site"
-          href="https://sites.google.com/view/ofir-reading-comprehension/home-1?authuser=0"
-          target="_blank"
-          rel="noopener noreferrer"
-        >Return to the main site</a>
-      </div>
+        <div class="panel">
+          <h2 style="margin: 0 0 10px; font-size: 1rem; color: var(--purple)">Curriculum 2020</h2>
+          <ul class="curriculum">
+            <li>The pupils can identify specific information in a short text.</li>
+            <li>The pupils can understand familiar written language.</li>
+          </ul>
+        </div>
+
+        <div class="submit-row">
+          <button type="button" class="action-btn btn-restart" id="btnRestart">Restart</button>
+          <button type="submit" class="action-btn submit-btn" id="btnSubmit">Submit</button>
+          <a
+            class="action-btn btn-return-site"
+            href="https://sites.google.com/view/ofir-reading-comprehension/home-1?authuser=0"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Return to main site</a>
+        </div>
+      </form>
 
       <div class="results" id="results" aria-live="polite">
         <h2>Your results</h2>
@@ -261,103 +250,113 @@
     <script>
       (function () {
         var STATEMENTS = [
-          { id: "s1", text: "Tali is the new English teacher.", answer: true },
-          { id: "s2", text: "English lessons are on Tuesday and Friday.", answer: false },
-          { id: "s3", text: "Pupils need a notebook and a pencil.", answer: true },
-          { id: "s4", text: "Pupils can eat food during the lesson.", answer: false },
-          { id: "s5", text: "Tali wants pupils' name, phone number, and address.", answer: true },
+          { id: "s1", text: "Tali is the new English teacher.", answer: "true" },
+          { id: "s2", text: "English lessons are on Tuesday and Friday.", answer: "false" },
+          { id: "s3", text: "Pupils need a notebook and a pencil.", answer: "true" },
+          { id: "s4", text: "Pupils can eat food during the lesson.", answer: "false" },
+          {
+            id: "s5",
+            text: "Tali wants the pupils' name, phone number, and address.",
+            answer: "true",
+          },
         ];
 
-        var form = document.getElementById("tfForm");
+        var answers = {};
+        var list = document.getElementById("statementList");
+        var form = document.getElementById("trueFalseForm");
         var results = document.getElementById("results");
         var scoreText = document.getElementById("scoreText");
         var resultDetails = document.getElementById("resultDetails");
         var btnRestart = document.getElementById("btnRestart");
 
-        function render() {
-          form.innerHTML = "";
-          results.classList.remove("is-open");
+        function renderStatements() {
+          list.innerHTML = STATEMENTS.map(function (item, index) {
+            return (
+              '<div class="statement-row" data-id="' +
+              item.id +
+              '">' +
+              '<p class="statement-text">' +
+              (index + 1) +
+              ". " +
+              item.text +
+              "</p>" +
+              '<div class="tf-group" role="group" aria-label="True or false for statement ' +
+              (index + 1) +
+              '">' +
+              '<button type="button" class="tf-btn" data-id="' +
+              item.id +
+              '" data-value="true">True</button>' +
+              '<button type="button" class="tf-btn" data-id="' +
+              item.id +
+              '" data-value="false">False</button>' +
+              "</div></div>"
+            );
+          }).join("");
 
-          STATEMENTS.forEach(function (stmt, index) {
-            var block = document.createElement("fieldset");
-            block.className = "stmt";
-            block.dataset.stmtId = stmt.id;
-
-            var num = document.createElement("span");
-            num.className = "stmt-num";
-            num.textContent = "Statement " + (index + 1);
-
-            var text = document.createElement("p");
-            text.className = "stmt-text";
-            text.textContent = stmt.text;
-
-            var btns = document.createElement("div");
-            btns.className = "tf-btns";
-            btns.setAttribute("role", "group");
-            btns.setAttribute("aria-label", "True or false for statement " + (index + 1));
-
-            ["true", "false"].forEach(function (val) {
-              var btn = document.createElement("button");
-              btn.type = "button";
-              btn.className = "tf-btn";
-              btn.dataset.value = val;
-              btn.textContent = val === "true" ? "True ✔️" : "False ❌";
-              btn.addEventListener("click", function () {
-                btns.querySelectorAll(".tf-btn").forEach(function (b) {
-                  b.classList.remove("is-selected");
-                });
-                btn.classList.add("is-selected");
-                block.dataset.selected = val;
+          list.querySelectorAll(".tf-btn").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+              var id = btn.getAttribute("data-id");
+              var value = btn.getAttribute("data-value");
+              answers[id] = value;
+              list.querySelectorAll('.tf-btn[data-id="' + id + '"]').forEach(function (peer) {
+                peer.classList.toggle("is-selected", peer === btn);
               });
-              btns.appendChild(btn);
             });
-
-            block.appendChild(num);
-            block.appendChild(text);
-            block.appendChild(btns);
-            form.appendChild(block);
           });
         }
 
         form.addEventListener("submit", function (e) {
           e.preventDefault();
           var correct = 0;
-          var html = "";
+          var rows = [];
 
-          STATEMENTS.forEach(function (stmt, index) {
-            var block = form.querySelector('[data-stmt-id="' + stmt.id + '"]');
-            var selected = block ? block.dataset.selected : "";
-            var expected = stmt.answer ? "true" : "false";
-            var ok = selected === expected;
-            if (ok) correct++;
-
-            if (block) {
-              block.classList.add("is-answered", ok ? "ok" : "bad");
+          STATEMENTS.forEach(function (item, index) {
+            var chosen = answers[item.id];
+            var ok = chosen === item.answer;
+            if (ok) correct += 1;
+            var msg;
+            if (!chosen) {
+              msg = "✗ No answer — the correct answer is " + (item.answer === "true" ? "True" : "False") + ".";
+            } else if (ok) {
+              msg = "✓ Correct — " + (item.answer === "true" ? "True" : "False") + ".";
+            } else {
+              msg =
+                "✗ Incorrect — you chose " +
+                (chosen === "true" ? "True" : "False") +
+                ". The correct answer is " +
+                (item.answer === "true" ? "True" : "False") +
+                ".";
             }
-
-            var row = document.createElement("div");
-            row.className = "result-row " + (ok ? "ok" : "bad");
-            var yours = selected ? (selected === "true" ? "True" : "False") : "(not answered)";
-            var right = stmt.answer ? "True" : "False";
-            row.innerHTML =
-              (ok ? "✓ " : "✗ ") +
-              "<strong>" +
-              (index + 1) +
-              ".</strong> " +
-              stmt.text +
-              (ok ? "" : " — You chose: <em>" + yours + "</em>. Correct: <em>" + right + "</em>.");
-            html += row.outerHTML;
+            rows.push(
+              '<div class="result-row ' +
+                (ok ? "ok" : "bad") +
+                '"><strong>' +
+                (index + 1) +
+                ".</strong> " +
+                item.text +
+                " — " +
+                msg +
+                "</div>"
+            );
           });
 
-          scoreText.textContent = correct + " / " + STATEMENTS.length;
-          scoreText.style.color = correct === STATEMENTS.length ? "var(--green)" : "var(--orange)";
-          resultDetails.innerHTML = html;
+          scoreText.textContent = "Score: " + correct + " / " + STATEMENTS.length;
+          resultDetails.innerHTML = rows.join("");
           results.classList.add("is-open");
           results.scrollIntoView({ behavior: "smooth", block: "nearest" });
         });
 
-        btnRestart.addEventListener("click", render);
-        render();
+        btnRestart.addEventListener("click", function () {
+          answers = {};
+          list.querySelectorAll(".tf-btn").forEach(function (btn) {
+            btn.classList.remove("is-selected");
+          });
+          results.classList.remove("is-open");
+          resultDetails.innerHTML = "";
+          scoreText.textContent = "";
+        });
+
+        renderStatements();
       })();
     </script>
   </body>
