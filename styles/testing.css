@@ -110,6 +110,33 @@
   margin-bottom: 0.35em;
 }
 
+.testing-quiz-instructions-block {
+  max-width: var(--container);
+  width: min(var(--container), calc(100% - 2rem));
+  margin: 0 auto 20px;
+}
+.testing-quiz-instructions {
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(75, 46, 131, 0.18);
+  background: rgba(242, 140, 40, 0.08);
+}
+.testing-quiz-instr-en {
+  margin: 0 0 10px;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.testing-quiz-instr-he {
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(30, 27, 36, 0.12);
+  font-size: 15px;
+  line-height: 1.55;
+  direction: rtl;
+  text-align: right;
+  color: var(--muted);
+}
+
 /* Blue backdrop + centered card (Justinmind-style — strong contrast vs page grey) */
 .quiz-form-section {
   padding: 32px 0 40px;
