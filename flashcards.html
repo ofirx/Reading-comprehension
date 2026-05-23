@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vocabulary Flashcards</title>
+    <style>
+      :root {
+        --bg: #f4f6fb;
+        --card: #fff;
+        --text: #1e1b24;
+        --muted: #5c5668;
+        --border: rgba(30, 27, 36, 0.12);
+        --radius: 18px;
+        --purple: #6b4c9a;
+        --orange: #f28c28;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 520px;
+        margin: 0 auto;
+        padding: 20px 16px 32px;
+        text-align: center;
+      }
+      h1 {
+        margin: 0 0 6px;
+        font-size: 1.4rem;
+        color: var(--purple);
+      }
+      .hint {
+        margin: 0 0 6px;
+        font-size: 15px;
+        color: var(--muted);
+      }
+      .hint-he {
+        margin: 0 0 18px;
+        font-size: 15px;
+        color: var(--muted);
+        direction: rtl;
+      }
+      .counter {
+        margin: 0 0 12px;
+        font-weight: 800;
+        color: var(--purple);
+      }
+      .stage {
+        perspective: 1200px;
+        min-height: 380px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+      }
+      .flashcard {
+        width: min(100%, 400px);
+        height: 340px;
+        position: relative;
+        cursor: pointer;
+        transform-style: preserve-3d;
+        transition: transform 0.55s cubic-bezier(0.4, 0.2, 0.2, 1);
+      }
+      .flashcard.is-flipped {
+        transform: rotateY(180deg);
+      }
+      .flashcard.is-exit-flip {
+        animation: exit-flip 0.5s ease-in forwards;
+      }
+      .flashcard.is-exit-slide {
+        animation: exit-slide 0.5s ease-in forwards;
+      }
+      .flashcard.is-exit-zoom {
+        animation: exit-zoom 0.5s ease-in forwards;
+      }
+      .flashcard.is-enter-flip {
+        animation: enter-flip 0.55s ease-out forwards;
+      }
+      .flashcard.is-enter-slide {
+        animation: enter-slide 0.55s ease-out forwards;
+      }
+      .flashcard.is-enter-zoom {
+        animation: enter-zoom 0.55s ease-out forwards;
+      }
+      @keyframes exit-flip {
+        to {
+          transform: rotateY(90deg) scale(0.92);
+          opacity: 0;
+        }
+      }
+      @keyframes enter-flip {
+        from {
+          transform: rotateY(-90deg) scale(0.92);
+          opacity: 0;
+        }
+        to {
+          transform: rotateY(0deg) scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes exit-slide {
+        to {
+          transform: translateX(-120%) rotate(-8deg);
+          opacity: 0;
+        }
+      }
+      @keyframes enter-slide {
+        from {
+          transform: translateX(120%) rotate(8deg);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0) rotate(0);
+          opacity: 1;
+        }
+      }
+      @keyframes exit-zoom {
+        to {
+          transform: scale(0.4) rotate(6deg);
+          opacity: 0;
+        }
+      }
+      @keyframes enter-zoom {
+        from {
+          transform: scale(0.4) rotate(-6deg);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1) rotate(0);
+          opacity: 1;
+        }
+      }
+      .face {
+        position: absolute;
+        inset: 0;
+        backface-visibility: hidden;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        background: var(--card);
+        box-shadow: 0 14px 36px rgba(30, 27, 36, 0.12);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .face-back {
+        transform: rotateY(180deg);
+        padding: 24px 20px;
+      }
+      .face-front img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .word-en {
+        margin: 0 0 14px;
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--purple);
+        line-height: 1.25;
+      }
+      .word-he {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        direction: rtl;
+        color: var(--muted);
+      }
+      .tap-hint {
+        margin-top: 8px;
+        font-size: 13px;
+        color: var(--orange);
+        font-weight: 700;
+      }
+      .nav-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+      }
+      .nav-btn {
+        padding: 12px 22px;
+        border: none;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--purple), #4e3878);
+        color: #fff;
+        font: inherit;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .nav-btn.secondary {
+        background: #fff;
+        color: var(--purple);
+        border: 2px solid var(--purple);
+      }
+      .nav-btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Vocabulary flashcards</h1>
+      <p class="hint">Click the card to see the word. Click again for the next picture — with a new switch effect each time.</p>
+      <p class="hint-he" lang="he" dir="rtl">לחצו על הכרטיס כדי לראות את המילה. לחצו שוב למעבר לתמונה הבאה — עם אפקט מעבר שונה בכל פעם.</p>
+      <p class="counter" id="counter" aria-live="polite">Card 1 / 6</p>
+
+      <div class="stage">
+        <article class="flashcard" id="flashcard" tabindex="0" role="button" aria-label="Flashcard — click to flip or go to next">
+          <div class="face face-front" id="faceFront">
+            <img id="cardImg" src="assets/flashcards/phone-number.png" alt="Flashcard picture" />
+          </div>
+          <div class="face face-back" id="faceBack">
+            <p class="word-en" id="wordEn">a phone number</p>
+            <p class="word-he" id="wordHe" lang="he" dir="rtl">מספר טלפון</p>
+          </div>
+        </article>
+      </div>
+
+      <p class="tap-hint" id="tapHint">Tap to see the word</p>
+
+      <div class="nav-row">
+        <button type="button" class="nav-btn secondary" id="btnPrev">Previous</button>
+        <button type="button" class="nav-btn" id="btnRestart">Restart</button>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var IMG = "assets/flashcards/";
+        var CARDS = [
+          {
+            en: "a phone number",
+            he: "מספר טלפון",
+            img: IMG + "phone-number.png",
+            alt: "Smartphone showing a phone number",
+          },
+          {
+            en: "an address",
+            he: "כתובת",
+            img: IMG + "address.png",
+            alt: "Delivery package with an address",
+          },
+          { en: "food", he: "אוכל", img: IMG + "food.png", alt: "Many dishes of food on a table" },
+          {
+            en: "a name",
+            he: "שם",
+            img: IMG + "name.png",
+            alt: "Student ID card with a name",
+          },
+          {
+            en: "a pencil",
+            he: "עפרון",
+            img: IMG + "pencil.png",
+            alt: "An orange pencil",
+          },
+          {
+            en: "a meeting",
+            he: "פגישה",
+            img: IMG + "meeting.png",
+            alt: "Students in a meeting together",
+          },
+        ];
+
+        var EFFECTS = ["flip", "slide", "zoom"];
+        var effectNames = { flip: "Flip", slide: "Slide", zoom: "Zoom" };
+
+        var cardEl = document.getElementById("flashcard");
+        var cardImg = document.getElementById("cardImg");
+        var wordEn = document.getElementById("wordEn");
+        var wordHe = document.getElementById("wordHe");
+        var counter = document.getElementById("counter");
+        var tapHint = document.getElementById("tapHint");
+        var btnPrev = document.getElementById("btnPrev");
+        var btnRestart = document.getElementById("btnRestart");
+
+        var index = 0;
+        var isFlipped = false;
+        var effectIndex = 0;
+        var busy = false;
+
+        function renderCard(i, flipped) {
+          var c = CARDS[i];
+          cardImg.src = c.img;
+          cardImg.alt = c.alt;
+          wordEn.textContent = c.en;
+          wordHe.textContent = c.he;
+          counter.textContent = "Card " + (i + 1) + " / " + CARDS.length;
+          isFlipped = !!flipped;
+          cardEl.classList.toggle("is-flipped", isFlipped);
+          tapHint.textContent = isFlipped ? "Tap for next picture (" + effectNames[EFFECTS[effectIndex]] + ")" : "Tap to see the word";
+          btnPrev.disabled = i === 0 && !isFlipped;
+        }
+
+        function clearAnimClasses() {
+          cardEl.classList.remove(
+            "is-exit-flip",
+            "is-exit-slide",
+            "is-exit-zoom",
+            "is-enter-flip",
+            "is-enter-slide",
+            "is-enter-zoom"
+          );
+        }
+
+        function goNext() {
+          if (busy) return;
+          var effect = EFFECTS[effectIndex];
+          effectIndex = (effectIndex + 1) % EFFECTS.length;
+          var next = (index + 1) % CARDS.length;
+          busy = true;
+          clearAnimClasses();
+          cardEl.classList.remove("is-flipped");
+          cardEl.classList.add("is-exit-" + effect);
+
+          window.setTimeout(function () {
+            index = next;
+            renderCard(index, false);
+            clearAnimClasses();
+            cardEl.classList.add("is-enter-" + effect);
+            window.setTimeout(function () {
+              clearAnimClasses();
+              busy = false;
+            }, 560);
+          }, 480);
+        }
+
+        function onCardClick() {
+          if (busy) return;
+          if (!isFlipped) {
+            isFlipped = true;
+            cardEl.classList.add("is-flipped");
+            tapHint.textContent = "Tap for next picture (" + effectNames[EFFECTS[effectIndex]] + ")";
+            btnPrev.disabled = false;
+            return;
+          }
+          goNext();
+        }
+
+        cardEl.addEventListener("click", onCardClick);
+        cardEl.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onCardClick();
+          }
+        });
+
+        btnPrev.addEventListener("click", function () {
+          if (busy) return;
+          if (isFlipped) {
+            isFlipped = false;
+            cardEl.classList.remove("is-flipped");
+            tapHint.textContent = "Tap to see the word";
+            btnPrev.disabled = index === 0;
+            return;
+          }
+          if (index > 0) {
+            effectIndex = (effectIndex + EFFECTS.length - 1) % EFFECTS.length;
+            index--;
+            renderCard(index, false);
+          }
+        });
+
+        btnRestart.addEventListener("click", function () {
+          if (busy) return;
+          index = 0;
+          effectIndex = 0;
+          clearAnimClasses();
+          renderCard(0, false);
+        });
+
+        renderCard(0, false);
+      })();
+    </script>
+  </body>
+</html>
