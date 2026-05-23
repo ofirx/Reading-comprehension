@@ -299,9 +299,16 @@
       }
       .total-score {
         text-align: center;
-        font-size: 2rem;
+        font-size: 1.35rem;
         font-weight: 800;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
+      }
+      .final-grade {
+        text-align: center;
+        font-size: 2.1rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+        color: var(--purple);
       }
       .chart-wrap {
         max-width: 280px;
@@ -367,6 +374,7 @@
       <div class="results" id="results" aria-live="polite">
         <h2>Your results</h2>
         <p class="total-score" id="totalScore"></p>
+        <p class="final-grade" id="finalGrade"></p>
         <div class="chart-wrap">
           <canvas id="gradeChart" width="280" height="280" aria-label="Correct and incorrect answers"></canvas>
         </div>
@@ -385,14 +393,14 @@
           },
           {
             id: "q2",
-            textBefore: "When I order a pizza, I give my home ",
-            textAfter: ".",
+            textBefore: "When I order a pizza, I give them ",
+            textAfter: " for delivery.",
             answer: "an address",
           },
           {
             id: "q3",
-            textBefore: 'When someone asks, "What is your ',
-            textAfter: '?", I say "Daniel" or "Noa."',
+            textBefore: "When someone asks me for ",
+            textAfter: ', I say "Daniel" or "Noa."',
             answer: "a name",
           },
           {
@@ -403,13 +411,13 @@
           },
           {
             id: "q5",
-            textBefore: "My parents have a ",
+            textBefore: "My parents have ",
             textAfter: " at school to talk about my progress.",
             answer: "a meeting",
           },
           {
             id: "q6",
-            textBefore: "When I want to call my friend after school, I need his ",
+            textBefore: "When I want to call my friend after school, I need ",
             textAfter: ".",
             answer: "a phone number",
           },
@@ -434,6 +442,7 @@
         var btnSubmit = document.getElementById("btnSubmit");
         var results = document.getElementById("results");
         var totalScore = document.getElementById("totalScore");
+        var finalGrade = document.getElementById("finalGrade");
         var resultDetails = document.getElementById("resultDetails");
         var chartInstance = null;
 
@@ -693,9 +702,9 @@
           var html = "";
           var pointsEach = 100 / SENTENCES.length;
 
-          SENTENCES.forEach(function (item, index) {
+          sentenceOrder.forEach(function (item, index) {
             var slot = slotsByQ[item.id];
-            var chip = slot.querySelector(".word-chip");
+            var chip = slot ? slot.querySelector(".word-chip") : null;
             var got = chip ? chip.dataset.label : "";
             var ok = norm(got) === norm(item.answer);
             if (ok) correct++;
@@ -705,16 +714,23 @@
               (ok ? "✓ " : "✗ ") +
               "<strong>" +
               (index + 1) +
-              ".</strong> Correct: <em>" +
+              ".</strong> " +
+              item.textBefore +
+              "<em>" +
+              (got || "___") +
+              "</em>" +
+              item.textAfter +
+              "<br>Correct: <em>" +
               item.answer +
               "</em>" +
-              (ok ? "" : " — You wrote: <em>" + (got || "(empty)") + "</em>");
+              (ok ? "" : " — You chose: <em>" + (got || "(empty)") + "</em>");
             html += row.outerHTML;
           });
 
           var grade = Math.round(correct * pointsEach);
-          totalScore.textContent = correct + " / " + SENTENCES.length + " correct · Grade: " + grade + " / 100";
-          totalScore.style.color = grade === 100 ? "var(--green)" : grade >= 50 ? "var(--orange)" : "#c94a4a";
+          totalScore.textContent = correct + " / " + SENTENCES.length + " correct";
+          finalGrade.textContent = "Final grade: " + grade + " / 100";
+          finalGrade.style.color = grade === 100 ? "var(--green)" : grade >= 50 ? "var(--orange)" : "#c94a4a";
           resultDetails.innerHTML = html;
 
           if (chartInstance) chartInstance.destroy();
