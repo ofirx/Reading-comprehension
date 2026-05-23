@@ -375,6 +375,10 @@
             return;
           }
           playStatus.hidden = true;
+          WORDS.forEach(function (w) {
+            var other = audioByWordId[w.id];
+            if (other && other !== audio) other.pause();
+          });
           audio.pause();
           audio.currentTime = 0;
           var tryPlay = function () {
