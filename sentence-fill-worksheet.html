@@ -104,6 +104,9 @@
         flex-direction: column;
         gap: 14px;
       }
+      .sentence-list.is-shuffling {
+        pointer-events: none;
+      }
       .sentence-row {
         padding: 12px 14px;
         border: 1px solid var(--border);
@@ -111,12 +114,100 @@
         background: #fff;
         font-size: 16px;
         line-height: 1.65;
+        transform-origin: center center;
+      }
+      .sentence-row.shuffle-out {
+        animation: sentence-shuffle-out 0.45s ease-in forwards;
+      }
+      .sentence-row.shuffle-in {
+        animation: sentence-shuffle-in 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      .word-bank.is-shuffling {
+        pointer-events: none;
+        animation: bank-shuffle-wiggle 0.45s ease-in-out;
+      }
+      .word-bank .word-chip.shuffle-out {
+        animation: chip-shuffle-out 0.4s ease-in forwards;
+      }
+      .word-bank .word-chip.shuffle-in {
+        animation: chip-shuffle-in 0.5s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      @keyframes list-shuffle-wiggle {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-8px) rotate(-0.4deg);
+        }
+        75% {
+          transform: translateX(8px) rotate(0.4deg);
+        }
+      }
+      @keyframes sentence-shuffle-out {
+        0% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(16px) scale(0.92);
+          filter: blur(2px);
+        }
+      }
+      @keyframes sentence-shuffle-in {
+        0% {
+          opacity: 0;
+          transform: translateY(-20px) scale(0.9) rotate(-2deg);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1) rotate(0);
+        }
+      }
+      @keyframes bank-shuffle-wiggle {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(0.97) rotate(1deg);
+        }
+      }
+      @keyframes chip-shuffle-out {
+        to {
+          opacity: 0;
+          transform: scale(0.55) rotate(10deg);
+        }
+      }
+      @keyframes chip-shuffle-in {
+        from {
+          opacity: 0;
+          transform: scale(0.5) rotate(-12deg);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) rotate(0);
+        }
+      }
+      @keyframes sentence-num-roll {
+        50% {
+          transform: rotate(180deg) scale(0.75);
+          color: #fff;
+          background: rgba(242, 140, 40, 0.55);
+          border-radius: 50%;
+        }
       }
       .sentence-num {
         display: inline-block;
         min-width: 1.5em;
         font-weight: 800;
         color: var(--purple);
+        border-radius: 4px;
+        transition: background 0.2s ease;
+      }
+      .sentence-num.is-rolling {
+        animation: sentence-num-roll 0.55s ease-in-out;
       }
       .drop-slot {
         display: inline-flex;
@@ -348,6 +439,7 @@
 
         var chipsById = {};
         var slotsByQ = {};
+        var sentenceOrder = [];
         var selectedChip = null;
 
         function shuffle(arr) {
@@ -445,15 +537,87 @@
           });
         }
 
-        function renderSentences() {
+        function clearShuffleClasses() {
+          sentenceList.classList.remove("is-shuffling");
+          wordBank.classList.remove("is-shuffling");
+          sentenceList.style.animation = "";
+          sentenceList.querySelectorAll(".sentence-row").forEach(function (row) {
+            row.classList.remove("shuffle-out", "shuffle-in");
+            row.style.animationDelay = "";
+          });
+          wordBank.querySelectorAll(".word-chip").forEach(function (chip) {
+            chip.classList.remove("shuffle-out", "shuffle-in");
+            chip.style.animationDelay = "";
+          });
+        }
+
+        function animateShuffleOut(done) {
+          var rows = sentenceList.querySelectorAll(".sentence-row");
+          var chips = wordBank.querySelectorAll(".word-chip");
+          if (!rows.length) {
+            done();
+            return;
+          }
+          sentenceList.classList.add("is-shuffling");
+          wordBank.classList.add("is-shuffling");
+          sentenceList.style.animation = "list-shuffle-wiggle 0.45s ease-in-out";
+          rows.forEach(function (row, i) {
+            row.style.animationDelay = i * 0.05 + "s";
+            row.classList.add("shuffle-out");
+            var num = row.querySelector(".sentence-num");
+            if (num) {
+              num.textContent = "?";
+              num.classList.add("is-rolling");
+            }
+          });
+          chips.forEach(function (chip, i) {
+            chip.style.animationDelay = i * 0.04 + "s";
+            chip.classList.add("shuffle-out");
+          });
+          window.setTimeout(function () {
+            sentenceList.style.animation = "";
+            done();
+          }, 480);
+        }
+
+        function animateShuffleIn() {
+          sentenceList.querySelectorAll(".sentence-row").forEach(function (row, i) {
+            row.style.animationDelay = i * 0.07 + "s";
+            row.classList.add("shuffle-in");
+            var num = row.querySelector(".sentence-num");
+            if (num) {
+              window.setTimeout(
+                function (n, v) {
+                  n.textContent = v;
+                  n.classList.remove("is-rolling");
+                },
+                120 + i * 70,
+                num,
+                i + 1 + "."
+              );
+            }
+          });
+          wordBank.querySelectorAll(".word-chip").forEach(function (chip, i) {
+            chip.style.animationDelay = i * 0.05 + "s";
+            chip.classList.add("shuffle-in");
+          });
+          window.setTimeout(clearShuffleClasses, 650);
+        }
+
+        function renderSentences(order, forShuffleIn) {
           sentenceList.innerHTML = "";
           slotsByQ = {};
-          SENTENCES.forEach(function (item, index) {
+          sentenceOrder = order.slice();
+          sentenceOrder.forEach(function (item, index) {
             var row = document.createElement("div");
             row.className = "sentence-row";
+            if (forShuffleIn) {
+              row.classList.add("shuffle-in");
+              row.style.animationDelay = index * 0.07 + "s";
+            }
             var num = document.createElement("span");
             num.className = "sentence-num";
-            num.textContent = index + 1 + ".";
+            num.textContent = forShuffleIn ? "?" : index + 1 + ".";
             var slot = document.createElement("span");
             slot.className = "drop-slot";
             slot.dataset.qid = item.id;
@@ -467,10 +631,15 @@
           });
         }
 
-        function renderBank(order) {
+        function renderBank(order, forShuffleIn) {
           wordBank.innerHTML = "";
-          order.forEach(function (w) {
-            wordBank.appendChild(chipsById[w.id]);
+          order.forEach(function (w, i) {
+            var chip = chipsById[w.id];
+            if (forShuffleIn) {
+              chip.classList.add("shuffle-in");
+              chip.style.animationDelay = i * 0.05 + "s";
+            }
+            wordBank.appendChild(chip);
           });
           updateBankHint();
         }
@@ -490,14 +659,25 @@
 
         function build() {
           ensureChips();
-          renderSentences();
-          renderBank(shuffle(BANK));
+          renderSentences(shuffle(SENTENCES.slice()), false);
+          renderBank(shuffle(BANK.slice()), false);
         }
 
         function mixExercises() {
           results.classList.remove("is-open");
           returnAllToBank();
-          renderBank(shuffle(BANK));
+          btnMix.disabled = true;
+          var newSentenceOrder = shuffle(SENTENCES.slice());
+          var newBankOrder = shuffle(BANK.slice());
+          animateShuffleOut(function () {
+            clearShuffleClasses();
+            renderSentences(newSentenceOrder, true);
+            renderBank(newBankOrder, true);
+            animateShuffleIn();
+            window.setTimeout(function () {
+              btnMix.disabled = false;
+            }, 680);
+          });
         }
 
         function restart() {
