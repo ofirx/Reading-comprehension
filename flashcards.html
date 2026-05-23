@@ -228,8 +228,8 @@
   <body>
     <div class="wrap">
       <h1>Vocabulary flashcards</h1>
-      <p class="hint">Click the card to see the word. Click again for the next picture.</p>
-      <p class="hint-he" lang="he" dir="rtl">לחצו על הכרטיס כדי לראות את המילה. לחצו שוב למעבר לתמונה הבאה.</p>
+      <p class="hint">Click the card to see the meaning of the word. Click again for the next picture.</p>
+      <p class="hint-he" lang="he" dir="rtl">לחצו על הכרטיס כדי לראות את משמעות המילה. לחצו שוב למעבר לתמונה הבאה.</p>
       <p class="hint">To exit to the main site, click the blue <strong>Return to main site</strong> button.</p>
       <p class="hint-he" lang="he" dir="rtl">כדי לצאת לאתר הראשי, לחצו על הכפתור הכחול <strong>Return to main site</strong>.</p>
       <p class="counter" id="counter" aria-live="polite">Card 1 / 6</p>
@@ -246,7 +246,7 @@
         </article>
       </div>
 
-      <p class="tap-hint" id="tapHint">Tap to see the word</p>
+      <p class="tap-hint" id="tapHint">Tap to see the meaning of the word</p>
 
       <div class="nav-row">
         <button type="button" class="nav-btn secondary" id="btnPrev">Previous</button>
@@ -322,7 +322,7 @@
           counter.textContent = "Card " + (i + 1) + " / " + CARDS.length;
           isFlipped = !!flipped;
           cardEl.classList.toggle("is-flipped", isFlipped);
-          tapHint.textContent = isFlipped ? "Tap for next picture" : "Tap to see the word";
+          tapHint.textContent = isFlipped ? "Tap for next picture" : "Tap to see the meaning of the word";
           btnPrev.disabled = i === 0 && !isFlipped;
         }
 
@@ -384,7 +384,7 @@
           if (isFlipped) {
             isFlipped = false;
             cardEl.classList.remove("is-flipped");
-            tapHint.textContent = "Tap to see the word";
+            tapHint.textContent = "Tap to see the meaning of the word";
             btnPrev.disabled = index === 0;
             return;
           }
