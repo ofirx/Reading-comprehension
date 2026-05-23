@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Activity 1 — My School Bag</title>
+    <style>
+      :root {
+        --bg: #f4f6fb;
+        --card: #fff;
+        --text: #1e1b24;
+        --muted: #5c5668;
+        --border: rgba(30, 27, 36, 0.12);
+        --radius: 14px;
+        --purple: #6b4c9a;
+        --purple-2: #4e3878;
+        --green: #2e9b5a;
+        --green-2: #1f7a45;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 16px 14px 32px;
+      }
+      .badge {
+        display: inline-block;
+        margin: 0 0 8px;
+        padding: 4px 12px;
+        border-radius: 999px;
+        background: rgba(107, 76, 154, 0.12);
+        color: var(--purple);
+        font-size: 13px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      h1 {
+        margin: 0 0 6px;
+        font-size: 1.4rem;
+        color: var(--purple);
+      }
+      .skill {
+        margin: 0 0 10px;
+        font-size: 14px;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .lede {
+        margin: 0 0 8px;
+        font-size: 15px;
+        color: var(--muted);
+      }
+      .lede-he {
+        margin: 0 0 8px;
+        font-size: 15px;
+        direction: rtl;
+        text-align: right;
+        color: var(--muted);
+      }
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 18px;
+        margin-bottom: 18px;
+        box-shadow: 0 8px 24px rgba(30, 27, 36, 0.06);
+      }
+      .panel h2 {
+        margin: 0 0 12px;
+        font-size: 1rem;
+        color: var(--purple);
+      }
+      .option-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .option-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 650;
+      }
+      .option-item input {
+        width: 20px;
+        height: 20px;
+        accent-color: var(--purple);
+        cursor: pointer;
+      }
+      .follow-up-label {
+        display: block;
+        margin: 0 0 10px;
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .follow-up-label-he {
+        display: block;
+        margin: 0 0 12px;
+        font-size: 15px;
+        direction: rtl;
+        text-align: right;
+        color: var(--muted);
+      }
+      .follow-up-input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 2px solid rgba(107, 76, 154, 0.35);
+        border-radius: 10px;
+        font: inherit;
+        font-size: 16px;
+      }
+      .follow-up-input:focus {
+        outline: none;
+        border-color: var(--purple);
+      }
+      .curriculum {
+        margin: 0;
+        padding-left: 18px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .submit-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 22px;
+      }
+      .action-btn {
+        padding: 14px 28px;
+        border: none;
+        border-radius: 999px;
+        color: #fff;
+        font: inherit;
+        font-size: 1.05rem;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .action-btn:hover {
+        filter: brightness(1.06);
+      }
+      .btn-restart {
+        background: linear-gradient(135deg, var(--green), var(--green-2));
+        box-shadow: 0 8px 22px rgba(46, 155, 90, 0.35);
+      }
+      .submit-btn {
+        background: linear-gradient(135deg, var(--purple), var(--purple-2));
+        box-shadow: 0 8px 22px rgba(107, 76, 154, 0.4);
+      }
+      .btn-return-site {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.4);
+      }
+      .btn-return-site:hover {
+        color: #fff;
+      }
+      .results {
+        display: none;
+        margin-top: 20px;
+        padding: 18px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+      }
+      .results.is-open {
+        display: block;
+      }
+      .results h2 {
+        margin: 0 0 10px;
+        text-align: center;
+        color: var(--purple);
+      }
+      .score-big {
+        text-align: center;
+        font-size: 1.35rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+      }
+      .result-row {
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        border-radius: 10px;
+        font-size: 14px;
+        border: 1px solid var(--border);
+      }
+      .result-row.ok {
+        background: rgba(46, 155, 90, 0.1);
+      }
+      .result-row.bad {
+        background: rgba(201, 74, 74, 0.08);
+      }
+      .personal-note {
+        margin-top: 12px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: rgba(107, 76, 154, 0.08);
+        font-size: 15px;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <p class="badge">Follow-up activity · Activity 1</p>
+      <h1>My School Bag 👜</h1>
+      <p class="skill">Skill: Written Production + Vocabulary</p>
+      <p class="lede">Choose the things you need for English class.</p>
+      <p class="lede-he" lang="he" dir="rtl">הוראות: בחרו את הדברים שאתם צריכים לשיעור אנגלית.</p>
+      <p class="lede">To return to the main site, click the blue <strong>Return to main site</strong> button.</p>
+      <p class="lede-he" lang="he" dir="rtl">כדי לחזור לאתר הראשי, לחצו על הכפתור הכחול <strong>Return to main site</strong>.</p>
+
+      <form id="schoolBagForm" novalidate>
+        <div class="panel">
+          <h2>What do you need for English class?</h2>
+          <motion-div class="option-list" id="optionList">
+            <label class="option-item"><input type="checkbox" name="item" value="book" data-correct="1" /> a book</label>
+            <label class="option-item"><input type="checkbox" name="item" value="notebook" data-correct="1" /> a notebook</label>
+            <label class="option-item"><input type="checkbox" name="item" value="pencil" data-correct="1" /> a pencil</label>
+            <label class="option-item"><input type="checkbox" name="item" value="banana" data-correct="0" /> a banana</label>
+            <label class="option-item"><input type="checkbox" name="item" value="football" data-correct="0" /> a football</label>
+            <label class="option-item"><input type="checkbox" name="item" value="bicycle" data-correct="0" /> a bicycle</label>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Follow-up question</h2>
+          <span class="follow-up-label">What do you have in your school bag?</span>
+          <span class="follow-up-label-he" lang="he" dir="rtl">מה יש לכם בתיק בית הספר?</span>
+          <label for="bagAnswer" class="sr-only">I have a...</label>
+          <input
+            type="text"
+            id="bagAnswer"
+            class="follow-up-input"
+            placeholder="I have a ___________________________."
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="panel">
+          <h2>Curriculum 2020</h2>
+          <ul class="curriculum">
+            <li>The pupils can identify familiar vocabulary.</li>
+            <li>The pupils can provide simple personal information.</li>
+          </ul>
+        </div>
+
+        <div class="submit-row">
+          <button type="button" class="action-btn btn-restart" id="btnRestart">Restart</button>
+          <button type="submit" class="action-btn submit-btn" id="btnSubmit">Submit</button>
+          <a
+            class="action-btn btn-return-site"
+            href="https://sites.google.com/view/ofir-reading-comprehension/home-1?authuser=0"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Return to main site</a>
+        </div>
+      </form>
+
+      <div class="results" id="results" aria-live="polite">
+        <h2>Your results</h2>
+        <p class="score-big" id="scoreText"></p>
+        <div id="resultDetails"></motion-div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var LABELS = {
+          book: "a book",
+          notebook: "a notebook",
+          pencil: "a pencil",
+          banana: "a banana",
+          football: "a football",
+          bicycle: "a bicycle",
+        };
+
+        var form = document.getElementById("schoolBagForm");
+        var results = document.getElementById("results");
+        var scoreText = document.getElementById("scoreText");
+        var resultDetails = document.getElementById("resultDetails");
+        var bagAnswer = document.getElementById("bagAnswer");
+        var btnRestart = document.getElementById("btnRestart");
+
+        function getCheckboxes() {
+          return Array.prototype.slice.call(form.querySelectorAll('input[name="item"]'));
+        }
+
+        function gradeItem(input) {
+          var shouldCheck = input.getAttribute("data-correct") === "1";
+          return shouldCheck === input.checked;
+        }
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var boxes = getCheckboxes();
+          var correct = 0;
+          var rows = [];
+
+          boxes.forEach(function (input) {
+            var ok = gradeItem(input);
+            if (ok) correct += 1;
+            var label = LABELS[input.value] || input.value;
+            var shouldCheck = input.getAttribute("data-correct") === "1";
+            var msg;
+            if (ok) {
+              msg = shouldCheck
+                ? "✓ Correct — you chose " + label + " (needed for class)."
+                : "✓ Correct — you did not choose " + label + " (not for class).";
+            } else if (shouldCheck) {
+              msg = "✗ You should choose " + label + " — Tali says you need it.";
+            } else {
+              msg = "✗ You should not choose " + label + " — it is not for English class.";
+            }
+            rows.push('<div class="result-row ' + (ok ? "ok" : "bad") + '">' + msg + "</div>");
+          });
+
+          scoreText.textContent = "Score: " + correct + " / " + boxes.length;
+
+          var personal = (bagAnswer.value || "").trim();
+          if (personal) {
+            rows.push(
+              '<motion-div class="personal-note"><strong>Your answer:</strong> I have a ' +
+                personal.replace(/</g, "&lt;") +
+                ".</div>"
+            );
+          } else {
+            rows.push(
+              '<div class="personal-note">You can also write what you have in your school bag in the box above.</div>'
+            );
+          }
+
+          resultDetails.innerHTML = rows.join("");
+          results.classList.add("is-open");
+          results.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+
+        btnRestart.addEventListener("click", function () {
+          getCheckboxes().forEach(function (input) {
+            input.checked = false;
+          });
+          bagAnswer.value = "";
+          results.classList.remove("is-open");
+          resultDetails.innerHTML = "";
+          scoreText.textContent = "";
+        });
+      })();
+    </script>
+  </body>
+</html>

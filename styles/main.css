@@ -287,6 +287,13 @@ label.listening-audio-upload-btn.is-upload-disabled {
 .listening-worksheet-embed[title*="Audio word"] {
   min-height: 820px;
 }
+.listening-worksheet-embed[title*="School Bag"] {
+  min-height: 980px;
+}
+.listening-worksheet-embed--compact,
+.listening-worksheet-embed[title*="Is It True"] {
+  min-height: 780px;
+}
 
 .wordwall-embed-row {
   display: flex;

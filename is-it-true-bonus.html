@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Is It True? — Bonus Activity</title>
+    <style>
+      :root {
+        --bg: #f4f6fb;
+        --card: #fff;
+        --text: #1e1b24;
+        --muted: #5c5668;
+        --border: rgba(30, 27, 36, 0.12);
+        --radius: 14px;
+        --purple: #6b4c9a;
+        --purple-2: #4e3878;
+        --orange: #f28c28;
+        --orange-2: #d96d00;
+        --green: #2e9b5a;
+        --green-2: #1f7a45;
+        --red: #c94a4a;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 16px 14px 32px;
+      }
+      h1 {
+        margin: 0 0 6px;
+        font-size: 1.4rem;
+        color: var(--purple);
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0 0 12px;
+      }
+      .meta span {
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(107, 76, 154, 0.1);
+        color: var(--purple);
+      }
+      .lede {
+        margin: 0 0 6px;
+        font-size: 15px;
+        color: var(--muted);
+      }
+      .lede-he {
+        margin: 0 0 6px;
+        font-size: 15px;
+        direction: rtl;
+        text-align: right;
+        color: var(--muted);
+      }
+      .lede-he:last-of-type {
+        margin-bottom: 18px;
+      }
+      .statements {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-bottom: 20px;
+      }
+      .stmt {
+        padding: 14px 16px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: 0 6px 18px rgba(30, 27, 36, 0.05);
+      }
+      .stmt.is-answered.ok {
+        border-color: rgba(46, 155, 90, 0.45);
+        background: rgba(46, 155, 90, 0.06);
+      }
+      .stmt.is-answered.bad {
+        border-color: rgba(201, 74, 74, 0.35);
+        background: rgba(201, 74, 74, 0.05);
+      }
+      .stmt-num {
+        display: inline-block;
+        margin-bottom: 6px;
+        font-size: 12px;
+        font-weight: 800;
+        color: var(--purple);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .stmt-text {
+        margin: 0 0 12px;
+        font-size: 15px;
+        font-weight: 650;
+      }
+      .tf-btns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .tf-btn {
+        flex: 1 1 120px;
+        padding: 12px 18px;
+        border: 2px solid var(--border);
+        border-radius: 999px;
+        background: #fff;
+        font: inherit;
+        font-size: 15px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s, color 0.15s;
+      }
+      .tf-btn:hover {
+        border-color: var(--purple);
+      }
+      .tf-btn.is-selected {
+        border-color: var(--purple);
+        background: rgba(107, 76, 154, 0.12);
+        color: var(--purple);
+      }
+      .tf-btn[data-value="true"].is-selected {
+        border-color: var(--green);
+        background: rgba(46, 155, 90, 0.12);
+        color: var(--green-2);
+      }
+      .tf-btn[data-value="false"].is-selected {
+        border-color: var(--orange);
+        background: rgba(242, 140, 40, 0.12);
+        color: var(--orange-2);
+      }
+      .submit-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 8px;
+      }
+      .action-btn {
+        padding: 14px 28px;
+        border: none;
+        border-radius: 999px;
+        color: #fff;
+        font: inherit;
+        font-size: 1.05rem;
+        font-weight: 800;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .action-btn:hover {
+        filter: brightness(1.06);
+      }
+      .submit-btn {
+        background: linear-gradient(135deg, var(--purple), var(--purple-2));
+        box-shadow: 0 8px 22px rgba(107, 76, 154, 0.4);
+      }
+      .btn-restart {
+        background: linear-gradient(135deg, var(--green), var(--green-2));
+        box-shadow: 0 8px 22px rgba(46, 155, 90, 0.35);
+      }
+      .btn-return-site {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.4);
+      }
+      .btn-return-site:hover {
+        color: #fff;
+      }
+      .results {
+        display: none;
+        margin-top: 20px;
+        padding: 18px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+      }
+      .results.is-open {
+        display: block;
+      }
+      .results h2 {
+        margin: 0 0 10px;
+        text-align: center;
+        color: var(--purple);
+      }
+      .score-big {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+      }
+      .result-row {
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        border-radius: 10px;
+        font-size: 14px;
+        border: 1px solid var(--border);
+      }
+      .result-row.ok {
+        background: rgba(46, 155, 90, 0.1);
+      }
+      .result-row.bad {
+        background: rgba(201, 74, 74, 0.08);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Is It True? ✔️❌</h1>
+      <div class="meta" aria-label="Curriculum alignment">
+        <span>Curriculum 2020</span>
+        <span>Reading Comprehension — Bonus</span>
+      </div>
+      <p class="lede">
+        Read each statement about Tali&apos;s message. Choose <strong>True</strong> or <strong>False</strong> for every
+        question, then press <strong>Submit</strong> to see your score.
+      </p>
+      <p class="lede">
+        If you wish to return, click the blue <strong>Return to the main site</strong> button.
+      </p>
+      <p class="lede-he" lang="he" dir="rtl">
+        קראו כל משפט על הודעתה של טלי. בחרו <strong>נכון (True)</strong> או <strong>לא נכון (False)</strong> לכל שאלה,
+        ואז לחצו <strong>Submit</strong> כדי לראות את הציון.
+      </p>
+      <p class="lede-he" lang="he" dir="rtl">
+        אם ברצונכם לחזור, לחצו על הכפתור הכחול <strong>Return to the main site</strong>.
+      </p>
+
+      <form id="tfForm" class="statements" aria-label="True or false statements"></form>
+
+      <div class="submit-row">
+        <button type="submit" class="action-btn submit-btn" form="tfForm">Submit</button>
+        <button type="button" class="action-btn btn-restart" id="btnRestart">Restart</button>
+        <a
+          class="action-btn btn-return-site"
+          href="https://sites.google.com/view/ofir-reading-comprehension/home-1?authuser=0"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Return to the main site</a>
+      </div>
+
+      <div class="results" id="results" aria-live="polite">
+        <h2>Your results</h2>
+        <p class="score-big" id="scoreText"></p>
+        <div id="resultDetails"></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var STATEMENTS = [
+          { id: "s1", text: "Tali is the new English teacher.", answer: true },
+          { id: "s2", text: "English lessons are on Tuesday and Friday.", answer: false },
+          { id: "s3", text: "Pupils need a notebook and a pencil.", answer: true },
+          { id: "s4", text: "Pupils can eat food during the lesson.", answer: false },
+          { id: "s5", text: "Tali wants pupils' name, phone number, and address.", answer: true },
+        ];
+
+        var form = document.getElementById("tfForm");
+        var results = document.getElementById("results");
+        var scoreText = document.getElementById("scoreText");
+        var resultDetails = document.getElementById("resultDetails");
+        var btnRestart = document.getElementById("btnRestart");
+
+        function render() {
+          form.innerHTML = "";
+          results.classList.remove("is-open");
+
+          STATEMENTS.forEach(function (stmt, index) {
+            var block = document.createElement("fieldset");
+            block.className = "stmt";
+            block.dataset.stmtId = stmt.id;
+
+            var num = document.createElement("span");
+            num.className = "stmt-num";
+            num.textContent = "Statement " + (index + 1);
+
+            var text = document.createElement("p");
+            text.className = "stmt-text";
+            text.textContent = stmt.text;
+
+            var btns = document.createElement("div");
+            btns.className = "tf-btns";
+            btns.setAttribute("role", "group");
+            btns.setAttribute("aria-label", "True or false for statement " + (index + 1));
+
+            ["true", "false"].forEach(function (val) {
+              var btn = document.createElement("button");
+              btn.type = "button";
+              btn.className = "tf-btn";
+              btn.dataset.value = val;
+              btn.textContent = val === "true" ? "True ✔️" : "False ❌";
+              btn.addEventListener("click", function () {
+                btns.querySelectorAll(".tf-btn").forEach(function (b) {
+                  b.classList.remove("is-selected");
+                });
+                btn.classList.add("is-selected");
+                block.dataset.selected = val;
+              });
+              btns.appendChild(btn);
+            });
+
+            block.appendChild(num);
+            block.appendChild(text);
+            block.appendChild(btns);
+            form.appendChild(block);
+          });
+        }
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var correct = 0;
+          var html = "";
+
+          STATEMENTS.forEach(function (stmt, index) {
+            var block = form.querySelector('[data-stmt-id="' + stmt.id + '"]');
+            var selected = block ? block.dataset.selected : "";
+            var expected = stmt.answer ? "true" : "false";
+            var ok = selected === expected;
+            if (ok) correct++;
+
+            if (block) {
+              block.classList.add("is-answered", ok ? "ok" : "bad");
+            }
+
+            var row = document.createElement("div");
+            row.className = "result-row " + (ok ? "ok" : "bad");
+            var yours = selected ? (selected === "true" ? "True" : "False") : "(not answered)";
+            var right = stmt.answer ? "True" : "False";
+            row.innerHTML =
+              (ok ? "✓ " : "✗ ") +
+              "<strong>" +
+              (index + 1) +
+              ".</strong> " +
+              stmt.text +
+              (ok ? "" : " — You chose: <em>" + yours + "</em>. Correct: <em>" + right + "</em>.");
+            html += row.outerHTML;
+          });
+
+          scoreText.textContent = correct + " / " + STATEMENTS.length;
+          scoreText.style.color = correct === STATEMENTS.length ? "var(--green)" : "var(--orange)";
+          resultDetails.innerHTML = html;
+          results.classList.add("is-open");
+          results.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+
+        btnRestart.addEventListener("click", render);
+        render();
+      })();
+    </script>
+  </body>
+</html>
