@@ -348,6 +348,18 @@
         background: linear-gradient(135deg, var(--purple), var(--purple-2));
         box-shadow: 0 8px 22px rgba(107, 76, 154, 0.4);
       }
+      .btn-return-site {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.4);
+      }
+      .btn-return-site:hover {
+        color: #fff;
+        filter: brightness(1.06);
+      }
       .results {
         display: none;
         margin-top: 20px;
@@ -448,6 +460,12 @@
         <button type="button" class="action-btn btn-mix" id="btnMix">Mix exercises</button>
         <button type="button" class="action-btn btn-restart" id="btnRestart">Restart</button>
         <button type="button" class="action-btn submit-btn" id="btnSubmit">Submit</button>
+        <a
+          class="action-btn btn-return-site"
+          href="https://sites.google.com/view/ofir-reading-comprehension/pre-reading-2?authuser=0"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Return to the main site</a>
       </div>
 
       <div class="play-status" id="playStatus" role="status" aria-live="polite" hidden></div>
