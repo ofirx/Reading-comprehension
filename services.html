@@ -143,15 +143,47 @@ Tali 🙂
                 />
               </label>
               <audio id="listeningPageAudio" class="sr-only" preload="metadata" src="assets/uploads/listening-audio.mp3"></audio>
+              <div class="listening-instructions">
+                <p class="listening-instr-en">
+                  Press the red <strong>Play</strong> button to listen to the text. Press <strong>Pause</strong> after
+                  you hear the sentence <em>I&apos;m your new English teacher.</em> Then answer the short live worksheet
+                  below. When you finish, press <strong>Play</strong> again and continue listening.
+                </p>
+                <p class="listening-instr-he" lang="he" dir="rtl">
+                  לחצו על כפתור <strong>Play</strong> האדום כדי להאזין לטקסט. לחצו על <strong>Pause</strong> אחרי
+                  המשפט <em>I&apos;m your new English teacher.</em> ענו על דף העבודה האינטראקטיבי הקצר למטה. אחרי
+                  שסיימתם, לחצו שוב על <strong>Play</strong> והמשיכו להאזין.
+                </p>
+              </div>
               <div class="listening-audio-controls" role="group" aria-label="Audio playback">
-                <button type="button" class="btn btn-forward" id="listeningAudioPlay" disabled>Play</button>
+                <button type="button" class="btn btn-back" id="listeningAudioPlay" disabled>Play</button>
                 <button type="button" class="btn" id="listeningAudioPause" disabled>Pause</button>
                 <button type="button" class="btn btn-back" id="listeningAudioStop" disabled>Stop</button>
               </div>
-              <button type="button" class="btn" id="exportServicesHtmlBtn" style="margin-top: 8px">
+              <button type="button" class="btn" id="exportServicesHtmlBtn" style="margin-top: 8px" hidden>
                 Download services.html
               </button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Short live worksheet (pause after "I'm your new English teacher") -->
+      <section class="page-block" aria-label="Live worksheet while reading">
+        <div class="container">
+          <div class="media-box" style="padding: 16px">
+            <div
+              class="small"
+              style="margin-bottom: 10px; color: var(--purple); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em"
+            >
+              Live worksheet
+            </div>
+            <iframe
+              class="listening-worksheet-embed"
+              title="Short live worksheet"
+              src="live-worksheet.html"
+              loading="lazy"
+            ></iframe>
           </div>
         </div>
       </section>

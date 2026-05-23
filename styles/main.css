@@ -252,6 +252,38 @@ label.listening-audio-upload-btn.is-upload-disabled {
   gap: 10px;
   align-items: center;
 }
+.listening-instructions {
+  margin: 0 0 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(201, 74, 74, 0.06);
+}
+.listening-instr-en {
+  margin: 0 0 10px;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.listening-instr-en em {
+  font-style: italic;
+}
+.listening-instr-he {
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(30, 27, 36, 0.12);
+  font-size: 15px;
+  line-height: 1.55;
+  direction: rtl;
+  text-align: right;
+  color: var(--muted);
+}
+.listening-worksheet-embed {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  min-height: 900px;
+  background: #f4f6fb;
+}
 
 .wordwall-embed-row {
   display: flex;
