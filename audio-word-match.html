@@ -100,8 +100,8 @@
         outline: 3px solid var(--orange);
         outline-offset: 2px;
       }
-      .word-chip.is-placed {
-        display: none;
+      .drop-slot .word-chip {
+        display: inline-flex;
       }
       .sounds-wrap h2 {
         margin: 0 0 12px;
@@ -491,7 +491,7 @@
         }
 
         function updateBankHint() {
-          var visible = wordBank.querySelectorAll(".word-chip:not(.is-placed)").length;
+          var visible = wordBank.querySelectorAll(".word-chip").length;
           wordBank.classList.toggle("is-empty-hint", visible === 0);
         }
 
