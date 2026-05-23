@@ -385,7 +385,7 @@
       }
       .slide-pre-layout {
         display: grid;
-        grid-template-columns: auto 1fr auto;
+        grid-template-columns: 1fr auto;
         align-items: center;
         width: 100%;
         max-width: 100%;
@@ -394,31 +394,16 @@
       .words-col-left {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
         align-items: flex-start;
         align-self: stretch;
         min-height: clamp(260px, 48vmin, 400px);
       }
-      .center-boxes {
+      .words-above-prepay {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: clamp(18px, 3.5vmin, 32px);
-        justify-self: center;
-      }
-      .orange-box {
-        border: 3px solid #f28c28;
-        border-radius: 10px;
-        padding: clamp(16px, 3vmin, 28px) clamp(28px, 5vmin, 52px);
-        min-width: clamp(180px, 26vw, 300px);
-        min-height: clamp(72px, 11vmin, 110px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow:
-          0 0 12px rgba(242, 140, 40, 0.45),
-          inset 0 0 20px rgba(242, 140, 40, 0.08);
+        align-items: flex-start;
+        gap: clamp(1.2rem, 3.5vmin, 2.4rem);
+        margin-top: auto;
       }
       .word-pre-row {
         display: flex;
@@ -572,23 +557,23 @@
       @media (max-width: 640px) {
         .slide-pre-layout {
           grid-template-columns: 1fr;
-          grid-template-rows: auto auto auto;
+          grid-template-rows: auto auto;
           justify-items: center;
           gap: 24px;
         }
         .words-col-left {
           min-height: auto;
-          gap: 32px;
+          align-items: center;
+          width: 100%;
+        }
+        .words-above-prepay {
+          margin-top: 24px;
           align-items: center;
         }
         .word-pre-row {
           justify-content: center;
         }
-        .center-boxes {
-          order: 2;
-        }
         .slide-pre-layout .traffic-light {
-          order: 3;
           justify-self: center;
         }
       }
@@ -627,23 +612,19 @@
           <div class="slide-pre-layout">
             <div class="words-col-left">
               <span class="pre-word-top word-re" lang="en">re</span>
-              <div class="word-pre-row">
-                <span class="pre-word-bottom" lang="en">pre</span>
-                <p class="compound-word word-prepay" lang="en">
-                  <span class="neon-red-word">pre</span><span class="neon-yellow-word">pay</span>
-                </p>
-              </div>
-            </div>
-            <div class="center-boxes">
-              <div class="orange-box">
+              <div class="words-above-prepay">
                 <p class="compound-word compound-word--top word-restart" lang="en">
                   <span class="neon-red-word">re</span><span class="neon-yellow-word">start</span>
                 </p>
-              </div>
-              <div class="orange-box">
                 <p class="compound-word word-replay" lang="en">
                   <span class="neon-red-word">re</span><span class="neon-yellow-word">play</span>
                 </p>
+                <div class="word-pre-row">
+                  <span class="pre-word-bottom" lang="en">pre</span>
+                  <p class="compound-word word-prepay" lang="en">
+                    <span class="neon-red-word">pre</span><span class="neon-yellow-word">pay</span>
+                  </p>
+                </div>
               </div>
             </div>
             <div class="traffic-light" role="img" aria-label="Traffic light blinking red then yellow every one and a half seconds">
