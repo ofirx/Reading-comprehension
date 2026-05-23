@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Audio Word Match — Live Worksheet</title>
+    <style>
+      :root {
+        --bg: #f4f6fb;
+        --card: #fff;
+        --text: #1e1b24;
+        --muted: #5c5668;
+        --border: rgba(30, 27, 36, 0.12);
+        --radius: 14px;
+        --purple: #6b4c9a;
+        --purple-2: #4e3878;
+        --orange: #f28c28;
+        --green: #2e9b5a;
+        --red: #c94a4a;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 16px 14px 32px;
+      }
+      h1 {
+        margin: 0 0 6px;
+        font-size: 1.4rem;
+        color: var(--purple);
+      }
+      .lede {
+        margin: 0 0 6px;
+        font-size: 15px;
+        color: var(--muted);
+      }
+      .lede-he {
+        margin: 0 0 18px;
+        font-size: 15px;
+        direction: rtl;
+        text-align: right;
+        color: var(--muted);
+      }
+      .word-bank-wrap {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        margin-bottom: 18px;
+        box-shadow: 0 8px 24px rgba(30, 27, 36, 0.06);
+      }
+      .word-bank-wrap h2 {
+        margin: 0 0 10px;
+        font-size: 1rem;
+        color: var(--purple);
+      }
+      .word-bank {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        min-height: 52px;
+        padding: 12px;
+        border-radius: 10px;
+        background: rgba(107, 76, 154, 0.06);
+        border: 2px dashed rgba(107, 76, 154, 0.35);
+      }
+      .word-bank.is-empty-hint::after {
+        content: "All words placed — drag back here to change an answer.";
+        color: var(--muted);
+        font-size: 14px;
+        width: 100%;
+      }
+      .word-chip {
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: #fff;
+        border: 2px solid var(--purple);
+        font-weight: 700;
+        font-size: 14px;
+        cursor: grab;
+        user-select: none;
+        touch-action: none;
+        transition: transform 0.12s ease, box-shadow 0.12s ease;
+      }
+      .word-chip:active {
+        cursor: grabbing;
+      }
+      .word-chip.is-dragging {
+        opacity: 0.45;
+      }
+      .word-chip.is-selected {
+        outline: 3px solid var(--orange);
+        outline-offset: 2px;
+      }
+      .word-chip.is-placed {
+        display: none;
+      }
+      .match-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .match-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px 12px;
+        padding: 14px 16px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: 0 6px 18px rgba(30, 27, 36, 0.05);
+      }
+      .play-btn {
+        flex-shrink: 0;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 999px;
+        background: var(--red);
+        color: #fff;
+        font: inherit;
+        font-weight: 800;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(201, 74, 74, 0.35);
+      }
+      .play-btn:hover {
+        filter: brightness(1.05);
+      }
+      .sentence-line {
+        flex: 1 1 200px;
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.55;
+      }
+      .drop-slot {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 120px;
+        min-height: 40px;
+        padding: 4px 10px;
+        margin: 0 4px;
+        vertical-align: middle;
+        border-radius: 10px;
+        border: 2px dashed rgba(107, 76, 154, 0.45);
+        background: rgba(107, 76, 154, 0.06);
+        transition: background 0.15s ease, border-color 0.15s ease;
+      }
+      .drop-slot.is-over {
+        border-color: var(--orange);
+        background: rgba(242, 140, 40, 0.15);
+      }
+      .drop-slot.is-filled {
+        border-style: solid;
+        border-color: var(--purple);
+        background: #fff;
+      }
+      .drop-slot .word-chip {
+        cursor: grab;
+        margin: 0;
+      }
+      .drop-slot .placeholder {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 600;
+        pointer-events: none;
+      }
+      .submit-row {
+        text-align: center;
+        margin-top: 22px;
+      }
+      .submit-btn {
+        padding: 14px 40px;
+        border: none;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--purple), var(--purple-2));
+        color: #fff;
+        font: inherit;
+        font-size: 1.05rem;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 8px 22px rgba(107, 76, 154, 0.4);
+      }
+      .submit-btn:hover {
+        filter: brightness(1.06);
+      }
+      .results {
+        display: none;
+        margin-top: 20px;
+        padding: 18px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+      }
+      .results.is-open {
+        display: block;
+      }
+      .results h2 {
+        margin: 0 0 10px;
+        text-align: center;
+        color: var(--purple);
+      }
+      .score-big {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+        color: var(--green);
+      }
+      .result-row {
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        border-radius: 10px;
+        font-size: 14px;
+        border: 1px solid var(--border);
+      }
+      .result-row.ok {
+        background: rgba(46, 155, 90, 0.1);
+        border-color: rgba(46, 155, 90, 0.35);
+      }
+      .result-row.bad {
+        background: rgba(201, 74, 74, 0.08);
+        border-color: rgba(201, 74, 74, 0.35);
+      }
+      @media (max-width: 520px) {
+        .match-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .play-btn {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Listen and match the words</h1>
+      <p class="lede">
+        Press <strong>Play</strong> to hear each word. Drag a word from the bank into the correct sentence. When you
+        finish all six, press <strong>Submit</strong>.
+      </p>
+      <p class="lede-he" lang="he" dir="rtl">
+        לחצו על <strong>Play</strong> כדי לשמוע כל מילה. גררו מילה מהבנק למשפט הנכון. בסיום לחצו על
+        <strong>Submit</strong>.
+      </p>
+
+      <div class="word-bank-wrap">
+        <h2>Word bank</h2>
+        <div class="word-bank" id="wordBank" aria-label="Word bank"></div>
+      </div>
+
+      <div class="match-list" id="matchList" aria-label="Sentences"></div>
+
+      <div class="submit-row">
+        <button type="button" class="submit-btn" id="btnSubmit">Submit</button>
+      </div>
+
+      <div class="results" id="results" aria-live="polite">
+        <h2>Your results</h2>
+        <p class="score-big" id="scoreText"></p>
+        <div id="resultDetails"></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var AUDIO = "assets/audio-words/";
+        var ITEMS = [
+          {
+            id: "food",
+            label: "food",
+            audio: AUDIO + "food.mp3",
+            sentence: "No _____ , please.",
+          },
+          {
+            id: "meeting",
+            label: "a meeting",
+            audio: AUDIO + "a-meeting.mp3",
+            sentence: "It's nice to _____ you.",
+          },
+          {
+            id: "name",
+            label: "a name",
+            audio: AUDIO + "a-name.mp3",
+            sentence: "I want your _____ .",
+          },
+          {
+            id: "pencil",
+            label: "a pencil",
+            audio: AUDIO + "a-pencil.mp3",
+            sentence: "You need a book, a notebook and _____ .",
+          },
+          {
+            id: "phone",
+            label: "a phone number",
+            audio: AUDIO + "a-phone-number.mp3",
+            sentence: "I want your name, _____ and address.",
+          },
+          {
+            id: "address",
+            label: "an address",
+            audio: AUDIO + "an-address.mp3",
+            sentence: "I want your name, phone number and _____ .",
+          },
+        ];
+
+        var wordBank = document.getElementById("wordBank");
+        var matchList = document.getElementById("matchList");
+        var btnSubmit = document.getElementById("btnSubmit");
+        var results = document.getElementById("results");
+        var scoreText = document.getElementById("scoreText");
+        var resultDetails = document.getElementById("resultDetails");
+
+        var selectedChip = null;
+        var slotsByRow = {};
+        var chipsById = {};
+
+        function shuffle(arr) {
+          var a = arr.slice();
+          for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = a[i];
+            a[i] = a[j];
+            a[j] = t;
+          }
+          return a;
+        }
+
+        function renderSentence(template, slotEl) {
+          var parts = template.split("_____");
+          var frag = document.createDocumentFragment();
+          if (parts[0]) frag.appendChild(document.createTextNode(parts[0]));
+          frag.appendChild(slotEl);
+          if (parts[1]) frag.appendChild(document.createTextNode(parts[1]));
+          return frag;
+        }
+
+        function createChip(label, wordId) {
+          var chip = document.createElement("span");
+          chip.className = "word-chip";
+          chip.textContent = label;
+          chip.draggable = true;
+          chip.dataset.wordId = wordId;
+          chip.setAttribute("role", "button");
+          chip.tabIndex = 0;
+
+          chip.addEventListener("dragstart", function (e) {
+            e.dataTransfer.setData("text/plain", wordId);
+            e.dataTransfer.effectAllowed = "move";
+            chip.classList.add("is-dragging");
+          });
+          chip.addEventListener("dragend", function () {
+            chip.classList.remove("is-dragging");
+          });
+          chip.addEventListener("click", function () {
+            if (selectedChip === chip) {
+              selectedChip.classList.remove("is-selected");
+              selectedChip = null;
+              return;
+            }
+            if (selectedChip) selectedChip.classList.remove("is-selected");
+            selectedChip = chip;
+            chip.classList.add("is-selected");
+          });
+          chipsById[wordId] = chip;
+          return chip;
+        }
+
+        function returnChipToBank(chip) {
+          if (!chip) return;
+          chip.classList.remove("is-placed");
+          wordBank.appendChild(chip);
+          updateBankHint();
+        }
+
+        function placeChipInSlot(chip, slot) {
+          var existing = slot.querySelector(".word-chip");
+          if (existing && existing !== chip) returnChipToBank(existing);
+          if (chip.parentElement && chip.parentElement.classList.contains("drop-slot")) {
+            chip.parentElement.classList.remove("is-filled");
+            var ph = chip.parentElement.querySelector(".placeholder");
+            if (ph) ph.hidden = false;
+          }
+          slot.querySelector(".placeholder").hidden = true;
+          slot.appendChild(chip);
+          slot.classList.add("is-filled");
+          chip.classList.add("is-placed");
+          chip.classList.remove("is-selected");
+          if (selectedChip === chip) selectedChip = null;
+          updateBankHint();
+        }
+
+        function setupSlot(slot) {
+          var placeholder = document.createElement("span");
+          placeholder.className = "placeholder";
+          placeholder.textContent = "drop here";
+          slot.appendChild(placeholder);
+
+          slot.addEventListener("dragover", function (e) {
+            e.preventDefault();
+            slot.classList.add("is-over");
+          });
+          slot.addEventListener("dragleave", function () {
+            slot.classList.remove("is-over");
+          });
+          slot.addEventListener("drop", function (e) {
+            e.preventDefault();
+            slot.classList.remove("is-over");
+            var wordId = e.dataTransfer.getData("text/plain");
+            var chip = chipsById[wordId];
+            if (chip) placeChipInSlot(chip, slot);
+          });
+          slot.addEventListener("click", function () {
+            if (selectedChip) {
+              placeChipInSlot(selectedChip, slot);
+            }
+          });
+        }
+
+        function updateBankHint() {
+          var visible = wordBank.querySelectorAll(".word-chip:not(.is-placed)").length;
+          wordBank.classList.toggle("is-empty-hint", visible === 0);
+        }
+
+        function build() {
+          shuffle(ITEMS).forEach(function (item) {
+            var row = document.createElement("div");
+            row.className = "match-row";
+            row.dataset.rowId = item.id;
+
+            var play = document.createElement("button");
+            play.type = "button";
+            play.className = "play-btn";
+            play.textContent = "Play";
+            play.setAttribute("aria-label", "Play sound for sentence " + item.id);
+            play.addEventListener("click", function () {
+              var a = new Audio(item.audio);
+              a.play();
+            });
+
+            var p = document.createElement("p");
+            p.className = "sentence-line";
+            var slot = document.createElement("span");
+            slot.className = "drop-slot";
+            slot.dataset.correctId = item.id;
+            setupSlot(slot);
+            slotsByRow[item.id] = slot;
+            p.appendChild(renderSentence(item.sentence, slot));
+
+            row.appendChild(play);
+            row.appendChild(p);
+            matchList.appendChild(row);
+          });
+
+          shuffle(ITEMS).forEach(function (item) {
+            wordBank.appendChild(createChip(item.label, item.id));
+          });
+          updateBankHint();
+        }
+
+        btnSubmit.addEventListener("click", function () {
+          var correct = 0;
+          var html = "";
+          ITEMS.forEach(function (item) {
+            var slot = slotsByRow[item.id];
+            var chip = slot.querySelector(".word-chip");
+            var placedId = chip ? chip.dataset.wordId : null;
+            var ok = placedId === item.id;
+            if (ok) correct++;
+            var row = document.createElement("div");
+            row.className = "result-row " + (ok ? "ok" : "bad");
+            var heard = item.label;
+            var got = chip ? chip.textContent : "(empty)";
+            row.innerHTML =
+              (ok ? "✓ " : "✗ ") +
+              "<strong>" +
+              item.sentence.replace("_____", "______") +
+              "</strong><br>" +
+              "Correct word: <em>" +
+              heard +
+              "</em>" +
+              (ok ? "" : " — You placed: <em>" + got + "</em>");
+            html += row.outerHTML;
+          });
+          scoreText.textContent = correct + " / " + ITEMS.length;
+          scoreText.style.color = correct === ITEMS.length ? "var(--green)" : "var(--orange)";
+          resultDetails.innerHTML = html;
+          results.classList.add("is-open");
+          results.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+
+        build();
+      })();
+    </script>
+  </body>
+</html>
