@@ -15,7 +15,9 @@
         --purple: #6b4c9a;
         --purple-2: #4e3878;
         --orange: #f28c28;
+        --orange-2: #d96d00;
         --green: #2e9b5a;
+        --green-2: #1f7a45;
         --red: #c94a4a;
       }
       * {
@@ -193,23 +195,37 @@
         pointer-events: none;
       }
       .submit-row {
-        text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
         margin-top: 22px;
       }
-      .submit-btn {
-        padding: 14px 40px;
+      .action-btn {
+        padding: 14px 28px;
         border: none;
         border-radius: 999px;
-        background: linear-gradient(135deg, var(--purple), var(--purple-2));
         color: #fff;
         font: inherit;
         font-size: 1.05rem;
         font-weight: 800;
         cursor: pointer;
-        box-shadow: 0 8px 22px rgba(107, 76, 154, 0.4);
       }
-      .submit-btn:hover {
+      .action-btn:hover {
         filter: brightness(1.06);
+      }
+      .btn-mix {
+        background: linear-gradient(135deg, var(--orange), var(--orange-2));
+        box-shadow: 0 8px 22px rgba(242, 140, 40, 0.4);
+      }
+      .btn-restart {
+        background: linear-gradient(135deg, var(--green), var(--green-2));
+        box-shadow: 0 8px 22px rgba(46, 155, 90, 0.35);
+      }
+      .submit-btn {
+        background: linear-gradient(135deg, var(--purple), var(--purple-2));
+        box-shadow: 0 8px 22px rgba(107, 76, 154, 0.4);
       }
       .results {
         display: none;
@@ -308,7 +324,9 @@
       </div>
 
       <div class="submit-row">
-        <button type="button" class="submit-btn" id="btnSubmit">Submit</button>
+        <button type="button" class="action-btn btn-mix" id="btnMix">Mix exercises</button>
+        <button type="button" class="action-btn btn-restart" id="btnRestart">Restart</button>
+        <button type="button" class="action-btn submit-btn" id="btnSubmit">Submit</button>
       </div>
 
       <div class="play-status" id="playStatus" role="status" aria-live="polite" hidden></div>
@@ -343,6 +361,8 @@
 
         var wordBank = document.getElementById("wordBank");
         var matchList = document.getElementById("matchList");
+        var btnMix = document.getElementById("btnMix");
+        var btnRestart = document.getElementById("btnRestart");
         var btnSubmit = document.getElementById("btnSubmit");
         var results = document.getElementById("results");
         var scoreText = document.getElementById("scoreText");
@@ -495,8 +515,38 @@
           wordBank.classList.toggle("is-empty-hint", visible === 0);
         }
 
-        function build() {
-          soundRows = shuffle(WORDS.slice());
+        function ensureChips() {
+          WORDS.forEach(function (word) {
+            if (!chipsById[word.id]) createChip(word);
+          });
+        }
+
+        function returnAllChipsToBank() {
+          WORDS.forEach(function (word) {
+            var chip = chipsById[word.id];
+            if (!chip) return;
+            if (chip.parentElement && chip.parentElement.classList.contains("drop-slot")) {
+              var slot = chip.parentElement;
+              slot.classList.remove("is-filled");
+              var ph = slot.querySelector(".placeholder");
+              if (ph) ph.hidden = false;
+            }
+            chip.classList.remove("is-placed", "is-selected");
+            wordBank.appendChild(chip);
+          });
+          selectedChip = null;
+          updateBankHint();
+        }
+
+        function hideResults() {
+          results.classList.remove("is-open");
+          playStatus.hidden = true;
+        }
+
+        function renderSoundRows(order) {
+          matchList.innerHTML = "";
+          slotsBySoundId = {};
+          soundRows = order.slice();
 
           soundRows.forEach(function (word, index) {
             var row = document.createElement("div");
@@ -532,12 +582,35 @@
             row.appendChild(slot);
             matchList.appendChild(row);
           });
+        }
 
-          shuffle(WORDS).forEach(function (word) {
-            wordBank.appendChild(createChip(word));
+        function renderWordBank(order) {
+          wordBank.innerHTML = "";
+          order.forEach(function (word) {
+            wordBank.appendChild(chipsById[word.id]);
           });
           updateBankHint();
         }
+
+        function mixExercises() {
+          hideResults();
+          returnAllChipsToBank();
+          renderSoundRows(shuffle(WORDS.slice()));
+          renderWordBank(shuffle(WORDS.slice()));
+        }
+
+        function restartExercise() {
+          hideResults();
+          returnAllChipsToBank();
+        }
+
+        function build() {
+          ensureChips();
+          mixExercises();
+        }
+
+        btnMix.addEventListener("click", mixExercises);
+        btnRestart.addEventListener("click", restartExercise);
 
         btnSubmit.addEventListener("click", function () {
           var correct = 0;
