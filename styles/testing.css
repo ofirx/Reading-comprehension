@@ -113,7 +113,11 @@
 .testing-quiz-instructions-block {
   max-width: var(--container);
   width: min(var(--container), calc(100% - 2rem));
-  margin: 0 auto 20px;
+  margin: 0 auto 24px;
+}
+.testing-quiz-instructions-title {
+  margin: 0 0 10px;
+  font-size: 1.25rem;
 }
 .testing-quiz-instructions {
   padding: 14px 18px;
