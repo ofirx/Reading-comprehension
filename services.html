@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Services - EFL</title>
-    <link rel="stylesheet" href="styles/main.css?v=20260522f" />
+    <link rel="stylesheet" href="styles/main.css?v=20260522g" />
   </head>
   <body data-page="practicing">
     <header class="topbar">
@@ -96,6 +96,20 @@
             >
               Listening activity
             </div>
+            <div class="listening-instructions">
+              <p class="listening-instr-en">
+                Read the text below once. After you read the text once, you can listen: press the red
+                <strong>Play</strong> button to listen to the text. Press <strong>Pause</strong> after you hear the
+                sentence <em>I&apos;m your new English teacher.</em> Then answer the short live worksheet below. When you
+                finish, press <strong>Play</strong> again and continue listening.
+              </p>
+              <p class="listening-instr-he" lang="he" dir="rtl">
+                קראו את הטקסט למטה פעם אחת. אחרי שקראתם את הטקסט פעם אחת, תוכלו להאזין: לחצו על כפתור
+                <strong>Play</strong> האדום כדי להאזין לטקסט. לחצו על <strong>Pause</strong> אחרי המשפט
+                <em>I&apos;m your new English teacher.</em> ענו על דף העבודה האינטראקטיבי הקצר למטה. אחרי שסיימתם,
+                לחצו שוב על <strong>Play</strong> והמשיכו להאזין.
+              </p>
+            </div>
             <div class="listening-text-panel">
               <label class="btn btn-primary listening-text-upload-btn is-upload-disabled" hidden aria-hidden="true">
                 Upload text
@@ -143,18 +157,6 @@ Tali 🙂
                 />
               </label>
               <audio id="listeningPageAudio" class="sr-only" preload="metadata" src="assets/uploads/listening-audio.mp3"></audio>
-              <div class="listening-instructions">
-                <p class="listening-instr-en">
-                  Press the red <strong>Play</strong> button to listen to the text. Press <strong>Pause</strong> after
-                  you hear the sentence <em>I&apos;m your new English teacher.</em> Then answer the short live worksheet
-                  below. When you finish, press <strong>Play</strong> again and continue listening.
-                </p>
-                <p class="listening-instr-he" lang="he" dir="rtl">
-                  לחצו על כפתור <strong>Play</strong> האדום כדי להאזין לטקסט. לחצו על <strong>Pause</strong> אחרי
-                  המשפט <em>I&apos;m your new English teacher.</em> ענו על דף העבודה האינטראקטיבי הקצר למטה. אחרי
-                  שסיימתם, לחצו שוב על <strong>Play</strong> והמשיכו להאזין.
-                </p>
-              </div>
               <div class="listening-audio-controls" role="group" aria-label="Audio playback">
                 <button type="button" class="btn btn-back" id="listeningAudioPlay" disabled>Play</button>
                 <button type="button" class="btn" id="listeningAudioPause" disabled>Pause</button>
