@@ -392,6 +392,11 @@
         align-items: flex-start;
         text-align: left;
       }
+      .word-row-gap {
+        height: calc(3 * clamp(1.8rem, 5vmin, 3rem));
+        flex-shrink: 0;
+        width: 1px;
+      }
       .compound-word {
         margin: 0;
         font-size: clamp(3.5rem, 12vmin, 8rem);
@@ -488,15 +493,11 @@
         animation: neon-throb-red 2.6s ease-in-out infinite;
       }
       .pre-word-bottom {
-        margin-top: 0.15em;
         font-size: clamp(3.5rem, 12vmin, 8rem);
         font-weight: 900;
         line-height: 1;
         color: var(--neon-red);
         animation: neon-throb-red 2.6s ease-in-out infinite;
-      }
-      .col-right .compound-word--bottom {
-        margin-top: 0.15em;
       }
       .slide-pre-layout .traffic-light {
         flex-shrink: 0;
@@ -590,12 +591,14 @@
               <div class="words-grid">
                 <div class="col-left">
                   <span class="pre-word-top" lang="en">re</span>
+                  <div class="word-row-gap" aria-hidden="true"></div>
                   <span class="pre-word-bottom" lang="en">pre</span>
                 </div>
                 <div class="col-right">
                   <p class="compound-word compound-word--top" lang="en">
                     <span class="neon-red-word">re</span><span class="neon-yellow-word">play</span>
                   </p>
+                  <div class="word-row-gap" aria-hidden="true"></div>
                   <p class="compound-word compound-word--bottom" lang="en">
                     <span class="neon-red-word">re</span><span class="neon-yellow-word">start</span>
                   </p>
