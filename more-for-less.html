@@ -401,6 +401,24 @@
         align-self: center;
         justify-self: start;
       }
+      .word-pair {
+        display: flex;
+        align-items: baseline;
+        gap: clamp(10px, 2vw, 22px);
+        flex-wrap: nowrap;
+      }
+      .word-he {
+        font-size: clamp(2rem, 7vmin, 4.2rem);
+        font-weight: 800;
+        line-height: 1;
+        color: var(--neon-ice);
+        animation: neon-throb-ice 2.6s ease-in-out infinite;
+        direction: rtl;
+        white-space: nowrap;
+      }
+      .word-he--sm {
+        font-size: clamp(1.75rem, 6vmin, 3.5rem);
+      }
       .word-re {
         grid-column: 1;
         grid-row: 1;
@@ -420,6 +438,8 @@
       .word-prepay {
         grid-column: 2;
         grid-row: 4;
+      }
+      .word-prepay .compound-word {
         margin: 0;
       }
       .words-grid-layout::after {
@@ -585,8 +605,13 @@
         }
         .word-restart,
         .word-replay,
-        .word-prepay {
+        .word-prepay,
+        .word-re,
+        .word-pre {
           justify-self: start;
+        }
+        .word-pair {
+          flex-wrap: wrap;
         }
         .slide-pre-layout .traffic-light {
           justify-self: center;
@@ -626,17 +651,32 @@
         <section class="slide slide--content slide--pre" data-slide="2" aria-hidden="true">
           <div class="slide-pre-layout">
             <div class="words-grid-layout">
-              <span class="pre-word-top word-re" lang="en">re</span>
-              <p class="compound-word compound-word--top word-restart" lang="en">
-                <span class="neon-red-word">re</span><span class="neon-yellow-word">start</span>
-              </p>
-              <p class="compound-word word-replay" lang="en">
-                <span class="neon-red-word">re</span><span class="neon-yellow-word">play</span>
-              </p>
-              <span class="pre-word-bottom word-pre" lang="en">pre</span>
-              <p class="compound-word word-prepay" lang="en">
-                <span class="neon-red-word">pre</span><span class="neon-yellow-word">pay</span>
-              </p>
+              <div class="word-pair word-re">
+                <span class="pre-word-top" lang="en">re</span>
+                <span class="word-he" lang="he" dir="rtl">שוב</span>
+              </div>
+              <div class="word-pair word-restart">
+                <p class="compound-word compound-word--top" lang="en">
+                  <span class="neon-red-word">re</span><span class="neon-yellow-word">start</span>
+                </p>
+                <span class="word-he" lang="he" dir="rtl">מחדש</span>
+              </div>
+              <div class="word-pair word-replay">
+                <p class="compound-word" lang="en">
+                  <span class="neon-red-word">re</span><span class="neon-yellow-word">play</span>
+                </p>
+                <span class="word-he word-he--sm" lang="he" dir="rtl">שחק שוב</span>
+              </div>
+              <div class="word-pair word-pre">
+                <span class="pre-word-bottom" lang="en">pre</span>
+                <span class="word-he" lang="he" dir="rtl">לפני</span>
+              </div>
+              <div class="word-pair word-prepay">
+                <p class="compound-word" lang="en">
+                  <span class="neon-red-word">pre</span><span class="neon-yellow-word">pay</span>
+                </p>
+                <span class="word-he word-he--sm" lang="he" dir="rtl">מראש</span>
+              </div>
             </div>
             <div class="traffic-light" role="img" aria-label="Traffic light blinking red then yellow every one and a half seconds">
               <div class="traffic-housing">
