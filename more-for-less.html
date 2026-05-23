@@ -381,21 +381,28 @@
         align-self: center;
       }
       .words-grid {
-        display: flex;
-        align-items: flex-start;
-        gap: clamp(20px, 4vw, 48px);
+        display: grid;
+        grid-template-columns: auto auto;
+        grid-template-rows: auto auto auto auto auto auto;
+        column-gap: clamp(48px, 14vw, 180px);
+        row-gap: clamp(1.6rem, 4.5vmin, 2.8rem);
+        align-items: start;
       }
-      .col-left,
-      .col-right {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        text-align: left;
+      .word-re {
+        grid-column: 1;
+        grid-row: 1;
       }
-      .word-row-gap {
-        height: calc(3 * clamp(1.8rem, 5vmin, 3rem));
-        flex-shrink: 0;
-        width: 1px;
+      .word-restart {
+        grid-column: 2;
+        grid-row: 1;
+      }
+      .word-replay {
+        grid-column: 2;
+        grid-row: 3;
+      }
+      .word-pre {
+        grid-column: 1;
+        grid-row: 6;
       }
       .compound-word {
         margin: 0;
@@ -543,12 +550,14 @@
           justify-self: center;
         }
         .words-grid {
-          justify-content: center;
+          column-gap: clamp(24px, 8vw, 48px);
+          justify-items: center;
         }
-        .col-left,
-        .col-right {
-          align-items: center;
-          text-align: center;
+        .word-re,
+        .word-pre,
+        .word-restart,
+        .word-replay {
+          justify-self: center;
         }
         .slide-pre-layout .traffic-light {
           justify-self: center;
@@ -589,20 +598,14 @@
           <div class="slide-pre-layout">
             <div class="left-words">
               <div class="words-grid">
-                <div class="col-left">
-                  <span class="pre-word-top" lang="en">re</span>
-                  <div class="word-row-gap" aria-hidden="true"></div>
-                  <span class="pre-word-bottom" lang="en">pre</span>
-                </div>
-                <div class="col-right">
-                  <p class="compound-word compound-word--top" lang="en">
-                    <span class="neon-red-word">re</span><span class="neon-yellow-word">play</span>
-                  </p>
-                  <div class="word-row-gap" aria-hidden="true"></div>
-                  <p class="compound-word compound-word--bottom" lang="en">
-                    <span class="neon-red-word">re</span><span class="neon-yellow-word">start</span>
-                  </p>
-                </div>
+                <span class="pre-word-top word-re" lang="en">re</span>
+                <p class="compound-word compound-word--top word-restart" lang="en">
+                  <span class="neon-red-word">re</span><span class="neon-yellow-word">start</span>
+                </p>
+                <p class="compound-word word-replay" lang="en">
+                  <span class="neon-red-word">re</span><span class="neon-yellow-word">play</span>
+                </p>
+                <span class="pre-word-bottom word-pre" lang="en">pre</span>
               </div>
             </div>
             <div class="traffic-light" role="img" aria-label="Traffic light blinking red then yellow every one and a half seconds">
