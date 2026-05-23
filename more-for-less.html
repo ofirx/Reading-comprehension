@@ -370,7 +370,7 @@
       }
       .slide-pre-layout {
         display: grid;
-        grid-template-columns: auto 1fr auto;
+        grid-template-columns: 1fr auto;
         align-items: center;
         width: 100%;
         max-width: min(1200px, 96vw);
@@ -380,39 +380,27 @@
         justify-self: start;
         align-self: center;
       }
-      .re-be-line {
+      .words-grid {
         display: flex;
         align-items: flex-start;
-        gap: clamp(16px, 3vw, 36px);
+        gap: clamp(20px, 4vw, 48px);
       }
-      .re-pre-column {
+      .col-left,
+      .col-right {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         text-align: left;
       }
-      .pre-text {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        text-align: left;
-      }
-      .restart-text {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-self: center;
-        text-align: center;
-      }
-      .slide-pre-layout .traffic-light {
-        flex-shrink: 0;
-        justify-self: end;
-      }
-      .restart-word {
+      .compound-word {
+        margin: 0;
         font-size: clamp(3.5rem, 12vmin, 8rem);
         font-weight: 900;
         line-height: 1;
         white-space: nowrap;
+      }
+      .compound-word--top {
+        font-size: clamp(4rem, 14vmin, 9rem);
       }
       .neon-red-word {
         color: var(--neon-red);
@@ -507,13 +495,12 @@
         color: var(--neon-red);
         animation: neon-throb-red 2.6s ease-in-out infinite;
       }
-      .pre-word-be {
-        font-size: clamp(4rem, 14vmin, 9rem);
-        font-weight: 900;
-        line-height: 1;
-        color: var(--neon-red);
-        animation: neon-throb-red 2.6s ease-in-out infinite;
-        padding-top: 0;
+      .col-right .compound-word--bottom {
+        margin-top: 0.15em;
+      }
+      .slide-pre-layout .traffic-light {
+        flex-shrink: 0;
+        justify-self: end;
       }
       .traffic-bulb--blink-red {
         animation: red-blink 1.5s ease-in-out infinite;
@@ -547,26 +534,22 @@
       @media (max-width: 640px) {
         .slide-pre-layout {
           grid-template-columns: 1fr;
-          grid-template-rows: auto auto auto;
+          grid-template-rows: auto auto;
           justify-items: center;
           gap: 28px;
         }
         .left-words {
           justify-self: center;
         }
-        .re-pre-column,
-        .pre-text {
+        .words-grid {
+          justify-content: center;
+        }
+        .col-left,
+        .col-right {
           align-items: center;
           text-align: center;
         }
-        .re-be-line {
-          justify-content: center;
-        }
-        .restart-text {
-          order: 2;
-        }
         .slide-pre-layout .traffic-light {
-          order: 3;
           justify-self: center;
         }
       }
@@ -604,18 +587,20 @@
         <section class="slide slide--content slide--pre" data-slide="2" aria-hidden="true">
           <div class="slide-pre-layout">
             <div class="left-words">
-              <div class="re-be-line">
-                <div class="re-pre-column">
+              <div class="words-grid">
+                <div class="col-left">
                   <span class="pre-word-top" lang="en">re</span>
                   <span class="pre-word-bottom" lang="en">pre</span>
                 </div>
-                <span class="pre-word-be" lang="en">be</span>
+                <div class="col-right">
+                  <p class="compound-word compound-word--top" lang="en">
+                    <span class="neon-red-word">re</span><span class="neon-yellow-word">start</span>
+                  </p>
+                  <p class="compound-word compound-word--bottom" lang="en">
+                    <span class="neon-red-word">re</span><span class="neon-yellow-word">play</span>
+                  </p>
+                </div>
               </div>
-            </div>
-            <div class="restart-text">
-              <p class="restart-word" lang="en">
-                <span class="neon-red-word">re</span><span class="neon-yellow-word">start</span>
-              </p>
             </div>
             <div class="traffic-light" role="img" aria-label="Traffic light blinking red then yellow every one and a half seconds">
               <div class="traffic-housing">
