@@ -257,7 +257,7 @@
       }
       .slot-row {
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-template-columns: auto 1fr;
         gap: 10px;
         align-items: stretch;
       }
@@ -406,11 +406,11 @@
       <h1>Put the Events in the Correct Order</h1>
       <p class="lede">
         <strong>Instructions:</strong> Read the sentences and drag them into positions <strong>1–7</strong> in the
-        correct order according to the text.
+        correct <strong>order of the sentences</strong> according to the text.
       </p>
       <p class="lede-he" lang="he" dir="rtl">
-        <strong>הוראות:</strong> קראו את המשפטים וגררו אותם למקומות <strong>1–7</strong> לפי הסדר הנכון של האירועים
-        בטקסט.
+        <strong>הוראות:</strong> קראו את המשפטים וגררו אותם למקומות <strong>1–7</strong> לפי <strong>סדר המשפטים</strong>
+        הנכון בטקסט.
       </p>
       <p class="lede">
         When you finish, click <strong>Submit</strong> to see if your order was correct.
@@ -429,12 +429,18 @@
         <div class="activity-grid">
           <div>
             <h2>Sentences</h2>
-            <p class="lede" style="margin-bottom: 10px">Drag each sentence to a number on the right.</p>
+            <p class="lede" style="margin-bottom: 10px">Drag each sentence to a number on the left.</p>
+            <p class="lede-he" lang="he" dir="rtl" style="margin-bottom: 10px">
+              גררו כל משפט למספר בצד שמאל.
+            </p>
             <div class="sentence-bank" id="sentenceBank" aria-label="Sentence bank"></div>
           </div>
           <div>
             <h2>Order (1–7)</h2>
             <p class="lede" style="margin-bottom: 10px">Drop sentences here. They turn blue when placed.</p>
+            <p class="lede-he" lang="he" dir="rtl" style="margin-bottom: 10px">
+              שחררו את המשפטים כאן. הם יהפכו לכחולים אחרי שמניחים אותם.
+            </p>
             <div class="slots-list" id="slotsList" aria-label="Numbered order slots"></div>
           </div>
         </div>
@@ -623,8 +629,8 @@
             num.className = "slot-num";
             num.textContent = String(n);
             num.setAttribute("aria-hidden", "true");
-            row.appendChild(slot);
             row.appendChild(num);
+            row.appendChild(slot);
             slotsList.appendChild(row);
             slotsByNum[n] = slot;
           }
