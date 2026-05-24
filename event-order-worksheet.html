@@ -647,6 +647,8 @@
             if (card) returnCardToBank(card);
           });
         }
+
+        function clearShuffleClasses() {
           sentenceBank.classList.remove("is-shuffling");
           sentenceBank.removeAttribute("data-shuffle-anim");
           sentenceBank.querySelectorAll(".event-card").forEach(function (card) {
