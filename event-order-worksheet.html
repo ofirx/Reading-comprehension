@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Put the Events in Order — Live Worksheet</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+      :root {
+        --bg: #f4f6fb;
+        --card: #fff;
+        --text: #1e1b24;
+        --muted: #5c5668;
+        --border: rgba(30, 27, 36, 0.12);
+        --radius: 14px;
+        --purple: #6b4c9a;
+        --purple-2: #4e3878;
+        --orange: #f28c28;
+        --orange-2: #d96d00;
+        --green: #2e9b5a;
+        --green-2: #1f7a45;
+        --placed: #e8f0ff;
+        --placed-border: #5b7fd4;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 16px 14px 32px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 1.35rem;
+        color: var(--purple);
+      }
+      .lede {
+        margin: 0 0 8px;
+        font-size: 15px;
+        color: var(--muted);
+      }
+      .lede-he {
+        margin: 0 0 8px;
+        font-size: 15px;
+        direction: rtl;
+        text-align: right;
+        color: var(--muted);
+      }
+      .curriculum {
+        margin: 0 0 16px;
+        padding: 10px 14px;
+        font-size: 13px;
+        color: var(--muted);
+        background: rgba(107, 76, 154, 0.07);
+        border-radius: 10px;
+        border: 1px dashed rgba(107, 76, 154, 0.25);
+      }
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 18px;
+        margin-bottom: 18px;
+        box-shadow: 0 8px 24px rgba(30, 27, 36, 0.06);
+      }
+      .panel h2 {
+        margin: 0 0 12px;
+        font-size: 1.05rem;
+        color: var(--purple);
+      }
+      .activity-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      @media (max-width: 720px) {
+        .activity-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .sentence-bank {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-height: 120px;
+        padding: 12px;
+        border: 2px dashed rgba(107, 76, 154, 0.35);
+        border-radius: 12px;
+        background: #fafbfe;
+      }
+      .sentence-bank.is-empty-hint::after {
+        content: "All sentences placed — drag back here to change an answer.";
+        display: block;
+        font-size: 13px;
+        color: var(--muted);
+        font-style: italic;
+        text-align: center;
+        padding: 8px 4px;
+      }
+      .sentence-bank.is-shuffling {
+        pointer-events: none;
+      }
+      .sentence-bank.is-over-bank {
+        border-color: var(--orange);
+        background: rgba(242, 140, 40, 0.08);
+      }
+      .event-card {
+        padding: 12px 14px;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        background: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: grab;
+        user-select: none;
+        transition:
+          background 0.25s ease,
+          border-color 0.25s ease,
+          transform 0.15s ease,
+          box-shadow 0.25s ease;
+      }
+      .event-card:active {
+        cursor: grabbing;
+      }
+      .event-card.is-selected {
+        border-color: var(--purple);
+        box-shadow: 0 0 0 3px rgba(107, 76, 154, 0.18);
+      }
+      .event-card.is-placed {
+        background: linear-gradient(135deg, #dbeafe, #e0e7ff);
+        border-color: var(--placed-border);
+        color: #1e3a6e;
+      }
+      .event-card.shuffle-out,
+      .event-card.shuffle-in {
+        transform-origin: center center;
+      }
+      [data-shuffle-anim="slide-left"] .event-card.shuffle-out {
+        animation: shuffle-out-slide-left 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="slide-left"] .event-card.shuffle-in {
+        animation: shuffle-in-slide-left 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      [data-shuffle-anim="slide-right"] .event-card.shuffle-out {
+        animation: shuffle-out-slide-right 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="slide-right"] .event-card.shuffle-in {
+        animation: shuffle-in-slide-right 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      [data-shuffle-anim="flip"] .event-card.shuffle-out {
+        animation: shuffle-out-flip 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="flip"] .event-card.shuffle-in {
+        animation: shuffle-in-flip 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      [data-shuffle-anim="zoom"] .event-card.shuffle-out {
+        animation: shuffle-out-zoom 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="zoom"] .event-card.shuffle-in {
+        animation: shuffle-in-zoom 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      [data-shuffle-anim="bounce"] .event-card.shuffle-out {
+        animation: shuffle-out-bounce 0.45s ease-in forwards;
+      }
+      [data-shuffle-anim="bounce"] .event-card.shuffle-in {
+        animation: shuffle-in-bounce 0.55s cubic-bezier(0.34, 1.35, 0.64, 1) backwards;
+      }
+      @keyframes shuffle-out-slide-left {
+        to {
+          opacity: 0;
+          transform: translateX(-40px);
+        }
+      }
+      @keyframes shuffle-in-slide-left {
+        from {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes shuffle-out-slide-right {
+        to {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+      }
+      @keyframes shuffle-in-slide-right {
+        from {
+          opacity: 0;
+          transform: translateX(-40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes shuffle-out-flip {
+        to {
+          opacity: 0;
+          transform: perspective(400px) rotateY(90deg) scale(0.85);
+        }
+      }
+      @keyframes shuffle-in-flip {
+        from {
+          opacity: 0;
+          transform: perspective(400px) rotateY(-90deg) scale(0.85);
+        }
+        to {
+          opacity: 1;
+          transform: perspective(400px) rotateY(0) scale(1);
+        }
+      }
+      @keyframes shuffle-out-zoom {
+        to {
+          opacity: 0;
+          transform: scale(0.35);
+        }
+      }
+      @keyframes shuffle-in-zoom {
+        from {
+          opacity: 0;
+          transform: scale(1.35);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      @keyframes shuffle-out-bounce {
+        70% {
+          transform: translateY(-12px) scale(1.02);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(28px) scale(0.75);
+        }
+      }
+      @keyframes shuffle-in-bounce {
+        0% {
+          opacity: 0;
+          transform: translateY(-32px) scale(0.75);
+        }
+        60% {
+          transform: translateY(6px) scale(1.04);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .slots-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .slot-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: stretch;
+      }
+      .drop-slot {
+        min-height: 54px;
+        padding: 8px 10px;
+        border: 2px dashed rgba(107, 76, 154, 0.45);
+        border-radius: 12px;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        transition:
+          border-color 0.2s ease,
+          background 0.2s ease;
+      }
+      .drop-slot .placeholder {
+        font-size: 13px;
+        color: var(--muted);
+        font-style: italic;
+        pointer-events: none;
+      }
+      .drop-slot.is-over {
+        border-color: var(--orange);
+        background: rgba(242, 140, 40, 0.08);
+      }
+      .drop-slot.is-filled {
+        border-style: solid;
+        border-color: var(--placed-border);
+        background: var(--placed);
+      }
+      .drop-slot .event-card {
+        width: 100%;
+        margin: 0;
+      }
+      .slot-num {
+        width: 44px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--purple), var(--purple-2));
+        color: #fff;
+        font-size: 1.15rem;
+        font-weight: 800;
+        flex-shrink: 0;
+      }
+      .submit-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 22px;
+      }
+      .action-btn {
+        padding: 14px 28px;
+        border: none;
+        border-radius: 999px;
+        color: #fff;
+        font: inherit;
+        font-size: 1.05rem;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .action-btn:hover {
+        filter: brightness(1.06);
+      }
+      .action-btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+      .btn-mix {
+        background: linear-gradient(135deg, var(--orange), var(--orange-2));
+        box-shadow: 0 8px 22px rgba(242, 140, 40, 0.4);
+      }
+      .btn-restart {
+        background: linear-gradient(135deg, var(--green), var(--green-2));
+        box-shadow: 0 8px 22px rgba(46, 155, 90, 0.35);
+      }
+      .submit-btn {
+        background: linear-gradient(135deg, var(--purple), var(--purple-2));
+        box-shadow: 0 8px 22px rgba(107, 76, 154, 0.4);
+      }
+      .btn-return-site {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.4);
+      }
+      .btn-return-site:hover {
+        color: #fff;
+      }
+      .results {
+        display: none;
+        margin-top: 20px;
+        padding: 18px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+      }
+      .results.is-open {
+        display: block;
+      }
+      .results h2 {
+        margin: 0 0 10px;
+        text-align: center;
+        color: var(--purple);
+      }
+      .total-score {
+        text-align: center;
+        font-size: 1.35rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+      }
+      .final-grade {
+        text-align: center;
+        font-size: 2.1rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+        color: var(--purple);
+      }
+      .chart-wrap {
+        max-width: 280px;
+        margin: 0 auto 16px;
+      }
+      .result-row {
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        border-radius: 10px;
+        font-size: 14px;
+        border: 1px solid var(--border);
+      }
+      .result-row.ok {
+        background: rgba(46, 155, 90, 0.1);
+      }
+      .result-row.bad {
+        background: rgba(201, 74, 74, 0.08);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Put the Events in the Correct Order</h1>
+      <p class="lede">
+        <strong>Instructions:</strong> Read the sentences and drag them into positions <strong>1–7</strong> in the
+        correct order according to the text.
+      </p>
+      <p class="lede-he" lang="he" dir="rtl">
+        <strong>הוראות:</strong> קראו את המשפטים וגררו אותם למקומות <strong>1–7</strong> לפי הסדר הנכון של האירועים
+        בטקסט.
+      </p>
+      <p class="curriculum">
+        <strong>Curriculum 2020:</strong> The pupils can understand the sequence of events and identify specific
+        information in a short written text.
+      </p>
+
+      <div class="panel">
+        <div class="activity-grid">
+          <div>
+            <h2>Sentences</h2>
+            <p class="lede" style="margin-bottom: 10px">Drag each sentence to a number on the right.</p>
+            <div class="sentence-bank" id="sentenceBank" aria-label="Sentence bank"></div>
+          </div>
+          <div>
+            <h2>Order (1–7)</h2>
+            <p class="lede" style="margin-bottom: 10px">Drop sentences here. They turn blue when placed.</p>
+            <div class="slots-list" id="slotsList" aria-label="Numbered order slots"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="submit-row">
+        <button type="button" class="action-btn btn-mix" id="btnMix">Mix</button>
+        <button type="button" class="action-btn btn-restart" id="btnRestart">Restart</button>
+        <button type="button" class="action-btn submit-btn" id="btnSubmit">Submit</button>
+        <a
+          class="action-btn btn-return-site"
+          href="services.html"
+          target="_parent"
+        >Return to main site</a>
+      </div>
+
+      <div class="results" id="results" aria-live="polite">
+        <h2>Your results</h2>
+        <p class="total-score" id="totalScore"></p>
+        <p class="final-grade" id="finalGrade"></p>
+        <div class="chart-wrap">
+          <canvas id="gradeChart" width="280" height="280" aria-label="Correct and incorrect answers"></canvas>
+        </div>
+        <div id="resultDetails"></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var EVENTS = [
+          { id: "welcome", text: "Tali welcomes the pupils to English class.", order: 1 },
+          { id: "teacher", text: "Tali says that she is the new English teacher.", order: 2 },
+          {
+            id: "details",
+            text: "Tali asks the pupils to write their name, phone number, and address.",
+            order: 3,
+          },
+          {
+            id: "schedule",
+            text: "Tali says that English lessons are on Mondays and Thursdays.",
+            order: 4,
+          },
+          {
+            id: "supplies",
+            text: "Tali tells the pupils to bring a book, a notebook, and a pencil.",
+            order: 5,
+          },
+          { id: "nofood", text: "Tali asks the pupils not to bring food to class.", order: 6 },
+          { id: "goodbye", text: "Tali says goodbye and will see the pupils on Monday.", order: 7 },
+        ];
+
+        var SLOT_COUNT = EVENTS.length;
+        var SHUFFLE_ANIMS = ["slide-left", "slide-right", "flip", "zoom", "bounce"];
+        var shuffleAnimIndex = 0;
+        var chartInstance = null;
+        var selectedCard = null;
+        var cardsById = {};
+        var slotsByNum = {};
+
+        var sentenceBank = document.getElementById("sentenceBank");
+        var slotsList = document.getElementById("slotsList");
+        var btnMix = document.getElementById("btnMix");
+        var btnRestart = document.getElementById("btnRestart");
+        var btnSubmit = document.getElementById("btnSubmit");
+        var results = document.getElementById("results");
+        var totalScore = document.getElementById("totalScore");
+        var finalGrade = document.getElementById("finalGrade");
+        var resultDetails = document.getElementById("resultDetails");
+
+        function shuffle(arr) {
+          var a = arr.slice();
+          for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = a[i];
+            a[i] = a[j];
+            a[j] = t;
+          }
+          return a;
+        }
+
+        function updateBankHint() {
+          sentenceBank.classList.toggle(
+            "is-empty-hint",
+            sentenceBank.querySelectorAll(".event-card").length === 0
+          );
+        }
+
+        function setCardPlaced(card, placed) {
+          card.classList.toggle("is-placed", placed);
+        }
+
+        function createCard(event) {
+          var card = document.createElement("div");
+          card.className = "event-card";
+          card.textContent = event.text;
+          card.draggable = true;
+          card.dataset.eventId = event.id;
+          card.tabIndex = 0;
+          card.addEventListener("dragstart", function (e) {
+            e.dataTransfer.setData("text/plain", event.id);
+            card.classList.add("is-dragging");
+          });
+          card.addEventListener("dragend", function () {
+            card.classList.remove("is-dragging");
+          });
+          card.addEventListener("click", function () {
+            if (selectedCard === card) {
+              selectedCard.classList.remove("is-selected");
+              selectedCard = null;
+              return;
+            }
+            if (selectedCard) selectedCard.classList.remove("is-selected");
+            selectedCard = card;
+            card.classList.add("is-selected");
+          });
+          cardsById[event.id] = card;
+          return card;
+        }
+
+        function returnCardToBank(card) {
+          if (!card) return;
+          var parent = card.parentElement;
+          if (parent && parent.classList.contains("drop-slot")) {
+            parent.classList.remove("is-filled");
+            var ph = parent.querySelector(".placeholder");
+            if (ph) ph.hidden = false;
+          }
+          setCardPlaced(card, false);
+          sentenceBank.appendChild(card);
+          updateBankHint();
+        }
+
+        function placeCardInSlot(card, slot) {
+          var existing = slot.querySelector(".event-card");
+          if (existing && existing !== card) returnCardToBank(existing);
+          var prev = card.parentElement;
+          if (prev && prev.classList.contains("drop-slot")) {
+            prev.classList.remove("is-filled");
+            var ph2 = prev.querySelector(".placeholder");
+            if (ph2) ph2.hidden = false;
+          }
+          slot.querySelector(".placeholder").hidden = true;
+          slot.appendChild(card);
+          slot.classList.add("is-filled");
+          setCardPlaced(card, true);
+          card.classList.remove("is-selected");
+          if (selectedCard === card) selectedCard = null;
+          updateBankHint();
+        }
+
+        function setupSlot(slot) {
+          var placeholder = document.createElement("span");
+          placeholder.className = "placeholder";
+          placeholder.textContent = "Drop sentence here";
+          slot.appendChild(placeholder);
+          slot.addEventListener("dragover", function (e) {
+            e.preventDefault();
+            slot.classList.add("is-over");
+          });
+          slot.addEventListener("dragleave", function () {
+            slot.classList.remove("is-over");
+          });
+          slot.addEventListener("drop", function (e) {
+            e.preventDefault();
+            slot.classList.remove("is-over");
+            var card = cardsById[e.dataTransfer.getData("text/plain")];
+            if (card) placeCardInSlot(card, slot);
+          });
+          slot.addEventListener("click", function () {
+            if (selectedCard) placeCardInSlot(selectedCard, slot);
+          });
+        }
+
+        function buildSlots() {
+          slotsList.innerHTML = "";
+          slotsByNum = {};
+          for (var n = 1; n <= SLOT_COUNT; n++) {
+            var row = document.createElement("div");
+            row.className = "slot-row";
+            var slot = document.createElement("div");
+            slot.className = "drop-slot";
+            slot.dataset.slotNum = String(n);
+            setupSlot(slot);
+            var num = document.createElement("div");
+            num.className = "slot-num";
+            num.textContent = String(n);
+            num.setAttribute("aria-hidden", "true");
+            row.appendChild(slot);
+            row.appendChild(num);
+            slotsList.appendChild(row);
+            slotsByNum[n] = slot;
+          }
+        }
+
+        function setupBankDrop() {
+          sentenceBank.addEventListener("dragover", function (e) {
+            e.preventDefault();
+            sentenceBank.classList.add("is-over-bank");
+          });
+          sentenceBank.addEventListener("dragleave", function (e) {
+            if (!sentenceBank.contains(e.relatedTarget)) {
+              sentenceBank.classList.remove("is-over-bank");
+            }
+          });
+          sentenceBank.addEventListener("drop", function (e) {
+            e.preventDefault();
+            sentenceBank.classList.remove("is-over-bank");
+            var card = cardsById[e.dataTransfer.getData("text/plain")];
+            if (card) returnCardToBank(card);
+          });
+        }
+          sentenceBank.classList.remove("is-shuffling");
+          sentenceBank.removeAttribute("data-shuffle-anim");
+          sentenceBank.querySelectorAll(".event-card").forEach(function (card) {
+            card.classList.remove("shuffle-out", "shuffle-in");
+            card.style.animationDelay = "";
+          });
+        }
+
+        function nextShuffleAnim() {
+          var name = SHUFFLE_ANIMS[shuffleAnimIndex % SHUFFLE_ANIMS.length];
+          shuffleAnimIndex += 1;
+          return name;
+        }
+
+        function animateShuffleOut(done) {
+          sentenceBank.classList.add("is-shuffling");
+          sentenceBank.setAttribute("data-shuffle-anim", nextShuffleAnim());
+          var cards = sentenceBank.querySelectorAll(".event-card");
+          if (!cards.length) {
+            done();
+            return;
+          }
+          cards.forEach(function (card) {
+            card.classList.add("shuffle-out");
+          });
+          window.setTimeout(done, 460);
+        }
+
+        function animateShuffleIn(order) {
+          order.forEach(function (event, i) {
+            var card = cardsById[event.id];
+            card.classList.add("shuffle-in");
+            card.style.animationDelay = i * 0.06 + "s";
+          });
+          window.setTimeout(clearShuffleClasses, 650);
+        }
+
+        function renderBank(order, forShuffleIn) {
+          sentenceBank.innerHTML = "";
+          order.forEach(function (event, i) {
+            var card = cardsById[event.id];
+            if (forShuffleIn) {
+              card.classList.add("shuffle-in");
+              card.style.animationDelay = i * 0.06 + "s";
+            }
+            sentenceBank.appendChild(card);
+          });
+          updateBankHint();
+        }
+
+        function returnAllToBank() {
+          EVENTS.forEach(function (event) {
+            returnCardToBank(cardsById[event.id]);
+          });
+          selectedCard = null;
+        }
+
+        function ensureCards() {
+          EVENTS.forEach(function (event) {
+            if (!cardsById[event.id]) createCard(event);
+          });
+        }
+
+        function build() {
+          ensureCards();
+          buildSlots();
+          setupBankDrop();
+          renderBank(shuffle(EVENTS.slice()), false);
+        }
+
+        function mixSentences() {
+          results.classList.remove("is-open");
+          returnAllToBank();
+          Object.keys(slotsByNum).forEach(function (key) {
+            var slot = slotsByNum[key];
+            slot.classList.remove("is-filled", "is-over");
+            var ph = slot.querySelector(".placeholder");
+            if (ph) ph.hidden = false;
+          });
+          btnMix.disabled = true;
+          var newOrder = shuffle(EVENTS.slice());
+          animateShuffleOut(function () {
+            clearShuffleClasses();
+            renderBank(newOrder, true);
+            animateShuffleIn(newOrder);
+            window.setTimeout(function () {
+              btnMix.disabled = false;
+            }, 680);
+          });
+        }
+
+        function restart() {
+          results.classList.remove("is-open");
+          returnAllToBank();
+          Object.keys(slotsByNum).forEach(function (key) {
+            var slot = slotsByNum[key];
+            slot.classList.remove("is-filled", "is-over");
+            var ph = slot.querySelector(".placeholder");
+            if (ph) ph.hidden = false;
+          });
+        }
+
+        function getCorrectEventForSlot(slotNum) {
+          for (var i = 0; i < EVENTS.length; i++) {
+            if (EVENTS[i].order === slotNum) return EVENTS[i];
+          }
+          return null;
+        }
+
+        btnMix.addEventListener("click", mixSentences);
+        btnRestart.addEventListener("click", restart);
+
+        btnSubmit.addEventListener("click", function () {
+          var correct = 0;
+          var html = "";
+          var pointsEach = 100 / SLOT_COUNT;
+
+          for (var n = 1; n <= SLOT_COUNT; n++) {
+            var slot = slotsByNum[n];
+            var card = slot ? slot.querySelector(".event-card") : null;
+            var gotId = card ? card.dataset.eventId : "";
+            var expected = getCorrectEventForSlot(n);
+            var ok = gotId === expected.id;
+            if (ok) correct++;
+
+            var gotText = card ? card.textContent : "(empty)";
+            var row = document.createElement("div");
+            row.className = "result-row " + (ok ? "ok" : "bad");
+            row.innerHTML =
+              (ok ? "✓ Correct — " : "✗ Wrong — ") +
+              "<strong>Position " +
+              n +
+              ":</strong> " +
+              (ok
+                ? expected.text
+                : "You put: <em>" +
+                  gotText +
+                  "</em><br>Correct answer: <em>" +
+                  expected.text +
+                  "</em>");
+            html += row.outerHTML;
+          }
+
+          var grade = Math.round(correct * pointsEach);
+          totalScore.textContent = correct + " / " + SLOT_COUNT + " in the correct order";
+          finalGrade.textContent = "Final grade: " + grade + " / 100";
+          finalGrade.style.color = grade === 100 ? "var(--green)" : grade >= 50 ? "var(--orange)" : "#c94a4a";
+          resultDetails.innerHTML = html;
+
+          if (chartInstance) chartInstance.destroy();
+          chartInstance = new Chart(document.getElementById("gradeChart"), {
+            type: "pie",
+            data: {
+              labels: ["Correct", "Incorrect"],
+              datasets: [
+                {
+                  data: [correct, SLOT_COUNT - correct],
+                  backgroundColor: ["#2e9b5a", "#c94a4a"],
+                },
+              ],
+            },
+            options: {
+              plugins: { legend: { position: "bottom" } },
+            },
+          });
+
+          results.classList.add("is-open");
+          results.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+
+        build();
+      })();
+    </script>
+  </body>
+</html>
