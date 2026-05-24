@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Services - EFL</title>
     <link rel="stylesheet" href="styles/main.css?v=20260522g" />
+    <style>
+      .btn-return-site {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 28px;
+        border: none;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #fff;
+        font: inherit;
+        font-size: 1.05rem;
+        font-weight: 800;
+        text-decoration: none;
+        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.4);
+        cursor: pointer;
+      }
+      .btn-return-site:hover {
+        color: #fff;
+        filter: brightness(1.06);
+      }
+    </style>
   </head>
   <body data-page="practicing">
     <header class="topbar">
@@ -184,238 +206,20 @@ Tali 🙂
               loading="lazy"
             ></iframe>
           </div>
-          <div class="media-box" style="padding: 16px; margin-top: 24px">
-            <div
-              class="small"
-              style="margin-bottom: 10px; color: var(--purple); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em"
-            >
-              Live worksheet — complete the sentences
-            </div>
-            <iframe
-              class="listening-worksheet-embed"
-              title="Complete the sentences worksheet"
-              src="sentence-fill-worksheet.html"
-              loading="lazy"
-            ></iframe>
-          </div>
-          <div class="media-box" style="padding: 16px; margin-top: 24px">
-            <div
-              class="small"
-              style="margin-bottom: 10px; color: var(--purple); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em"
-            >
-              Live worksheet — put events in order
-            </div>
-            <iframe
-              class="listening-worksheet-embed"
-              title="Put the events in the correct order"
-              src="event-order-worksheet.html"
-              loading="lazy"
-            ></iframe>
-          </div>
         </div>
       </section>
 
-      <!-- Wordwall + Speak/Practice -->
-      <section class="page-block" aria-label="While reading content section">
-        <div class="container page-split">
-          <div class="media-box">
-            <div class="small" style="padding: 16px 16px 0; color: var(--purple); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
-              Wordwall Activity
-            </div>
-            <!-- Load activity: use the orange button to paste Wordwall iframe HTML or embed URL -->
-            <div class="wordwall-embed-row">
-              <iframe
-                id="wordwallEmbed1"
-                class="wordwall-embed"
-                title="Wordwall activity"
-                src="about:blank"
-                allowfullscreen
-              ></iframe>
-              <button
-                type="button"
-                class="wordwall-activity-upload"
-                data-wordwall-open="1"
-                aria-haspopup="dialog"
-                aria-controls="wordwallDialog1"
-                aria-label="Load Wordwall activity — paste embed HTML"
-              >
-                <span class="wordwall-activity-upload-text" aria-hidden="true">
-                  <span class="wordwall-activity-upload-line">Upload</span>
-                  <span class="wordwall-activity-upload-line">activity</span>
-                </span>
-              </button>
-            </div>
-            <div class="small" style="padding: 16px 16px 0; color: var(--purple); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
-              Optional Wordwall Activity 2
-            </div>
-            <!-- Same column width as Activity 1 — iframe + upload row -->
-            <div class="wordwall-embed-row">
-              <iframe
-                id="wordwallEmbed2"
-                class="wordwall-embed"
-                title="Wordwall activity 2"
-                src="about:blank"
-                allowfullscreen
-              ></iframe>
-              <button
-                type="button"
-                class="wordwall-activity-upload"
-                data-wordwall-open="2"
-                aria-haspopup="dialog"
-                aria-controls="wordwallDialog2"
-                aria-label="Load Wordwall activity — paste embed HTML"
-              >
-                <span class="wordwall-activity-upload-text" aria-hidden="true">
-                  <span class="wordwall-activity-upload-line">Upload</span>
-                  <span class="wordwall-activity-upload-line">activity</span>
-                </span>
-              </button>
-            </div>
-          </div>
-          <div class="card">
-            <div class="small" style="color: var(--purple); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em">
-              Section 2
-            </div>
-            <h2 style="margin: 10px 0 10px; letter-spacing: -0.02em">Speak / Practice</h2>
-            <p style="margin: 0; color: var(--muted)">
-              Add a prompt like: “Say hello to a friend” with 2-3 example responses.
-            </p>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px">
-              <a class="btn btn-forward" href="contact.html">Forward</a>
-              <a class="btn btn-back" href="about.html">Back</a>
-            </div>
-          </div>
+      <section class="page-block" aria-label="Return to main site">
+        <div class="container" style="text-align: center; padding-top: 8px; padding-bottom: 24px">
+          <a
+            class="btn btn-return-site"
+            href="https://sites.google.com/view/ofir-reading-comprehension/while-reading-3?authuser=0"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Return to main site</a>
         </div>
       </section>
 
-      <!-- Section 3: Divider + Big Text -->
-      <section class="page-block" aria-label="While reading divider section">
-        <div class="container">
-          <div class="divider-line" aria-hidden="true"></div>
-
-          <div class="divider-stack" aria-label="While reading: 3 dividers">
-            <div class="divider-item">
-              <h3>Divider 1 title (While reading)</h3>
-              <div class="rtl" lang="he" dir="rtl">טקסט בעברית (לא חובה) עבור מחיצה 1 בעמוד התרגול.</div>
-              <div class="divider-mini is-orange" aria-hidden="true"></div>
-              <div class="divider-upload">
-                <label class="btn btn-primary divider-upload-btn">
-                  Upload picture
-                  <input type="file" accept="image/*" class="divider-file-input sr-only" />
-                </label>
-                <div class="divider-upload-preview">
-                  <p class="divider-upload-placeholder">No image yet — uploads stay saved in this browser after refresh.</p>
-                  <img class="divider-upload-img" alt="" hidden />
-                  <button type="button" class="btn divider-upload-clear" hidden>Remove</button>
-                </div>
-              </div>
-              <p>Edit this text for divider 1 on the While reading page.</p>
-            </div>
-
-            <div class="divider-line divider-line--between" aria-hidden="true"></div>
-
-            <div class="divider-item">
-              <h3>Divider 2 title (While reading)</h3>
-              <div class="rtl" lang="he" dir="rtl">טקסט בעברית (לא חובה) עבור מחיצה 2 בעמוד התרגול.</div>
-              <div class="divider-mini is-orange" aria-hidden="true"></div>
-              <div class="divider-upload">
-                <label class="btn btn-primary divider-upload-btn">
-                  Upload picture
-                  <input type="file" accept="image/*" class="divider-file-input sr-only" />
-                </label>
-                <div class="divider-upload-preview">
-                  <p class="divider-upload-placeholder">No image yet — uploads stay saved in this browser after refresh.</p>
-                  <img class="divider-upload-img" alt="" hidden />
-                  <button type="button" class="btn divider-upload-clear" hidden>Remove</button>
-                </div>
-              </div>
-              <p>Edit this text for divider 2 on the While reading page.</p>
-            </div>
-
-            <div class="divider-line divider-line--between" aria-hidden="true"></div>
-
-            <div class="divider-item">
-              <h3>Divider 3 title (While reading)</h3>
-              <div class="rtl" lang="he" dir="rtl">טקסט בעברית (לא חובה) עבור מחיצה 3 בעמוד התרגול.</div>
-              <div class="divider-mini is-orange" aria-hidden="true"></div>
-              <div class="divider-upload">
-                <label class="btn btn-primary divider-upload-btn">
-                  Upload picture
-                  <input type="file" accept="image/*" class="divider-file-input sr-only" />
-                </label>
-                <div class="divider-upload-preview">
-                  <p class="divider-upload-placeholder">No image yet — uploads stay saved in this browser after refresh.</p>
-                  <img class="divider-upload-img" alt="" hidden />
-                  <button type="button" class="btn divider-upload-clear" hidden>Remove</button>
-                </div>
-              </div>
-              <p>Edit this text for divider 3 on the While reading page.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Wordwall embed paste dialogs (While reading 3) -->
-      <dialog class="wordwall-embed-dialog" id="wordwallDialog1" aria-labelledby="wordwallDialog1Title">
-        <div class="wordwall-embed-dialog-inner">
-          <h2 id="wordwallDialog1Title" class="wordwall-embed-dialog-title">Load Wordwall activity</h2>
-          <p class="wordwall-embed-dialog-help">
-            Paste the <strong>full iframe HTML</strong> from Wordwall (<em>Embed on your own website</em> → copy the code),
-            or paste only the <strong>https://wordwall.net/embed/…</strong> URL.
-          </p>
-          <label class="wordwall-embed-dialog-label" for="wordwallPaste1">Embed HTML or URL</label>
-          <textarea
-            id="wordwallPaste1"
-            class="wordwall-embed-dialog-textarea"
-            rows="5"
-            spellcheck="false"
-            placeholder='&lt;iframe style="max-width:100%" src="https://wordwall.net/embed/..." ...&gt;&lt;/iframe&gt;'
-          ></textarea>
-          <p class="wordwall-embed-dialog-error" id="wordwallError1" hidden></p>
-          <div class="wordwall-embed-dialog-actions">
-            <button type="button" class="btn wordwall-embed-dialog-cancel" data-wordwall-close="1">Cancel</button>
-            <button type="button" class="btn btn-primary" data-wordwall-load="1" data-wordwall-target="wordwallEmbed1">
-              Load activity
-            </button>
-          </div>
-        </div>
-      </dialog>
-
-      <dialog class="wordwall-embed-dialog" id="wordwallDialog2" aria-labelledby="wordwallDialog2Title">
-        <div class="wordwall-embed-dialog-inner">
-          <h2 id="wordwallDialog2Title" class="wordwall-embed-dialog-title">Load Wordwall activity</h2>
-          <p class="wordwall-embed-dialog-help">
-            Paste the <strong>full iframe HTML</strong> from Wordwall (<em>Embed on your own website</em> → copy the code),
-            or paste only the <strong>https://wordwall.net/embed/…</strong> URL.
-          </p>
-          <label class="wordwall-embed-dialog-label" for="wordwallPaste2">Embed HTML or URL</label>
-          <textarea
-            id="wordwallPaste2"
-            class="wordwall-embed-dialog-textarea"
-            rows="5"
-            spellcheck="false"
-            placeholder='&lt;iframe style="max-width:100%" src="https://wordwall.net/embed/..." ...&gt;&lt;/iframe&gt;'
-          ></textarea>
-          <p class="wordwall-embed-dialog-error" id="wordwallError2" hidden></p>
-          <div class="wordwall-embed-dialog-actions">
-            <button type="button" class="btn wordwall-embed-dialog-cancel" data-wordwall-close="2">Cancel</button>
-            <button type="button" class="btn btn-primary" data-wordwall-load="2" data-wordwall-target="wordwallEmbed2">
-              Load activity
-            </button>
-          </div>
-        </div>
-      </dialog>
-
-      <!-- Section 4: Prev / Next cursor -->
-      <section class="page-block" aria-label="While reading navigation section">
-        <div class="container">
-          <div class="pager" role="navigation" aria-label="Step navigation">
-            <a class="btn btn-back" href="about.html">Back</a>
-            <div class="small">Page 3 / 4</div>
-            <a class="btn btn-forward" href="contact.html">Forward</a>
-          </div>
-        </div>
-      </section>
     </main>
 
     <footer>
